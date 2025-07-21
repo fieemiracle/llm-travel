@@ -15,23 +15,27 @@ type FormInputProps = {
 export default function FormInput(props: FormInputProps) {
 
   // 状态管理
-  const [inputType, setInputType] = useState(InputType.AUDIO)
+  const [inputType, setInputType] = useState(InputType.KEYBOARD)
   const [inputValue, setInputValue] = useState('')
   const [inputLine, setInputLine] = useState(1)
 
   const onSend = () => {
-    console.log('onSend')
+    props.onSend(inputValue)
+    resetInput()
   }
 
   const onInput = (e: any) => {
-    console.log(e, 'onInput')
     setInputValue(e.detail.value)
-    props.onSend(e.detail.value)
   }
 
   const onLineChange = (e: any) => {
     const { lineCount } = e.detail || {}
     setInputLine(lineCount > MAX_LINE_COUNT ? MAX_LINE_COUNT : lineCount)
+  }
+
+  const resetInput = () => {
+    setInputValue('')
+    setInputLine(1)
   }
 
   return (

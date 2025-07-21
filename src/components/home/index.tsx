@@ -2,21 +2,21 @@ import { View, Text } from '@tarojs/components'
 import { HOME_WELCOME_TEXT } from '@/utils/const'
 import { formatArrayByCustomLength } from '@/utils/tools'
 import { HOME_BOTTOM_TIPS } from '@/mock'
-import { useState } from 'react'
 import FormInput from '@/components/formInput'
 import './index.less'
 
-export default function Home() {
+type HomeProps = {
+  getTipText: (value: string) => void
+  getInputValue: (value: string) => void
+}
+
+export default function Home(props: HomeProps) {
   const homeTipsList = formatArrayByCustomLength(HOME_BOTTOM_TIPS, 2)
   console.log(homeTipsList, 'homeTipsList')
 
-  // 状态管理
-  const [tipText, setTipText] = useState('')
-
   // 点击词条
   const onTipsClick = (item: string) => {
-    console.log(tipText, 'onTipsClick')
-    setTipText(item)
+    props.getTipText(item)
   }
 
   // 发送查询
@@ -26,6 +26,7 @@ export default function Home() {
     if (!query) {
       return
     }
+    props.getInputValue(query)
   }
 
   return (

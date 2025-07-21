@@ -8,3 +8,8 @@ export const InputType = {
   KEYBOARD: 'keyboard',
   AUDIO: 'audio'
 }
+
+export const ChatRole = {
+  USER: 'user',
+  ASSISTANT: 'assistant'
+}

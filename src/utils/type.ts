@@ -1,0 +1,1 @@
+export type ArrowDirection = 'top' | 'right' | 'bottom' | 'left'

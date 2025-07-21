@@ -1,5 +1,6 @@
 import { View, Text } from '@tarojs/components'
 import { useLoad } from '@tarojs/taro'
+import UserNavBar from '@/components/userNavBar'
 import './index.less'
 
 export default function Index () {
@@ -8,8 +9,9 @@ export default function Index () {
   })
 
   return (
-    <View className='index'>
-      <Text>Hello world!</Text>
+    <View className='user-wrapper'>
+      <UserNavBar />
+      <Text>个人中心</Text>
     </View>
   )
 }

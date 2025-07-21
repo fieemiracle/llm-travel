@@ -3,6 +3,7 @@ deploy_versions/
 .temp/
 .rn_temp/
 node_modules/
+.husky/
 .DS_Store
 .swc
 *.local

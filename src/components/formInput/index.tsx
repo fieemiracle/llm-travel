@@ -15,7 +15,7 @@ type FormInputProps = {
 export default function FormInput(props: FormInputProps) {
 
   // 状态管理
-  const [inputType, setInputType] = useState(InputType.KEYBOARD)
+  const [inputType, setInputType] = useState(InputType.AUDIO)
   const [inputValue, setInputValue] = useState('')
   const [inputLine, setInputLine] = useState(1)
 
@@ -54,15 +54,24 @@ export default function FormInput(props: FormInputProps) {
           }
         </View>
         <View className='form-input-item-center'>
-          <Textarea
-            className='form-input-item-center-textarea'
-            value={inputValue}
-            placeholder='可以问我任何关于出行的问题～'
-            placeholderClass='form-input-item-center-textarea-placeholder'
-            style={{ height: inputLine * MIN_INPUT_HEIGHT + 'rpx' }}
-            onInput={onInput}
-            onLineChange={onLineChange}
-          />
+          {
+            inputType === InputType.KEYBOARD && (
+              <Textarea
+                className='form-input-item-center-textarea'
+                value={inputValue}
+                placeholder='可以问我任何关于出行的问题～'
+                placeholderClass='form-input-item-center-textarea-placeholder'
+                style={{ height: inputLine * MIN_INPUT_HEIGHT + 'rpx' }}
+                onInput={onInput}
+                onLineChange={onLineChange}
+              />
+            )
+          }
+          {
+            inputType === InputType.AUDIO && (
+              <View className='form-input-item-center-audio'>按住说话</View>
+            )
+          }
         </View>
         {
           inputValue && (

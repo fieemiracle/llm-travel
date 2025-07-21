@@ -1,11 +1,63 @@
 import { View, Text } from '@tarojs/components'
+import { HOME_WELCOME_TEXT } from '@/utils/const'
+import { formatArrayByCustomLength } from '@/utils/tools'
+import { HOME_BOTTOM_TIPS } from '@/mock'
+import { useState } from 'react'
+import FormInput from '@/components/formInput'
 import './index.less'
 
-export default function Index () {
+export default function Home() {
+  const homeTipsList = formatArrayByCustomLength(HOME_BOTTOM_TIPS, 2)
+  console.log(homeTipsList, 'homeTipsList')
+
+  // 状态管理
+  const [tipText, setTipText] = useState('')
+
+  // 点击词条
+  const onTipsClick = (item: string) => {
+    console.log(tipText, 'onTipsClick')
+    setTipText(item)
+  }
+
+  // 发送查询
+  const onSendQuery = (value: string) => {
+    console.log(value, 'onSendQuery')
+    const query = value.trim()
+    if (!query) {
+      return
+    }
+  }
 
   return (
     <View className='home-wrapper'>
-      <Text>首页</Text>
+      {/* 欢迎语 */}
+      <View className='home-welcome'>
+        <Text>{HOME_WELCOME_TEXT}</Text>
+      </View>
+      {/* 内容区 */}
+      <View className='home-content'>
+      </View>
+      <View className='home-footer'>
+        {/* 底部词条 */}
+        <View className='home-tips'>
+          {
+            homeTipsList.map((listItem, listIndex) => (
+              <View className='home-tip' key={listIndex}>
+                {listItem.map((item, index) => (
+                  <View key={index} className='home-tips-item' onClick={() => onTipsClick(item)}>
+                    <Text>{item}</Text>
+                  </View>
+                ))}
+              </View>
+            ))
+          }
+        </View>
+        
+        {/* 输入框 */}
+        <View className='home-input'>
+          <FormInput onSend={(value) => onSendQuery(value)} />
+        </View>
+      </View>
     </View>
   )
 }

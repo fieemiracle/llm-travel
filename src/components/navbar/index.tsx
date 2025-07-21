@@ -1,6 +1,6 @@
 import { View, Text } from '@tarojs/components'
 import { getStatusBarHeight, getNavBarHeight, getMenuButtonBoundingClientRect } from '@/utils/system'
-import { RouterName } from '@/utils/router'
+import { RouterName } from '@/utils/enum'
 import { useState } from 'react'
 import Taro from '@tarojs/taro'
 import './index.less'

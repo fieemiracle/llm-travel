@@ -1,8 +1,10 @@
 import { View } from '@tarojs/components'
 import FormInput from '@/components/formInput'
-import { chatStore } from '@/store'
+import { useSelector, useDispatch } from 'react-redux'
+import { RootState } from '@/store'
+import { addChatItem } from '@/store/actions/chat'
 import { ChatRole } from '@/utils/enum'
-import { ChatRoleT } from '@/utils/type'
+import { ChatItem, ChatRoleT } from '@/utils/type'
 import QueryPopup from '@/components/queryPopup'
 import AnswerPopup from '@/components/answerPopup'
 import './index.less'
@@ -11,9 +13,9 @@ type ChatProps = {
 }
 
 export default function Chat (props: ChatProps) {
-  const chatList = chatStore.getChatList()
-  const queryText = chatStore.getQueryText()
-  console.log('queryText>>>>>>>', queryText)
+  const chatList = useSelector((state: RootState) => state.chat.chatList)
+  const queryText = useSelector((state: RootState) => state.chat.queryText)
+  const dispatch = useDispatch()
 
   const onSendQuery = (query: string) => {
     const userChatItem = {
@@ -22,15 +24,15 @@ export default function Chat (props: ChatProps) {
       role: ChatRole.USER as ChatRoleT,
       createdAt: new Date().toISOString(),
     }
-    chatStore.addChatItem(userChatItem)
-    console.log('query>>>>>>>', query)
+    dispatch(addChatItem(userChatItem))
+    console.log('query>>>>>>>', props, query, queryText)
   }
 
   return (
     <View className='chat-wrapper'>
       <View className='chat-content'>
         {
-          chatList.map((item) => {
+          chatList.map((item: ChatItem) => {
             return (
               <View className='chat-item' key={item.chatId}>
                   {

@@ -43,4 +43,10 @@
 
 ## 状态管理（Redux）
 
-- pnpm add redux react-redux redux-thunk redux-logger
+- pnpm add redux react-redux
+
+- **redux-thunk**
+- **redux-logger**
+- **useSelector**
+- **useDispatch**
+- **useStore**

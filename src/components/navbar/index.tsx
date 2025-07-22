@@ -1,7 +1,9 @@
 import { View, Text } from '@tarojs/components'
 import { getStatusBarHeight, getNavBarHeight, getMenuButtonBoundingClientRect } from '@/utils/system'
 import { RouterName, RouterNameValues } from '@/utils/enum'
-import { commonStore } from '@/store'
+import { useSelector, useDispatch } from 'react-redux'
+import { RootState } from '@/store'
+import { setCurrentRouteName } from '@/store/actions/common'
 import Taro from '@tarojs/taro'
 import './index.less'
 
@@ -18,14 +20,15 @@ export default function Navbar (props: NavbarProps) {
   const menuInfo = getMenuButtonBoundingClientRect()
   const menuHeight = menuInfo.height
   const menuWidth = menuInfo.width
-  console.log('menuInfo===', menuInfo)
+  console.log('menuInfo===', props, menuInfo)
 
   // 当前选中的路由，默认是 RouterName.INDEX
-  const currentRouteName = commonStore.getCurrentRouteName()
+  const currentRouteName = useSelector((state: RootState) => state.common.currentRouteName)
+  const dispatch = useDispatch()
 
   // 路由切换
   const changeRoute = (pathname: RouterNameValues) => {
-    commonStore.setCurrentRouteName(pathname)
+    dispatch(setCurrentRouteName(pathname))
     if (pathname === RouterName.USER) {
       Taro.navigateTo({
         url: `/pages/user/index`

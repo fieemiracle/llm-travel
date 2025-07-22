@@ -1,0 +1,15 @@
+{
+  "miniprogramRoot": "./dist",
+  "projectname": "llm-didi-travel",
+  "description": "🚀 智能旅游规划助手，让您的旅行更轻松！只需输入目的地和天数，小滴就能为您量身定制完美的吃喝玩乐住行攻略，适合个人游，家庭亲子游，情侣浪漫游，团队团建游，周末短途游，都能找到最适合的行程安排。",
+  "appid": "touristappid",
+  "setting": {
+    "urlCheck": true,
+    "es6": false,
+    "enhance": false,
+    "compileHotReLoad": false,
+    "postcss": false,
+    "minified": false
+  },
+  "compileType": "miniprogram"
+}

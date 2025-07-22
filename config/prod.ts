@@ -1,7 +1,21 @@
 import type { UserConfigExport } from "@tarojs/cli"
 
 export default {
-  mini: {},
+  mini: {
+    webpackChain(chain: { optimization: { splitChunks: (arg0: { cacheGroups: { vendor: { name: string; test: RegExp; chunks: string; priority: number } } }) => void } }) {
+      // 确保小程序构建时正确处理第三方库
+      chain.optimization.splitChunks({
+        cacheGroups: {
+          vendor: {
+            name: 'vendors',
+            test: /[\\/]node_modules[\\/]/,
+            chunks: 'all',
+            priority: 10
+          }
+        }
+      })
+    }
+  },
   h5: {
     compile: {
       include: [

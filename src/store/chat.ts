@@ -2,8 +2,9 @@ import { ChatItem } from '@/utils/type'
 
 export const chatStore = {
   chatList: [] as ChatItem[],
+  queryText: '',
 
-
+  // 聊天列表
   addChatItem: (item: ChatItem) => {
     chatStore.chatList.push(item)
   },
@@ -20,11 +21,18 @@ export const chatStore = {
       chatStore.chatList.splice(index, 1)
     }
   },
-
   getChatList: (): ChatItem[] => {
     return chatStore.chatList
   },
   clearChatList: () => {
     chatStore.chatList = []
+  },
+
+  // 全局提问内容
+  setQueryText: (queryText: string) => {
+    chatStore.queryText = queryText
+  },
+  getQueryText: (): string => {
+    return chatStore.queryText
   },
 }

@@ -1,12 +1,11 @@
 import { View, Text } from '@tarojs/components'
 import { getStatusBarHeight, getNavBarHeight, getMenuButtonBoundingClientRect } from '@/utils/system'
-import { RouterName } from '@/utils/enum'
-import { useState } from 'react'
+import { RouterName, RouterNameValues } from '@/utils/enum'
+import { commonStore } from '@/store'
 import Taro from '@tarojs/taro'
 import './index.less'
 
 interface NavbarProps {
-  onRouteChange: (pathname: string) => void
 }
 
 export default function Navbar (props: NavbarProps) {
@@ -22,17 +21,16 @@ export default function Navbar (props: NavbarProps) {
   console.log('menuInfo===', menuInfo)
 
   // 当前选中的路由，默认是 RouterName.INDEX
-  const [selected, setSelected] = useState(RouterName.INDEX)
+  const currentRouteName = commonStore.getCurrentRouteName()
 
   // 路由切换
-  const changeRoute = (pathname: string) => {
-    setSelected(pathname)
+  const changeRoute = (pathname: RouterNameValues) => {
+    commonStore.setCurrentRouteName(pathname)
     if (pathname === RouterName.USER) {
       Taro.navigateTo({
         url: `/pages/user/index`
       })
     }
-    props.onRouteChange(pathname)
   }
 
   return (
@@ -63,13 +61,13 @@ export default function Navbar (props: NavbarProps) {
         }}
       >
         <View
-          className={`navbar-center-title${selected === RouterName.INDEX ? ' navbar-center-title-selected' : ''}`}
-          onClick={() => changeRoute(RouterName.INDEX)}
+          className={`navbar-center-title ${currentRouteName === RouterName.HOME ? 'navbar-center-title-selected' : ''}`}
+          onClick={() => changeRoute(RouterName.HOME)}
         >
           <Text>灵感</Text>
         </View>
         <View
-          className={`navbar-center-title${selected === RouterName.CHAT ? ' navbar-center-title-selected' : ''}`}
+          className={`navbar-center-title ${currentRouteName === RouterName.CHAT ? 'navbar-center-title-selected' : ''}`}
           onClick={() => changeRoute(RouterName.CHAT)}
         >
           <Text>对话</Text>

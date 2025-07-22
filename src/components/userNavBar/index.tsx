@@ -14,7 +14,6 @@ export default function UserNavBar () {
   const menuInfo = getMenuButtonBoundingClientRect()
   const menuHeight = menuInfo.height
   const menuWidth = menuInfo.width
-  console.log('menuInfo===', menuInfo)
 
   // 返回
   const goBack = () => {

@@ -6,23 +6,22 @@ import FormInput from '@/components/formInput'
 import './index.less'
 
 type HomeProps = {
-  getTipText: (value: string) => void
-  getInputValue: (value: string) => void
+  getTipText: (tipText: string) => void
+  getInputValue: (inputText: string) => void
 }
 
 export default function Home(props: HomeProps) {
   const homeTipsList = formatArrayByCustomLength(HOME_BOTTOM_TIPS, 2)
-  console.log(homeTipsList, 'homeTipsList')
 
   // 点击词条
-  const onTipsClick = (item: string) => {
-    props.getTipText(item)
+  const onTipsClick = (tipText: string) => {
+    props.getTipText(tipText)
   }
 
   // 发送查询
-  const onSendQuery = (value: string) => {
-    console.log(value, 'onSendQuery')
-    const query = value.trim()
+  const onSendQuery = (inputText: string) => {
+    console.log(inputText, 'onSendQuery')
+    const query = inputText.trim()
     if (!query) {
       return
     }
@@ -56,7 +55,7 @@ export default function Home(props: HomeProps) {
         
         {/* 输入框 */}
         <View className='home-input'>
-          <FormInput onSend={(value) => onSendQuery(value)} />
+          <FormInput onSend={(inputText) => onSendQuery(inputText)} />
         </View>
       </View>
     </View>

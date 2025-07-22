@@ -5,35 +5,32 @@ import { ChatRole } from '@/utils/enum'
 import { ChatRoleT } from '@/utils/type'
 import QueryPopup from '@/components/queryPopup'
 import AnswerPopup from '@/components/answerPopup'
-import { useState } from 'react'
 import './index.less'
 
 type ChatProps = {
-  queryText: string
 }
 
 export default function Chat (props: ChatProps) {
   const chatList = chatStore.getChatList()
-  const [currentChatList, setCurrentChatList] = useState(chatList)
+  const queryText = chatStore.getQueryText()
+  console.log('queryText>>>>>>>', queryText)
 
-  const onSendQuery = (value: string) => {
+  const onSendQuery = (query: string) => {
     const userChatItem = {
       chatId: new Date().getTime().toString(),
-      content: value,
+      content: query,
       role: ChatRole.USER as ChatRoleT,
       createdAt: new Date().toISOString(),
     }
-    setCurrentChatList(() => {
-      return [...currentChatList, userChatItem]
-    })
-    console.log('query>>>>>>>', value)
+    chatStore.addChatItem(userChatItem)
+    console.log('query>>>>>>>', query)
   }
 
   return (
     <View className='chat-wrapper'>
       <View className='chat-content'>
         {
-          currentChatList.map((item) => {
+          chatList.map((item) => {
             return (
               <View className='chat-item' key={item.chatId}>
                   {
@@ -52,7 +49,7 @@ export default function Chat (props: ChatProps) {
         }
       </View>
       <View className='chat-input'>
-        <FormInput onSend={(value) => onSendQuery(value)} />
+        <FormInput onSend={(query) => onSendQuery(query)} />
       </View>
     </View>
   )

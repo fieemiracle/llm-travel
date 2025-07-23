@@ -3,6 +3,7 @@ import { RouterName } from "@/utils/enum"
 
 const initialState: CommonStateT = {
   currentRouteName: RouterName.HOME,
+  userInfo: null,
 }
 
 export const commonReducer = (state = initialState, action: CommonActionReturnT) => {
@@ -11,6 +12,11 @@ export const commonReducer = (state = initialState, action: CommonActionReturnT)
       return {
         ...state,
         currentRouteName: action.currentRouteName!,
+      }
+    case CommonActionType.SET_USER_INFO:
+      return {
+        ...state,
+        userInfo: action.userInfo!,
       }
     default:
       return state

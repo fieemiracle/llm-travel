@@ -50,3 +50,14 @@
 - **useSelector**
 - **useDispatch**
 - **useStore**
+
+## 环境判断
+
+### process.env.TARO_ENV & Taro.getEnv()
+
+| 特性         | process.env.TARO_ENV   | Taro.getEnv()         |
+| ------------ | ---------------------- | --------------------- |
+| 执行时机     | 编译时确定             | 运行时动态获取        |
+| 代码压缩     | 会被Tree Shaking优化   | 无法被静态分析        |
+| 多端兼容性   | 需要记住各平台字符串   | 使用标准常量          |
+| 推荐场景     | 条件编译（如不同平台组件） | 运行时逻辑判断    |

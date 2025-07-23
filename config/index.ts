@@ -78,6 +78,7 @@ export default defineConfig<'webpack5'>(async (merge, { command, mode }) => {
           }
         }
       },
+      esnextModules: ['taro-ui'],
       webpackChain(chain) {
         chain.resolve.plugin('tsconfig-paths').use(TsconfigPathsPlugin)
       }

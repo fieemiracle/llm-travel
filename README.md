@@ -61,3 +61,29 @@
 | 代码压缩     | 会被Tree Shaking优化   | 无法被静态分析        |
 | 多端兼容性   | 需要记住各平台字符串   | 使用标准常量          |
 | 推荐场景     | 条件编译（如不同平台组件） | 运行时逻辑判断    |
+
+## Taro UI
+
+- **安装** pnpm add taro-ui
+- **微信版本库限制** 因为要支持自定义主题功能，需要将样式从组件中抽离，在微信小程序中依赖`globalClass`功能，所以需要微信基础库版本在`v2.2.3以上`
+- 配置需要额外编译的源码模块
+- 由于引用`node_modules`的模块，默认不会编译，所以需要额外给H5配置`esnextModules`，在taro项目的`config/index.ts`中新增如下配置项
+```javascript
+h5: {
+  esnextModules: ['taro-ui']
+}
+```
+- **使用方式**
+```javascript
+// 引入所需组件
+import { AtButton } from 'taro-ui'
+
+// 方式1: 组件依赖的样式文件（按需引用时需要）（CSS中）
+@import "~taro-ui/dist/style/components/button.scss";
+
+// 方式2: 全局引入（JS中）
+import 'taro-ui/dist/style/index.scss'
+
+// 方式3: 全局引入（CSS中）
+@import "~taro-ui/dist/style/index.scss";
+```

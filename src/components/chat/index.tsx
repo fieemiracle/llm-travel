@@ -7,6 +7,7 @@ import { ChatRole } from '@/utils/enum'
 import { ChatItem, ChatRoleT } from '@/utils/type'
 import QueryPopup from '@/components/queryPopup'
 import AnswerPopup from '@/components/answerPopup'
+import { useEffect } from 'react'
 import './index.less'
 
 type ChatProps = {
@@ -18,14 +19,34 @@ export default function Chat (props: ChatProps) {
   const dispatch = useDispatch()
 
   const onSendQuery = (query: string) => {
-    const userChatItem = {
-      chatId: new Date().getTime().toString(),
-      content: query,
-      role: ChatRole.USER as ChatRoleT,
-      createdAt: new Date().toISOString(),
-    }
+    const userChatItem = formatChatItem(query, ChatRole.USER)
     dispatch(addChatItem(userChatItem))
-    console.log('query>>>>>>>', props, query, queryText)
+  }
+
+  useEffect(() => {
+    if (queryText) {
+      console.log('useEffect queryText>>>>>>>', queryText)
+      const userChatItem = formatChatItem(queryText, ChatRole.USER)
+      dispatch(addChatItem(userChatItem))
+      const assistantChatItem = formatChatItem('', ChatRole.ASSISTANT)
+      dispatch(addChatItem(assistantChatItem))
+    }
+  }, [queryText, dispatch])
+
+  // 格式化聊天项
+  const formatChatItem = (content: string, role: ChatRoleT): ChatItem => {
+    const chatItem = {
+      chatId: new Date().getTime().toString(),
+      content,
+      role,
+      createdAt: new Date().toISOString(),
+      ...(role === ChatRole.ASSISTANT && {
+        isLoading: true,
+        isStream: false,
+        isFinished: false,
+      }),
+    }
+    return chatItem
   }
 
   return (
@@ -42,7 +63,12 @@ export default function Chat (props: ChatProps) {
                   }
                   {
                     item.role === ChatRole.ASSISTANT && (
-                      <AnswerPopup answerText={item.content} />
+                      <AnswerPopup
+                        answerText={item.content}
+                        isLoading={item.isLoading!}
+                        isStreaming={item.isStreaming!}
+                        isFinished={item.isFinished!}
+                      />
                     )
                   }
               </View>

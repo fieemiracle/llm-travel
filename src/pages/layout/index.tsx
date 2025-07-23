@@ -18,7 +18,6 @@ export default function Layout() {
   const currentRouteName = useSelector((state: RootState) => state.common.currentRouteName)
   const dispatch = useDispatch()
   const changeQueryText = (value: string) => {
-    console.log('queryText>>>>>>', value);
     dispatch(setQueryText(value))
     dispatch(setCurrentRouteName(RouterName.CHAT))
   }

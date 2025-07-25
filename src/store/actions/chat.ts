@@ -10,7 +10,7 @@ export const addChatItem = (chatItem: ChatItem) => {
 }
 
 // 更新聊天项
-export const updateChatItem = (chatItem: ChatItem) => {
+export const updateChatItem = (chatItem: Partial<ChatItem>) => {
   return {
     type: ChatActionType.UPDATE_CHAT_ITEM,
     chatItem,

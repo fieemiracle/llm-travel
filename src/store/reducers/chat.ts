@@ -13,9 +13,18 @@ export const chatReducer = (state = initialState, action: ChatActionReturnT) => 
         chatList: [...state.chatList, action.chatItem],
       }
     case ChatActionType.UPDATE_CHAT_ITEM:
+      const updateChatList = state.chatList.map((item) => {
+        if (item.chatId === action.chatItem?.chatId) {
+          return {
+            ...item,
+            ...action.chatItem,
+          }
+        }
+        return item
+      })
       return {
         ...state,
-        chatList: state.chatList.map((item) => item.chatId === action.chatItem?.chatId ? action.chatItem : item),
+        chatList: updateChatList,
       }
     case ChatActionType.CLEAR_CHAT_LIST:
       return {

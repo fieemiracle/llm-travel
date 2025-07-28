@@ -1,10 +1,13 @@
 import { View, Text, RichText } from '@tarojs/components'
 import { useEffect, useState } from 'react'
 import markdownit from 'markdown-it'
-import { RichNodeT } from '@/utils/type'
+// import { RichNodeT } from '@/utils/type'
 // import 'highlight.js/styles/default.css'
 // import 'normalize.css'
 import './index.less'
+import styles from './markdown.module.less'
+
+console.log('styles>>>>>>>', styles, styles?.markdownModule)
 
 type AnswerPopupProps = {
   answerText: string
@@ -30,24 +33,25 @@ const md = markdownit({
 
 export default function AnswerPopup (props: AnswerPopupProps) {
   // console.log('props>>>>>>>', props)
-  const [richNodes, setRichNodes] = useState<RichNodeT[]>([])
+  // const [richNodes, setRichNodes] = useState<RichNodeT[]>([])
+  const [htmlString, setHtmlString] = useState('')
   
   useEffect(() => {
     console.log('props.answerText>>>>>>>', props.answerText)
     const markdownString = md.render(props.answerText)
-    // setHtmlString(markdownString)
-    const nodes: RichNodeT[] = [{
-      name: 'div',
-      attrs: {
-        class: 'markdown__it-rich-text',
-        style: 'font-size: 28rpx; line-height: 1.5;'
-      },
-      children: [{
-        type: 'text',
-        text: markdownString
-      }]
-    }]
-    setRichNodes(nodes)
+    setHtmlString(`<div class="${styles?.markdownModule}">${markdownString}</div>`)
+    // const nodes: RichNodeT[] = [{
+    //   name: 'div',
+    //   attrs: {
+    //     class: styles['markdown__it-richtext'],
+    //     style: 'font-size: 28rpx; line-height: 1.5;'
+    //   },
+    //   children: [{
+    //     type: 'text',
+    //     text:  `<div class="${styles?.['markdown__it-richtext']}">${markdownString}</div>`
+    //   }]
+    // }]
+    // setRichNodes(nodes)
   }, [props.answerText])
   
   return (
@@ -66,7 +70,8 @@ export default function AnswerPopup (props: AnswerPopupProps) {
           <View className='answer-popup-content'>
               <View className='answer-popup-content-item'>
                 {/* <Text dangerouslySetInnerHTML={{ __html: htmlString }}></Text> */}
-                <RichText nodes={richNodes} />
+                {/* <RichText nodes={nodes} /> */}
+                <RichText nodes={htmlString} />
               </View>
           </View>
         ) : (

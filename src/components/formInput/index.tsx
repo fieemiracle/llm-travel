@@ -1,6 +1,6 @@
 import { View, Textarea, Image } from '@tarojs/components'
 import { useState } from 'react'
-import { InputType } from '@/utils/enum'
+import { InputType, InputTypeValues } from '@/utils/enum'
 import { MIN_INPUT_HEIGHT, MAX_LINE_COUNT } from '@/utils/const'
 import keyboardIcon from '@/assets/iconfont/keyboard.png'
 import audioIcon from '@/assets/iconfont/audio.png'
@@ -15,7 +15,7 @@ type FormInputProps = {
 export default function FormInput(props: FormInputProps) {
 
   // 状态管理
-  const [inputType, setInputType] = useState(InputType.KEYBOARD)
+  const [inputType, setInputType] = useState<InputTypeValues>(InputType.KEYBOARD)
   const [inputValue, setInputValue] = useState('')
   const [inputLine, setInputLine] = useState(1)
 

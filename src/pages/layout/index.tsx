@@ -8,6 +8,7 @@ import { setQueryText } from '@/store/actions/chat'
 import { setCurrentRouteName } from '@/store/actions/common'
 import Home from '@/components/home'
 import Chat from '@/components/chat'
+import { useState } from 'react'
 import './index.less'
 
 export default function Layout() {
@@ -22,10 +23,12 @@ export default function Layout() {
     dispatch(setCurrentRouteName(RouterName.CHAT))
   }
 
+  const [currentHeaderHeight, setCurrentHeaderHeight] = useState(0)
+
   return (
     <View className='layout-wrapper'>
-      <Navbar />
-      <View className='layout-content'>
+      <Navbar getNavbarHeight={(headerHeight: number) => setCurrentHeaderHeight(headerHeight)} />
+      <View className='layout-content' style={{ height: `calc(100vh - ${currentHeaderHeight * 2}rpx)` }}>
         {
           currentRouteName === RouterName.HOME && (
             <Home

@@ -8,6 +8,7 @@ import Taro from '@tarojs/taro'
 import './index.less'
 
 interface NavbarProps {
+  getNavbarHeight?: (height: number) => void
 }
 
 export default function Navbar (props: NavbarProps) {
@@ -15,6 +16,7 @@ export default function Navbar (props: NavbarProps) {
   const statusBarHeight = getStatusBarHeight()
   const navbarHeight = getNavBarHeight()
   const navbarHeightPx = `${statusBarHeight + navbarHeight}PX`
+  props?.getNavbarHeight?.(statusBarHeight + navbarHeight)
 
   // 获取胶囊按钮信息
   const menuInfo = getMenuButtonBoundingClientRect()

@@ -2,13 +2,13 @@ import { View } from '@tarojs/components'
 import FormInput from '@/components/formInput'
 import { useSelector, useDispatch } from 'react-redux'
 import { RootState } from '@/store'
-import { addChatItem, updateChatItem } from '@/store/actions/chat'
+import { addChatItem, setQueryText, updateChatItem } from '@/store/actions/chat'
 import { ChatRole } from '@/utils/enum'
 import { ChatChunk, ChatItem, ChatRoleT } from '@/utils/type'
 import { generateRandomHash } from '@/utils/tools'
 import QueryPopup from '@/components/queryPopup'
 import AnswerPopup from '@/components/answerPopup'
-import { useEffect } from 'react'
+import { useEffect, useCallback, useRef } from 'react'
 import {
   DMXAPI_REQUEST_URL,
   DMXAPI_REQUEST_TIMEOUT,
@@ -23,17 +23,61 @@ import { TextDecoder } from 'text-encoding-shim'
 import { debugRequestHeaders } from '@/utils/debug'
 import './index.less'
 
-type ChatProps = {
-}
-
-export default function Chat(props: ChatProps) {
+export default function Chat() {
   const chatList = useSelector((state: RootState) => state.chat.chatList)
   const queryText = useSelector((state: RootState) => state.chat.queryText)
   const dispatch = useDispatch()
+  
+  // 使用 ref 来存储最新的 chatList，避免闭包问题
+  const chatListRef = useRef(chatList)
+  chatListRef.current = chatList
+
+  // const [currentAnswerText, setCurrentAnswerText] = useState('')
+  // const [currentAnswerChunks, setCurrentAnswerChunks] = useState<ChatChunk[]>([])
+
+  // 添加调试信息，监控 chatList 变化
+  // useEffect(() => {
+  //   console.log('chatList updated:', chatList.length, 'items')
+  //   chatList.forEach((item, index) => {
+  //     console.log(`Item ${index}:`, {
+  //       chatId: item.chatId,
+  //       role: item.role,
+  //       content: item.content?.substring(0, 50) + '...',
+  //       isLoading: item.isLoading,
+  //       isStreaming: item.isStreaming,
+  //       isFinished: item.isFinished,
+  //       chunksCount: item.chunks?.length || 0
+  //     })
+  //   })
+  // }, [chatList])
+
+  // 格式化聊天项
+  const formatChatItem = useCallback((
+    content: string,
+    role: ChatRoleT,
+    options?: Partial<Pick<ChatItem, 'isLoading' | 'isStreaming' | 'isFinished'>>,
+  ): ChatItem => {
+    const chatItem = {
+      chatId: generateRandomHash(),
+      content,
+      role,
+      createdAt: new Date().toISOString(),
+      ...(role === ChatRole.ASSISTANT && {
+        isLoading: false,
+        isStreaming: false,
+        isFinished: false,
+        ...(options || {})
+      }),
+    }
+    // console.log('formatChatItem>>>>>>>', chatItem)
+    return chatItem
+  }, [])
 
   // sse
-  const sendMessage = (userChatItem: ChatItem, assistantChatItem: ChatItem) => {
+  const sendMessage = useCallback((userChatItem: ChatItem, assistantChatItem: ChatItem) => {
     console.log('sendMessage>>>>>>>', userChatItem, assistantChatItem)
+    let updateContent = ''
+    let updateChunks = [] as ChatChunk[]
     
     // 调试请求头
     debugRequestHeaders()
@@ -90,6 +134,7 @@ export default function Chat(props: ChatProps) {
         if (chunkItem.includes(endTag)) {
           requestTask.abort()
           dispatch(updateChatItem({
+            chatId: assistantChatItem.chatId,
             isLoading: false,
             isStreaming: false,
             isFinished: true,
@@ -105,17 +150,23 @@ export default function Chat(props: ChatProps) {
           if (choices && choices.length) {
             const { delta } = choices[0]
             if (delta && delta.content) {
-              console.log('delta.content>>>>>>>', delta.content)
-              const chatItem = chatList.find((item) => item.chatId === assistantChatItem.chatId)
-              const preContent = chatItem?.content || ''
-              const preChunks = chatItem?.chunks || [] as ChatChunk[]
+              // console.log('delta.content>>>>>>>', delta.content)
+              // 使用 ref 中的最新 chatList，避免闭包问题
+              const currentChatList = chatListRef.current
+              const chatItem = currentChatList.find((item) => item.chatId === assistantChatItem.chatId)
+              // console.log('currentChatList>>>>>>>', currentChatList)
+              // const preContent = chatItem?.content || ''
+              updateContent = updateContent + delta.content
+              updateChunks = [...updateChunks, {
+                id,
+                content: delta.content,
+              }]
+              // const preChunks = chatItem?.chunks || [] as ChatChunk[]
               if (chatItem) {
                 dispatch(updateChatItem({
-                  content: preContent + delta.content,
-                  chunks: [...preChunks, {
-                    id,
-                    content: delta.content,
-                  }],
+                  chatId: assistantChatItem.chatId,
+                  content: updateContent,
+                  chunks: updateChunks,
                   isLoading: false,
                   isStreaming: true,
                   isFinished: false,
@@ -128,15 +179,16 @@ export default function Chat(props: ChatProps) {
         }
       }
     })
-  }
+  }, [dispatch])
 
-  const onSendQuery = (query: string) => {
+  const onSendQuery = useCallback((query: string) => {
     const userChatItem = formatChatItem(query, ChatRole.USER)
     dispatch(addChatItem(userChatItem))
     const assistantChatItem = formatChatItem('', ChatRole.ASSISTANT, { isLoading: true })
     dispatch(addChatItem(assistantChatItem))
+    dispatch(setQueryText(''))
     sendMessage(userChatItem, assistantChatItem)
-  }
+  }, [dispatch, formatChatItem,sendMessage])
 
   useEffect(() => {
     if (queryText) {
@@ -147,29 +199,7 @@ export default function Chat(props: ChatProps) {
       dispatch(addChatItem(assistantChatItem))
       sendMessage(userChatItem, assistantChatItem)
     }
-  }, [queryText, dispatch])
-
-  // 格式化聊天项
-  const formatChatItem = (
-    content: string,
-    role: ChatRoleT,
-    options?: Partial<Pick<ChatItem, 'isLoading' | 'isStreaming' | 'isFinished'>>,
-  ): ChatItem => {
-    const chatItem = {
-      chatId: generateRandomHash(),
-      content,
-      role,
-      createdAt: new Date().toISOString(),
-      ...(role === ChatRole.ASSISTANT && {
-        isLoading: false,
-        isStreaming: false,
-        isFinished: false,
-        ...(options || {})
-      }),
-    }
-    // console.log('formatChatItem>>>>>>>', chatItem)
-    return chatItem
-  }
+  }, [queryText, dispatch, formatChatItem,sendMessage])
 
   return (
     <View className='chat-wrapper'>

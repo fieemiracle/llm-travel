@@ -18,3 +18,18 @@ export type ChatItem = {
   isStreaming?: boolean
   isFinished?: boolean
 }
+
+export type RichNodeT = {
+  type?: 'node'  // 对于 HTMLElement，type 应该是 "node" 或 undefined
+  name: string
+  attrs: {
+    class?: string
+    style?: string
+    src?: string
+    [key: string]: any
+  },
+  children?: RichNodeT[]
+} | {
+  type: 'text'
+  text: string
+}

@@ -64,7 +64,7 @@ export const getRequestHeaders = () => {
 // 兼容旧版本的静态配置
 export const DMXAPI_REQUEST_HEADERS = getRequestHeaders()
 
-export const DMXAPI_REQUEST_TIMEOUT = 60000
+export const DMXAPI_REQUEST_TIMEOUT = 6000000
 
 export type HttpMethod = keyof typeof DMXAPI_REQUEST_METHOD
 

@@ -1,4 +1,9 @@
-import { View, Text } from '@tarojs/components'
+import { View, Text, RichText } from '@tarojs/components'
+import { useEffect, useState } from 'react'
+import markdownit from 'markdown-it'
+import { RichNodeT } from '@/utils/type'
+// import 'highlight.js/styles/default.css'
+// import 'normalize.css'
 import './index.less'
 
 type AnswerPopupProps = {
@@ -14,8 +19,37 @@ const AnswerPopupStatus = {
   FINISHED: '已深度思考',
 }
 
-export default function AnswerPopup (props: AnswerPopupProps) {
+const md = markdownit({
+  html: false, // 允许解析 HTML 标签
+  xhtmlOut: true,
+  linkify: true, // 自动转换 URL 为链接
+  typographer: true, // 启用排版优化（如引号美化
+  breaks: true, // 转换段落里的 '\n' 到 <br>
+  quotes: '“”‘’'
+})
 
+export default function AnswerPopup (props: AnswerPopupProps) {
+  // console.log('props>>>>>>>', props)
+  const [richNodes, setRichNodes] = useState<RichNodeT[]>([])
+  
+  useEffect(() => {
+    console.log('props.answerText>>>>>>>', props.answerText)
+    const markdownString = md.render(props.answerText)
+    // setHtmlString(markdownString)
+    const nodes: RichNodeT[] = [{
+      name: 'div',
+      attrs: {
+        class: 'markdown__it-rich-text',
+        style: 'font-size: 28rpx; line-height: 1.5;'
+      },
+      children: [{
+        type: 'text',
+        text: markdownString
+      }]
+    }]
+    setRichNodes(nodes)
+  }, [props.answerText])
+  
   return (
     <View className='answer-popup'>
       <View className='answer-popup-header'>
@@ -31,7 +65,8 @@ export default function AnswerPopup (props: AnswerPopupProps) {
         props.answerText ? (
           <View className='answer-popup-content'>
               <View className='answer-popup-content-item'>
-                <Text>{props.answerText}</Text>
+                {/* <Text dangerouslySetInnerHTML={{ __html: htmlString }}></Text> */}
+                <RichText nodes={richNodes} />
               </View>
           </View>
         ) : (

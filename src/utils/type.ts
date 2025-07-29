@@ -13,6 +13,8 @@ export type ChatItem = {
   content: string
   role: ChatRoleT
   createdAt: string
+  isThumbUp?: boolean
+  isThumbDown?: boolean
   chunks?: ChatChunk[]
   isLoading?: boolean
   isStreaming?: boolean

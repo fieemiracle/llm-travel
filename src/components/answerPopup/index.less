@@ -50,26 +50,49 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
+    padding: 24rpx;
+    box-sizing: border-box;
 
-    .answer-popup-footer-feedback {
+    .answer-popup-footer-tools {
       display: flex;
       align-items: center;
-      gap: 36rpx;
+      gap: 24rpx;
 
-      .answer-popup-footer-feedback-up, .answer-popup-footer-feedback-down {
+      .tool-item {
         width: 48rpx;
         height: 48rpx;
         display: flex;
         justify-content: center;
         align-items: center;
+
+        .tool-item-image {
+          width: 48rpx;
+          height: 48rpx;
+        }
+
+        .feedback-up-image, .feedback-down-image {
+          width: 80%;
+          height: 80%;
+        }
+      }
+
+      .resend {
+        width: 40rpx;
+        height: 40rpx;
       }
     }
 
-    .answer-popup-footer-regenerate {
+    .regenerate {
       width: fit-content;
       height: fit-content;
+      font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
+      font-weight: 600;
+      color: #0d7d76;
       font-size: 28rpx;
       color: #333;
+      display: flex;
+      align-items: center;
+      gap: 12rpx;
     }
   }
 }

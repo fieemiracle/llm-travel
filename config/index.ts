@@ -38,7 +38,14 @@ export default defineConfig<'webpack5'>(async (merge, { command, mode }) => {
         pxtransform: {
           enable: true,
           config: {
-
+            platform: 'weapp',
+            designWidth: 750,
+            deviceRatio: {
+              640: 2.34 / 2,
+              750: 1,
+              375: 2,
+              828: 1.81 / 2
+            }
           }
         },
         cssModules: {

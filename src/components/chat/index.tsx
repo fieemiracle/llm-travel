@@ -1,4 +1,4 @@
-import { View } from '@tarojs/components'
+import { View, ScrollView } from '@tarojs/components'
 import FormInput from '@/components/formInput'
 import { useSelector, useDispatch } from 'react-redux'
 import { RootState } from '@/store'
@@ -20,10 +20,14 @@ import {
 } from '@/service/dmxapi'
 import Taro from '@tarojs/taro'
 import { TextDecoder } from 'text-encoding-shim'
-import { debugRequestHeaders } from '@/utils/debug'
+// import { debugRequestHeaders } from '@/utils/debug'
 import './index.less'
 
-export default function Chat() {
+type ChatProps = {
+  getInputHeight?: (height: number) => void
+}
+
+export default function Chat(props: ChatProps) {
   const chatList = useSelector((state: RootState) => state.chat.chatList)
   const queryText = useSelector((state: RootState) => state.chat.queryText)
   const dispatch = useDispatch()
@@ -34,6 +38,9 @@ export default function Chat() {
 
   // const [currentAnswerText, setCurrentAnswerText] = useState('')
   // const [currentAnswerChunks, setCurrentAnswerChunks] = useState<ChatChunk[]>([])
+  const chatContentRef = useRef<any>(null)
+
+  // TODO: 自动滚动到底部
 
   // 添加调试信息，监控 chatList 变化
   // useEffect(() => {
@@ -80,7 +87,7 @@ export default function Chat() {
     let updateChunks = [] as ChatChunk[]
     
     // 调试请求头
-    debugRequestHeaders()
+    // debugRequestHeaders()
     
     const payload = {
       model: DMXAPI_MODELS.GROK_3_BETA,
@@ -170,6 +177,8 @@ export default function Chat() {
                   isLoading: false,
                   isStreaming: true,
                   isFinished: false,
+                  isThumbUp: false,
+                  isThumbDown: false,
                 }))
               }
             }
@@ -203,7 +212,15 @@ export default function Chat() {
 
   return (
     <View className='chat-wrapper'>
-      <View className='chat-content'>
+      <ScrollView
+        className='chat-content'
+        ref={chatContentRef}
+        scrollY
+        scrollWithAnimation
+        enhanced
+        showScrollbar={false}
+        scrollTop={0}
+      >
         {
           chatList.map((item: ChatItem) => {
             return (
@@ -220,6 +237,8 @@ export default function Chat() {
                       isLoading={item.isLoading!}
                       isStreaming={item.isStreaming!}
                       isFinished={item.isFinished!}
+                      isThumbUp={item.isThumbUp!}
+                      isThumbDown={item.isThumbDown!}
                     />
                   )
                 }
@@ -227,9 +246,9 @@ export default function Chat() {
             )
           })
         }
-      </View>
+      </ScrollView>
       <View className='chat-input'>
-        <FormInput onSend={(query) => onSendQuery(query)} />
+        <FormInput onSend={(query) => onSendQuery(query)} onHeightChange={(height) => props.getInputHeight?.(height)} />
       </View>
     </View>
   )

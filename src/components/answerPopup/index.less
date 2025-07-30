@@ -1,10 +1,13 @@
+@import '@/assets/style/animation.less';
+
 .answer-popup {
-  width: 100%;
+  width: calc(100% - 48rpx);
   height: fit-content;
-  // padding: 20rpx;
-  // box-sizing: border-box;
+  margin: 0 auto;
   display: flex;
   flex-direction: column;
+  background: #fff;
+  border-radius: 20rpx;
 
   .answer-popup-header {
     display: flex;
@@ -12,14 +15,20 @@
     padding: 24rpx;
     box-sizing: border-box;
 
+
     .answer-popup-header-logo {
       width: 48rpx;
       height: 48rpx;
-      background: #90F9F2;
+      // background: #90F9F2;
       border-radius: 50%;
       display: flex;
       justify-content: center;
       align-items: center;
+
+      .logo-image {
+        width: 48rpx;
+        height: 48rpx;
+      }
     }
 
     .answer-popup-header-text {
@@ -34,7 +43,7 @@
   .answer-popup-content {
     width: 100%;
     height: fit-content;
-    padding: 24rpx;
+    padding: 0 24rpx;
     padding-top: 0;
     box-sizing: border-box;
 
@@ -74,6 +83,11 @@
           width: 80%;
           height: 80%;
         }
+
+        .resend-image {
+          width: 98%;
+          height: 98%;
+        }
       }
 
       .resend {
@@ -89,10 +103,17 @@
       font-weight: 600;
       color: #0d7d76;
       font-size: 28rpx;
-      color: #333;
+      // color: #333;
       display: flex;
       align-items: center;
       gap: 12rpx;
+    }
+
+    .loading-image {
+      width: 48rpx;
+      height: 48rpx;
+      will-change: transform;
+      animation: loadingLoop 2s linear infinite;
     }
   }
 }

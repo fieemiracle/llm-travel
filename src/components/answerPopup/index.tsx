@@ -4,6 +4,8 @@ import markdownit from 'markdown-it'
 // import { RichNodeT } from '@/utils/type'
 // import 'highlight.js/styles/default.css'
 // import 'normalize.css'
+import logoImage from '@/assets/iconfont/youxiaozhu.png'
+import loadingImage from '@/assets/iconfont/loading.png'
 import './index.less'
 import styles from './markdown.module.less'
 
@@ -60,6 +62,7 @@ export default function AnswerPopup(props: AnswerPopupProps) {
     <View className='answer-popup'>
       <View className='answer-popup-header'>
         <View className='answer-popup-header-logo'>
+          <Image className='logo-image' src={logoImage} />
         </View>
         <View className='answer-popup-header-text'>
           {props.isLoading && <Text>{AnswerPopupStatus.LOADING}</Text>}
@@ -81,7 +84,7 @@ export default function AnswerPopup(props: AnswerPopupProps) {
         )
       }
       {
-        props.isFinished && (
+        props.isFinished ? (
           <View className='answer-popup-footer'>
             <View className='answer-popup-footer-tools'>
               {/* 复制 */}
@@ -114,8 +117,13 @@ export default function AnswerPopup(props: AnswerPopupProps) {
               </View>
             </View>
             <View className='regenerate'>
-              <Text>* AI生成</Text>
+              <Text>*</Text>
+              <Text>AI生成</Text>
             </View>
+          </View>
+        ) : (
+          <View className='answer-popup-footer'>
+            <Image className='loading-image' src={loadingImage}></Image>
           </View>
         )
       }

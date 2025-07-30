@@ -23,13 +23,26 @@ export type ChatActionReturnT = {
 // common相关
 export interface CommonStateT {
   currentRouteName: RouterNameValues
+  userInfo: UserInfoT | null
 }
 
 export const enum CommonActionType {
   SET_CURRENT_ROUTE_NAME = 'SET_CURRENT_ROUTE_NAME',
+  SET_USER_INFO = 'SET_USER_INFO',
 }
 
 export type CommonActionReturnT = {
   type: CommonActionType
   currentRouteName?: RouterNameValues
+  userInfo?: UserInfoT | null
+}
+
+export interface UserInfoT {
+  nickName: string
+  avatarUrl: string
+  city?: string
+  country?: string
+  province?: string
+  gender?: number
+  language?: string
 }

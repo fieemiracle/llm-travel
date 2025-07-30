@@ -25,3 +25,20 @@ export function formatArrayByCustomLength<T>(arr: T[], n: number): T[][] {
   // console.log('切割后的数组为=====', length, result)
   return result;
 }
+
+/**
+ * 生成随机哈希
+ * @param chars 字符串
+ * @param len 长度
+ * @returns 随机哈希
+ */
+export const generateRandomHash = (chars?: string, length?: number) => {
+  const str = chars || '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ,.!@#$%^&*()';
+  const len = length || 10
+  let hash = '';
+  for (let i = 0; i < len; i++) {
+    const randomIndex = Math.floor(Math.random() * str.length);
+    hash += str[randomIndex];
+  }
+  return hash;
+};

@@ -1,5 +1,6 @@
 import { PropsWithChildren } from 'react'
 import { useLaunch } from '@tarojs/taro'
+// @ts-ignore
 import { Provider } from 'react-redux'
 import store from '@/store'
 import './app.less'

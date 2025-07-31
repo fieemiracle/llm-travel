@@ -1,12 +1,15 @@
 import { View, Textarea } from '@tarojs/components'
 import { useState, useEffect, useRef } from 'react'
 import Taro from '@tarojs/taro'
-import { InputType, InputTypeValues } from '@/utils/enum'
+import { GlobalStatus, InputType, InputTypeValues } from '@/utils/enum'
 import { MIN_INPUT_HEIGHT, MAX_LINE_COUNT } from '@/utils/const'
-import './index.less'
-import IconFont from '../iconfont'
+import IconFont from '@/components/common/iconfont'
 import { ICONFONT_ICONS } from '@/utils/iconfont'
-
+import { RootState } from '@/store'
+import { useSelector } from 'react-redux'
+import { setQuickInputText } from '@/store/actions/common'
+import { useDispatch } from 'react-redux'
+import './index.less'
 
 type FormInputProps = {
   onSend: (value: string) => void
@@ -14,14 +17,17 @@ type FormInputProps = {
 }
 
 export default function FormInput(props: FormInputProps) {
+  // store
+  const quickInputText = useSelector((state: RootState) => state.common.quickInputText)
+  const dispatch = useDispatch()
 
-  // 状态管理
+  // state
   const [inputType, setInputType] = useState<InputTypeValues>(InputType.KEYBOARD)
   const [inputValue, setInputValue] = useState('')
   const [inputLine, setInputLine] = useState(1)
-  const [wrapperHeight, setWrapperHeight] = useState(0) // 新增高度状态
-  console.log('wrapperHeight>>>>>>>', wrapperHeight)
   const wrapperRef = useRef<any>(null) // 新增ref
+
+  const globalStatus = useSelector((state: RootState) => state.common.globalStatus)
 
   // 获取元素高度的方法
   const getWrapperHeight = () => {
@@ -32,18 +38,18 @@ export default function FormInput(props: FormInputProps) {
         const firstRect = rect[0]
         if (firstRect) {
           const height = firstRect.height
-          setWrapperHeight(height)
+          // setWrapperHeight(height)
           // 调用父组件的高度变化回调
           props.onHeightChange?.(height)
-          console.log('form-input-wrapper 高度1:', height, 'px')
+          // console.log('form-input-wrapper 高度1:', height, 'px')
         }
       } else if (rect && !Array.isArray(rect)) {
         // 如果是单个对象
         const height = rect.height
-        setWrapperHeight(height)
+        // setWrapperHeight(height)
         // 调用父组件的高度变化回调
         props.onHeightChange?.(height)
-        console.log('form-input-wrapper 高度2:', height, 'px')
+        // console.log('form-input-wrapper 高度2:', height, 'px')
       }
     }).exec()
   }
@@ -57,6 +63,13 @@ export default function FormInput(props: FormInputProps) {
     
     return () => clearTimeout(timer)
   }, [inputValue, inputLine, inputType])
+
+  useEffect(() => {
+    if (quickInputText) {
+      setInputValue(quickInputText)
+      dispatch(setQuickInputText(''))
+    }
+  }, [quickInputText])
 
   // 组件挂载时获取初始高度
   useEffect(() => {
@@ -132,12 +145,24 @@ export default function FormInput(props: FormInputProps) {
           }
         </View>
         {
-          inputValue && (
+          inputValue && globalStatus === GlobalStatus.FINISHED && (
             <View className='form-input-item-right'>
               <View className='form-input-item-right-icon' onClick={() => onSend()}>
-                {/* <Image src={sendIcon} className='form-input-item-right-icon-img' /> */}
                 <IconFont 
                   type={ICONFONT_ICONS.SEND}
+                  color='#90F9F2'
+                  size={24}
+                />
+              </View>
+            </View>
+          )
+        }
+        {
+          inputValue && (globalStatus === GlobalStatus.STREAMING || globalStatus === GlobalStatus.LOADING) && (
+            <View className='form-input-item-right'>
+              <View className='form-input-item-right-icon' onClick={() => onSend()}>
+                <IconFont 
+                  type={ICONFONT_ICONS.STOP}
                   color='#90F9F2'
                   size={24}
                 />

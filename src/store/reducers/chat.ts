@@ -72,6 +72,11 @@ export const chatReducer = (state = initialState, action: ChatActionReturnT) => 
         ...state,
         selectedChatIds: [],
       }
+    case ChatActionType.SET_GLOBAL_STATUS:
+      return {
+        ...state,
+        globalStatus: action.globalStatus!,
+      }
     default:
       return state
   }

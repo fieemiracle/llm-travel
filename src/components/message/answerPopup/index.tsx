@@ -23,6 +23,7 @@ type AnswerPopupProps = {
   isFinished: boolean
   isThumbUp: boolean
   isThumbDown: boolean
+  isLast: boolean
   chatId: string // 添加chatId用于更新状态
   onRegenerate?: (chatId: string) => void // 添加重新生成回调函数
 }
@@ -183,7 +184,10 @@ export default function AnswerPopup(props: AnswerPopupProps) {
               </View>
               {/* 分享 */}
               <View className='tool-item share' onClick={onShare}>
-                <Text className='share-icon'>📤</Text>
+                <IconFont 
+                  type={ICONFONT_ICONS.SHARE1}
+                  size={24}
+                />
               </View>
             </View>
             <View className='regenerate'>

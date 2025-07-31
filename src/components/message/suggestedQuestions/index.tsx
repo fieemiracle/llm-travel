@@ -40,7 +40,7 @@ export default function SuggestedQuestions(props: SuggestedQuestionsProps) {
   const recommendedQuestions = useMemo(() => {
     return questions?.length ? questions : defaultQuestions
   }, [])
-  console.log('questions>>>>>>>', recommendedQuestions)
+  // console.log('questions>>>>>>>', recommendedQuestions)
 
   const handleQuestionClick = (question: string) => {
     onQuestionClick?.(question)

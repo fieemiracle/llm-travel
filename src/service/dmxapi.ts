@@ -15,13 +15,17 @@ export const DMXAPI_MODELS = {
   GEMINI_2_5_PRO_EXP_03_25: 'gemini-2.5-pro-exp-03-25',
   GROK_3_BETA: 'grok-3',
   META_LLAMA_3_1_8B_INSTRUCT: 'meta-llama/Meta-Llama-3.1-8B-Instruct',
-}
+  GPT_3_5_TURBO: 'gpt-3.5-turbo',
+  DEEPSEEK_CHAT: 'deepseek-chat',
+} as const
 
 export const DMXAPI_REQUEST_BASE_URL = 'https://www.dmxapi.cn'
 
 export const DMXAPI_REQUEST_URL = `${DMXAPI_REQUEST_BASE_URL}/v1/chat/completions`
 
-export const DMXAPI_REQUEST_API_KEY = 'sk-tJl5fl5Zl0n0Eb032JKJROIhXLL652zc6gqkh7wSDRZiixSD'
+export const OPENAI_REQUEST_URL = 'https://api.deepseek.com/v1/chat/completions'
+
+export const DMXAPI_REQUEST_API_KEY = 'sk-6f1f6f2f60634380b4ef8c8a24bab269'
 
 // 获取当前环境
 const getCurrentEnv = () => {
@@ -48,16 +52,16 @@ export const getRequestHeaders = () => {
   if (currentEnv === 'h5') {
     return {
       ...baseHeaders,
-      'User-Agent': 'DMXAPI/1.0.0 (https://www.dmxapi.cn)',
+      // 'User-Agent': 'DMXAPI/1.0.0 (https://www.dmxapi.cn)',
     }
   }
 
   // 小程序环境使用自定义头部
   return {
     ...baseHeaders,
-    'X-Client-Type': 'DMXAPI/1.0.0',
+    // 'X-Client-Type': 'DMXAPI/1.0.0',
     'X-Client-Platform': currentEnv,
-    'X-Client-Url': 'https://www.dmxapi.cn',
+    // 'X-Client-Url': 'https://www.dmxapi.cn',
   }
 }
 

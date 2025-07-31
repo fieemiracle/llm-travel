@@ -1,12 +1,11 @@
-import { View, Textarea, Image } from '@tarojs/components'
+import { View, Textarea } from '@tarojs/components'
 import { useState, useEffect, useRef } from 'react'
 import Taro from '@tarojs/taro'
 import { InputType, InputTypeValues } from '@/utils/enum'
 import { MIN_INPUT_HEIGHT, MAX_LINE_COUNT } from '@/utils/const'
-import keyboardIcon from '@/assets/iconfont/keyboard.png'
-import audioIcon from '@/assets/iconfont/audio.png'
-import sendIcon from '@/assets/iconfont/send.png'
 import './index.less'
+import IconFont from '../iconfont'
+import { ICONFONT_ICONS } from '@/utils/iconfont'
 
 
 type FormInputProps = {
@@ -90,14 +89,24 @@ export default function FormInput(props: FormInputProps) {
           {
             inputType === InputType.KEYBOARD && (
               <View className='form-input-item-left-icon' onClick={() => setInputType(InputType.AUDIO)}>
-                <Image src={audioIcon} className='form-input-item-left-icon-img' />
+                {/* <Image src={audioIcon} className='form-input-item-left-icon-img' /> */}
+                <IconFont 
+                  type={ICONFONT_ICONS.AUDIO}
+                  color='#90F9F2'
+                  size={24}
+                />
               </View>
             )
           }
           {
             inputType === InputType.AUDIO && (
               <View className='form-input-item-left-icon' onClick={() => setInputType(InputType.KEYBOARD)}>
-                <Image src={keyboardIcon} className='form-input-item-left-icon-img' />
+                {/* <Image src={keyboardIcon} className='form-input-item-left-icon-img' /> */}
+                <IconFont 
+                  type={ICONFONT_ICONS.KEYBOARD}
+                  color='#90F9F2'
+                  size={24}
+                />
               </View>
             )
           }
@@ -126,7 +135,12 @@ export default function FormInput(props: FormInputProps) {
           inputValue && (
             <View className='form-input-item-right'>
               <View className='form-input-item-right-icon' onClick={() => onSend()}>
-                <Image src={sendIcon} className='form-input-item-right-icon-img' />
+                {/* <Image src={sendIcon} className='form-input-item-right-icon-img' /> */}
+                <IconFont 
+                  type={ICONFONT_ICONS.SEND}
+                  color='#90F9F2'
+                  size={24}
+                />
               </View>
             </View>
           )
@@ -135,34 +149,3 @@ export default function FormInput(props: FormInputProps) {
     </View>
   )
 }
-
-/*
-使用示例：
-
-// 在父组件中使用
-import FormInput from '@/components/formInput'
-
-function ParentComponent() {
-  const [inputHeight, setInputHeight] = useState(0)
-
-  const handleHeightChange = (height: number) => {
-    setInputHeight(height)
-    console.log('输入框高度变化:', height)
-    // 可以根据高度变化做其他处理，比如调整页面布局
-  }
-
-  const handleSend = (value: string) => {
-    console.log('发送消息:', value)
-  }
-
-  return (
-    <View>
-      <FormInput 
-        onSend={handleSend}
-        onHeightChange={handleHeightChange}
-      />
-      <View>当前输入框高度: {inputHeight}px</View>
-    </View>
-  )
-}
-*/

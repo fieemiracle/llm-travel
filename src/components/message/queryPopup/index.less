@@ -3,6 +3,8 @@
   height: fit-content;
   padding: 20rpx;
   box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
 
   .query-popup-content {
     width: fit-content;
@@ -17,6 +19,26 @@
     .query-popup-content-text {
       font-size: 28rpx;
       line-height: 28rpx;
+    }
+  }
+
+  .query-popup-footer {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    margin-top: 20rpx;
+    height: fit-content;
+    padding-right: 20rpx;
+    box-sizing: border-box;
+    width: 100%;
+
+    .query-popup-footer-item {
+      margin-left: 24rpx;
+      width: 48rpx;
+      height: 48rpx;
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
   }
 }

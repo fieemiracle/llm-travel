@@ -73,10 +73,14 @@
         display: flex;
         justify-content: center;
         align-items: center;
+        cursor: pointer;
+        user-select: none;
+        -webkit-tap-highlight-color: transparent;
 
         .tool-item-image {
           width: 48rpx;
           height: 48rpx;
+          pointer-events: none;
         }
 
         .feedback-up-image, .feedback-down-image {
@@ -109,7 +113,7 @@
       gap: 12rpx;
     }
 
-    .loading-image {
+    .loading-icon {
       width: 48rpx;
       height: 48rpx;
       will-change: transform;

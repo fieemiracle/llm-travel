@@ -2,7 +2,7 @@ import { View, ScrollView } from '@tarojs/components'
 import FormInput from '@/components/common/formInput'
 import { useSelector, useDispatch } from 'react-redux'
 import { RootState } from '@/store'
-import { addChatItem, setQueryText, updateChatItem } from '@/store/actions/chat'
+import { addChatItem, setQueryText, updateChatItem, clearChatItemContent } from '@/store/actions/chat'
 import { ChatRole } from '@/utils/enum'
 import { ChatChunk, ChatItem, ChatRoleT } from '@/utils/type'
 import { generateRandomHash } from '@/utils/tools'
@@ -39,6 +39,9 @@ export default function Chat(props: ChatProps) {
   // const [currentAnswerText, setCurrentAnswerText] = useState('')
   // const [currentAnswerChunks, setCurrentAnswerChunks] = useState<ChatChunk[]>([])
   const chatContentRef = useRef<any>(null)
+  
+  // 存储当前的请求任务，用于清理
+  const currentRequestTaskRef = useRef<any>(null)
 
   // TODO: 自动滚动到底部
 
@@ -82,22 +85,26 @@ export default function Chat(props: ChatProps) {
 
   // sse
   const sendMessage = useCallback((userChatItem: ChatItem, assistantChatItem: ChatItem) => {
-    console.log('sendMessage>>>>>>>', userChatItem, assistantChatItem)
+    // console.log('sendMessage>>>>>>>', userChatItem, assistantChatItem)
     let updateContent = ''
     let updateChunks = [] as ChatChunk[]
     
     // 调试请求头
     // debugRequestHeaders()
     
+    // 带上上下文 - 手动构建包含新消息的列表
+    const currentChatList = [...chatListRef.current, userChatItem, assistantChatItem]
+    console.log('currentChatList>>>>>>>', currentChatList)
+    const formatMessages = currentChatList.map((chatItem: ChatItem) => {
+      return {
+        role: chatItem.role,
+        content: chatItem.content
+      }
+    })
     const payload = {
       model: DMXAPI_MODELS.GROK_3_BETA,
       stream: true,
-      messages: [
-        {
-          role: userChatItem.role,
-          content: userChatItem.content
-        }
-      ]
+      messages: formatMessages
     }
     const requestTask = Taro.request({
       url: DMXAPI_REQUEST_URL,
@@ -118,6 +125,7 @@ export default function Chat(props: ChatProps) {
         console.log('sendMessage fail>>>>>>>', err)
         // 由客户端断开链接
         // requestTask.abort()
+        // requestTask.offChunkReceived(() => {})
         // 其他逻辑
         Taro.showToast({
           title: '发送失败',
@@ -125,6 +133,9 @@ export default function Chat(props: ChatProps) {
         })
       }
     })
+    
+    // 保存请求任务引用
+    currentRequestTaskRef.current = requestTask
 
     // 接收数据
     requestTask.onChunkReceived((chunk: any) => {
@@ -139,7 +150,10 @@ export default function Chat(props: ChatProps) {
       for (const chunkItem of chunks) {
         // 结束处理
         if (chunkItem.includes(endTag)) {
-          requestTask.abort()
+          // requestTask.abort()
+          setTimeout(() => {
+            requestTask.offChunkReceived(() => {})
+          }, 1000)
           dispatch(updateChatItem({
             chatId: assistantChatItem.chatId,
             isLoading: false,
@@ -159,10 +173,7 @@ export default function Chat(props: ChatProps) {
             if (delta && delta.content) {
               // console.log('delta.content>>>>>>>', delta.content)
               // 使用 ref 中的最新 chatList，避免闭包问题
-              const currentChatList = chatListRef.current
-              const chatItem = currentChatList.find((item) => item.chatId === assistantChatItem.chatId)
-              // console.log('currentChatList>>>>>>>', currentChatList)
-              // const preContent = chatItem?.content || ''
+              const chatItem = currentChatList.find((item) => item?.chatId === assistantChatItem.chatId)
               updateContent = updateContent + delta.content
               updateChunks = [...updateChunks, {
                 id,
@@ -190,6 +201,37 @@ export default function Chat(props: ChatProps) {
     })
   }, [dispatch])
 
+  // 重新生成处理函数
+  const handleRegenerate = useCallback((chatId: string) => {
+    console.log('handleRegenerate>>>>>>>', chatId)
+    
+    // 找到要重新生成的聊天项
+    const chatItem = chatList.find(item => item.chatId === chatId)
+    if (!chatItem) {
+      console.log('未找到对应的聊天项')
+      return
+    }
+    
+    // 找到对应的用户消息（通常是前一条消息）
+    const userMessageIndex = chatList.findIndex(item => item.chatId === chatId)
+    if (userMessageIndex <= 0) {
+      console.log('未找到对应的用户消息')
+      return
+    }
+    
+    const userChatItem = chatList[userMessageIndex - 1]
+    if (!userChatItem || userChatItem.role !== ChatRole.USER) {
+      console.log('前一条消息不是用户消息')
+      return
+    }
+    
+    // 清除当前回答的内容
+    dispatch(clearChatItemContent(chatId))
+    
+    // 重新发送请求
+    sendMessage(userChatItem, { ...chatItem, content: '', chunks: [] } as ChatItem)
+  }, [dispatch, chatList, sendMessage])
+
   const onSendQuery = useCallback((query: string) => {
     const userChatItem = formatChatItem(query, ChatRole.USER)
     dispatch(addChatItem(userChatItem))
@@ -209,6 +251,16 @@ export default function Chat(props: ChatProps) {
       sendMessage(userChatItem, assistantChatItem)
     }
   }, [queryText, dispatch, formatChatItem,sendMessage])
+
+  // 组件卸载时清理请求任务
+  useEffect(() => {
+    return () => {
+      if (currentRequestTaskRef.current) {
+        currentRequestTaskRef.current.offChunkReceived(() => {})
+        currentRequestTaskRef.current.abort()
+      }
+    }
+  }, [])
 
   return (
     <View className='chat-wrapper'>
@@ -239,6 +291,8 @@ export default function Chat(props: ChatProps) {
                       isFinished={item.isFinished!}
                       isThumbUp={item.isThumbUp!}
                       isThumbDown={item.isThumbDown!}
+                      chatId={item.chatId}
+                      onRegenerate={handleRegenerate}
                     />
                   )
                 }

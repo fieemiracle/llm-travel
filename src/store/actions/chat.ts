@@ -17,6 +17,23 @@ export const updateChatItem = (chatItem: Partial<ChatItem>) => {
   }
 }
 
+// 清除指定chatId的content
+export const clearChatItemContent = (chatId: string) => {
+  return {
+    type: ChatActionType.UPDATE_CHAT_ITEM,
+    chatItem: {
+      chatId,
+      content: '',
+      chunks: [],
+      isLoading: true,
+      isStreaming: false,
+      isFinished: false,
+      isThumbUp: false,
+      isThumbDown: false,
+    },
+  }
+}
+
 // 清空聊天列表
 export const clearChatList = () => {
   return {

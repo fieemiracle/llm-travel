@@ -3,6 +3,7 @@ import { HOME_WELCOME_TEXT } from '@/utils/const'
 import { formatArrayByCustomLength } from '@/utils/tools'
 import { HOME_BOTTOM_TIPS } from '@/mock'
 import FormInput from '@/components/common/formInput'
+import TravelRoute from '@/components/travelRoute'
 import './index.less'
 
 type HomeProps = {
@@ -36,6 +37,7 @@ export default function Home(props: HomeProps) {
       </View>
       {/* 内容区 */}
       <View className='home-content'>
+        <TravelRoute />
       </View>
       <View className='home-footer'>
         {/* 底部词条 */}

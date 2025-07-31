@@ -1,0 +1,96 @@
+.carousel-container {
+  position: relative;
+  width: 100%;
+  height: 320rpx;
+  border-radius: 24rpx;
+  overflow: hidden;
+
+  .carousel-wrapper {
+    position: relative;
+    width: 100%;
+    height: 100%;
+
+    .carousel-item {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      opacity: 0;
+      transition: opacity 0.5s ease-in-out;
+
+      &.active {
+        opacity: 1;
+      }
+
+      .carousel-image {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+
+      .carousel-content {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        background: linear-gradient(transparent, rgba(0, 0, 0, 0.6));
+        padding: 40rpx 32rpx 24rpx;
+        color: #fff;
+
+        .carousel-tags {
+          display: flex;
+          gap: 12rpx;
+          margin-bottom: 16rpx;
+
+          .carousel-tag {
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 8rpx;
+            padding: 6rpx 12rpx;
+
+            .carousel-tag-text {
+              font-size: 20rpx;
+              color: #fff;
+              font-weight: 500;
+            }
+          }
+        }
+
+        .carousel-title {
+          font-size: 36rpx;
+          font-weight: 600;
+          margin-bottom: 8rpx;
+          display: block;
+        }
+
+        .carousel-subtitle {
+          font-size: 24rpx;
+          opacity: 0.8;
+          display: block;
+        }
+      }
+    }
+  }
+
+  .carousel-indicators {
+    position: absolute;
+    bottom: 16rpx;
+    right: 32rpx;
+    display: flex;
+    gap: 12rpx;
+
+    .carousel-dot {
+      width: 12rpx;
+      height: 12rpx;
+      background: rgba(255, 255, 255, 0.4);
+      border-radius: 50%;
+      transition: all 0.3s;
+
+      &.active {
+        background: #fff;
+        width: 24rpx;
+        border-radius: 6rpx;
+      }
+    }
+  }
+} 

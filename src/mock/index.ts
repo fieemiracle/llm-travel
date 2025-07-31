@@ -25,6 +25,122 @@ export const HOME_BOTTOM_TIPS = [
   '🧳 旅行必备好物清单'
 ]
 
+// 轮播图数据
+export const CAROUSEL_DATA = [
+  {
+    id: '1',
+    title: '湖海园韵',
+    subtitle: '1天15个地点',
+    image: 'https://picsum.photos/600/300?random=1',
+    tags: ['游', '吃', '娱']
+  },
+  {
+    id: '2',
+    title: '故宫·天安门游',
+    subtitle: '1天14个地点',
+    image: 'https://picsum.photos/600/300?random=2',
+    tags: ['游', '吃', '娱']
+  },
+  {
+    id: '3',
+    title: '经典双园',
+    subtitle: '1天14个地点',
+    image: 'https://picsum.photos/600/300?random=3',
+    tags: ['游', '吃', '娱']
+  }
+]
+
+// 天气数据
+export const WEATHER_DATA = {
+  city: '北京',
+  temperature: '23°~30°',
+  condition: 'sunny',
+  description: '晴天'
+}
+
+// 推荐内容tabs
+export const RECOMMEND_TABS = [
+  { id: 'travel', name: '我的行程', active: false },
+  { id: 'classic', name: '经典必游', active: true },
+  { id: 'couple', name: '情侣约会', active: false },
+  { id: 'parent', name: '亲子带娃', active: false }
+]
+
+// 推荐内容数据
+export const RECOMMEND_DATA = {
+  travel: [
+    {
+      id: '1',
+      title: '我的北京3日游',
+      duration: '3天',
+      spots: 12,
+      image: 'https://picsum.photos/200/150?random=10'
+    },
+    {
+      id: '2',
+      title: '我的上海周末游',
+      duration: '2天',
+      spots: 8,
+      image: 'https://picsum.photos/200/150?random=11'
+    }
+  ],
+  classic: [
+    {
+      id: '1',
+      title: '湖海园韵',
+      duration: '1天',
+      spots: 15,
+      image: 'https://picsum.photos/200/150?random=20'
+    },
+    {
+      id: '2',
+      title: '故宫·天安门游',
+      duration: '1天',
+      spots: 14,
+      image: 'https://picsum.photos/200/150?random=21'
+    },
+    {
+      id: '3',
+      title: '经典双园',
+      duration: '1天',
+      spots: 14,
+      image: 'https://picsum.photos/200/150?random=22'
+    }
+  ],
+  couple: [
+    {
+      id: '1',
+      title: '浪漫夜景游',
+      duration: '1天',
+      spots: 6,
+      image: 'https://picsum.photos/200/150?random=30'
+    },
+    {
+      id: '2',
+      title: '情侣咖啡店打卡',
+      duration: '半天',
+      spots: 4,
+      image: 'https://picsum.photos/200/150?random=31'
+    }
+  ],
+  parent: [
+    {
+      id: '1',
+      title: '亲子游乐园',
+      duration: '1天',
+      spots: 5,
+      image: 'https://picsum.photos/200/150?random=40'
+    },
+    {
+      id: '2',
+      title: '科技馆探索',
+      duration: '半天',
+      spots: 3,
+      image: 'https://picsum.photos/200/150?random=41'
+    }
+  ]
+}
+
 // 历史对话数据
 export const MOCK_CHAT_HISTORY = [
   {

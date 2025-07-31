@@ -125,7 +125,11 @@ export default function Settings() {
   const aboutUs = () => {
     Taro.showModal({
       title: '关于我们',
-      content: '🚀 智能旅游规划助手\n\n我们致力于为用户提供最智能、最便捷的旅行规划服务。只需输入目的地和天数，就能为您量身定制完美的旅行攻略。\n\n适合个人游、家庭游、情侣游等各种出行需求。',
+      content: `
+        🚀 智能旅游规划助手
+        我们致力于为用户提供最智能、最便捷的旅行规划服务。只需输入目的地和天数，就能为您量身定制完美的旅行攻略。
+        适合个人游、家庭游、情侣游等各种出行需求。
+      `,
       showCancel: false,
       confirmText: '知道了'
     })
@@ -135,7 +139,13 @@ export default function Settings() {
   const privacyPolicy = () => {
     Taro.showModal({
       title: '隐私政策',
-      content: '我们非常重视您的隐私保护：\n\n• 不会收集您的个人敏感信息\n• 聊天记录仅保存在本地设备\n• 不会向第三方分享您的数据\n• 您可以随时删除本地数据',
+      content: `
+        我们非常重视您的隐私保护：
+        • 不会收集您的个人敏感信息
+        • 聊天记录仅保存在本地设备
+        • 不会向第三方分享您的数据
+        • 您可以随时删除本地数据
+      `,
       showCancel: false,
       confirmText: '我知道了'
     })
@@ -148,9 +158,9 @@ export default function Settings() {
       content: `
         感谢您使用智能旅游规划助手！
         使用本应用即表示您同意：
-        • 合理使用本应用功能
-        • 不进行恶意操作
-        • 遵守相关法律法规
+          • 合理使用本应用功能
+          • 不进行恶意操作
+          • 遵守相关法律法规
         我们将持续优化服务体验。
       `,
       showCancel: false,
@@ -269,7 +279,7 @@ export default function Settings() {
 
         {/* 版权信息 */}
         <View className='copyright-section'>
-          <Text className='copyright-text'>© 2024 智能旅游规划助手</Text>
+          <Text className='copyright-text'>© 2025 旅团子</Text>
           <Text className='copyright-text'>让您的旅行更轻松</Text>
         </View>
       </View>

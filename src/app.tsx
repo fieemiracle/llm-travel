@@ -3,6 +3,8 @@ import { useLaunch } from '@tarojs/taro'
 // @ts-ignore
 import { Provider } from 'react-redux'
 import store from '@/store'
+
+import 'animate.css'
 import './app.less'
 
 function App({ children }: PropsWithChildren<any>) {

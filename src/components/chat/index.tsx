@@ -8,6 +8,7 @@ import { ChatChunk, ChatItem, ChatRoleT } from '@/utils/type'
 import { generateRandomHash } from '@/utils/tools'
 import QueryPopup from '@/components/message/queryPopup'
 import AnswerPopup from '@/components/message/answerPopup'
+import SuggestedQuestions from '@/components/message/suggestedQuestions'
 import { useEffect, useCallback, useRef } from 'react'
 import {
   DMXAPI_REQUEST_URL,
@@ -264,6 +265,14 @@ export default function Chat(props: ChatProps) {
 
   return (
     <View className='chat-wrapper'>
+      {
+        !chatList.length && (
+          <SuggestedQuestions 
+            questions={[]}
+            onQuestionClick={() => {}}
+          />
+        )
+      }
       <ScrollView
         className='chat-content'
         ref={chatContentRef}

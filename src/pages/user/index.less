@@ -1,0 +1,285 @@
+.user-wrapper {
+  width: 100%;
+  height: 100vh;
+  background: linear-gradient(to bottom, #A9F7F9 0%, #A9FDF0 200rpx, #FFFFFF 200rpx);
+  position: relative;
+  display: flex;
+  flex-direction: column;
+
+  // 用户信息区域
+  .user-info-section {
+    padding: 40rpx 64rpx;
+    
+    .user-info {
+      display: flex;
+      align-items: center;
+      gap: 32rpx;
+      
+      .user-avatar {
+        width: 120rpx;
+        height: 120rpx;
+        background: #FFF;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        box-shadow: 0 4rpx 12rpx rgba(0, 0, 0, 0.1);
+        
+        .avatar-emoji {
+          font-size: 48rpx;
+        }
+      }
+      
+      .user-details {
+        flex: 1;
+        
+        .user-name {
+          font-size: 40rpx;
+          font-weight: 600;
+          color: #050A14;
+          margin-bottom: 8rpx;
+          display: block;
+        }
+        
+        .user-companion {
+          font-size: 28rpx;
+          color: #666;
+          display: block;
+        }
+      }
+      
+      .user-settings {
+        .settings-icon {
+          width: 80rpx;
+          height: 80rpx;
+          background: rgba(255, 255, 255, 0.8);
+          border-radius: 50%;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          font-size: 32rpx;
+        }
+      }
+    }
+  }
+
+  // Tab切换
+  .tab-section {
+    display: flex;
+    padding: 0 64rpx;
+    margin-bottom: 40rpx;
+    
+    .tab-item {
+      position: relative;
+      margin-right: 80rpx;
+      padding-bottom: 16rpx;
+      cursor: pointer;
+      
+      .tab-text {
+        font-size: 36rpx;
+        color: #999;
+        font-weight: 500;
+      }
+      
+      &.active {
+        .tab-text {
+          color: #050A14;
+          font-weight: 600;
+        }
+        
+        .tab-line {
+          position: absolute;
+          bottom: 0;
+          left: 0;
+          right: 0;
+          height: 6rpx;
+          background: #00CCC9;
+          border-radius: 3rpx;
+        }
+      }
+    }
+  }
+
+  // 内容区域
+  .content-section {
+    flex: 1;
+    padding: 0 32rpx;
+    overflow-y: auto;
+    padding-bottom: 40rpx;
+    min-height: 0; // 让flex子项能够缩小
+    
+    .content-list {
+      .chat-item {
+        background: #FFF;
+        border-radius: 24rpx;
+        padding: 32rpx;
+        margin-bottom: 24rpx;
+        box-shadow: 0 4rpx 12rpx rgba(0, 0, 0, 0.05);
+        
+        .chat-content {
+          margin-bottom: 24rpx;
+          
+          .chat-title {
+            font-size: 32rpx;
+            font-weight: 600;
+            color: #050A14;
+            margin-bottom: 24rpx;
+            display: block;
+          }
+          
+          .chat-images {
+            display: flex;
+            gap: 16rpx;
+            
+            .chat-image {
+              width: 120rpx;
+              height: 120rpx;
+              border-radius: 16rpx;
+              object-fit: cover;
+            }
+          }
+        }
+        
+        .chat-info {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          
+          .chat-messages {
+            font-size: 28rpx;
+            color: #666;
+          }
+          
+          .chat-date {
+            font-size: 28rpx;
+            color: #999;
+          }
+        }
+      }
+      
+      .travel-item {
+        background: #FFF;
+        border-radius: 24rpx;
+        padding: 32rpx;
+        margin-bottom: 24rpx;
+        display: flex;
+        gap: 24rpx;
+        box-shadow: 0 4rpx 12rpx rgba(0, 0, 0, 0.05);
+        
+        .travel-thumbnail {
+          width: 160rpx;
+          height: 160rpx;
+          border-radius: 16rpx;
+          object-fit: cover;
+          flex-shrink: 0;
+        }
+        
+        .travel-content {
+          flex: 1;
+          
+          .travel-tags {
+            display: flex;
+            gap: 12rpx;
+            margin-bottom: 16rpx;
+            
+            .travel-tag {
+              background: #E3FFFB;
+              border-radius: 8rpx;
+              padding: 8rpx 16rpx;
+              
+              .travel-tag-text {
+                font-size: 24rpx;
+                color: #00CCC9;
+                font-weight: 500;
+              }
+            }
+          }
+          
+          .travel-title {
+            font-size: 32rpx;
+            font-weight: 600;
+            color: #050A14;
+            margin-bottom: 12rpx;
+            display: block;
+          }
+          
+          .travel-info {
+            display: flex;
+            gap: 24rpx;
+            margin-bottom: 12rpx;
+            
+            .travel-duration, .travel-spots {
+              font-size: 28rpx;
+              color: #666;
+            }
+          }
+          
+          .travel-places {
+            .travel-places-text {
+              font-size: 28rpx;
+              color: #999;
+              line-height: 1.4;
+            }
+          }
+        }
+      }
+    }
+    
+    // 空内容状态
+    .empty-content {
+      text-align: center;
+      padding: 120rpx 32rpx;
+      
+      .empty-text {
+        font-size: 32rpx;
+        color: #666;
+        margin-bottom: 16rpx;
+        display: block;
+      }
+      
+      .empty-desc {
+        font-size: 28rpx;
+        color: #999;
+        display: block;
+      }
+    }
+  }
+
+  // 在线状态
+  .online-status {
+    text-align: center;
+    padding: 40rpx 0;
+    
+    .online-text {
+      font-size: 28rpx;
+      color: #999;
+    }
+  }
+
+  // 开始新对话按钮
+  .new-chat-btn {
+    position: fixed;
+    bottom: 40rpx;
+    right: 40rpx;
+    background: #050A14;
+    border-radius: 80rpx;
+    width: 300rpx;
+    height: 120rpx;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 8rpx 24rpx rgba(5, 10, 20, 0.3);
+    z-index: 100;
+    
+    .new-chat-text {
+      color: #FFF;
+      font-size: 48rpx;
+      font-weight: 500;
+    }
+    
+    &:active {
+      transform: scale(0.95);
+      transition: transform 0.1s;
+    }
+  }
+}

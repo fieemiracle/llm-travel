@@ -145,7 +145,14 @@ export default function Settings() {
   const userAgreement = () => {
     Taro.showModal({
       title: '用户协议',
-      content: '感谢您使用智能旅游规划助手！\n\n使用本应用即表示您同意：\n• 合理使用本应用功能\n• 不进行恶意操作\n• 遵守相关法律法规\n\n我们将持续优化服务体验。',
+      content: `
+        感谢您使用智能旅游规划助手！
+        使用本应用即表示您同意：
+        • 合理使用本应用功能
+        • 不进行恶意操作
+        • 遵守相关法律法规
+        我们将持续优化服务体验。
+      `,
       showCancel: false,
       confirmText: '同意'
     })

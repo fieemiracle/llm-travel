@@ -2,6 +2,9 @@ import { View, Text, Image } from '@tarojs/components'
 import { getStatusBarHeight, getNavBarHeight, getMenuButtonBoundingClientRect } from '@/utils/system'
 import Taro from '@tarojs/taro'
 import backIcon from '@/assets/iconfont/arrow-left.png'
+import { setCurrentRouteName } from '@/store/actions/common'
+import { RouterName } from '@/utils/enum'
+import { useDispatch } from 'react-redux'
 import './index.less'
 
 export default function UserNavBar () {
@@ -15,9 +18,12 @@ export default function UserNavBar () {
   const menuHeight = menuInfo.height
   const menuWidth = menuInfo.width
 
+  const dispatch = useDispatch()
+
   // 返回
   const goBack = () => {
     Taro.navigateBack()
+    dispatch(setCurrentRouteName(RouterName.HOME))
   }
 
   return (

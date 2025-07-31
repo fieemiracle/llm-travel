@@ -76,7 +76,7 @@ export default function Chat(props: ChatProps) {
 
   // sse
   const sendMessage = useCallback((userChatItem: ChatItem, assistantChatItem: ChatItem) => {
-    console.log('sendMessage>>>>>>>', userChatItem, assistantChatItem)
+    // console.log('sendMessage>>>>>>>', userChatItem, assistantChatItem)
     // 模拟产生数据
     // dispatch(updateChatItem({
     //     chatId: assistantChatItem.chatId,
@@ -248,7 +248,7 @@ export default function Chat(props: ChatProps) {
 
   useEffect(() => {
     if (queryText) {
-      console.log('useEffect queryText>>>>>>>', queryText)
+      // console.log('useEffect queryText>>>>>>>', queryText)
       // 发送消息前确保自动滚动开启
       setShouldAutoScroll(true)
       

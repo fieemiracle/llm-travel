@@ -1,13 +1,13 @@
 import { View, ScrollView } from '@tarojs/components'
-import FormInput from '@/components/formInput'
+import FormInput from '@/components/common/formInput'
 import { useSelector, useDispatch } from 'react-redux'
 import { RootState } from '@/store'
 import { addChatItem, setQueryText, updateChatItem } from '@/store/actions/chat'
 import { ChatRole } from '@/utils/enum'
 import { ChatChunk, ChatItem, ChatRoleT } from '@/utils/type'
 import { generateRandomHash } from '@/utils/tools'
-import QueryPopup from '@/components/queryPopup'
-import AnswerPopup from '@/components/answerPopup'
+import QueryPopup from '@/components/message/queryPopup'
+import AnswerPopup from '@/components/message/answerPopup'
 import { useEffect, useCallback, useRef } from 'react'
 import {
   DMXAPI_REQUEST_URL,

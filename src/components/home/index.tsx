@@ -2,7 +2,7 @@ import { View, Text } from '@tarojs/components'
 import { HOME_WELCOME_TEXT } from '@/utils/const'
 import { formatArrayByCustomLength } from '@/utils/tools'
 import { HOME_BOTTOM_TIPS } from '@/mock'
-import FormInput from '@/components/formInput'
+import FormInput from '@/components/common/formInput'
 import './index.less'
 
 type HomeProps = {

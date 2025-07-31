@@ -1,6 +1,6 @@
 import { View } from '@tarojs/components'
 import { useLoad } from '@tarojs/taro'
-import Navbar from '@/components/navbar'
+import Navbar from '@/components/common/navbar'
 import { RouterName } from '@/utils/enum'
 import { useSelector, useDispatch } from 'react-redux'
 import { RootState } from '@/store'

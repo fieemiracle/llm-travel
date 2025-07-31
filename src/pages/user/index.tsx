@@ -1,6 +1,6 @@
 import { View, Text } from '@tarojs/components'
 import { useLoad } from '@tarojs/taro'
-import UserNavBar from '@/components/userNavBar'
+import UserNavBar from '@/components/mine/userNavBar'
 import './index.less'
 
 export default function Index () {

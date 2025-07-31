@@ -48,3 +48,41 @@ export const setQueryText = (queryText: string) => {
     queryText,
   }
 }
+
+// 设置分享模式
+export const setShareMode = (shareMode: boolean) => {
+  return {
+    type: ChatActionType.SET_SHARE_MODE,
+    shareMode,
+  }
+}
+
+// 设置选中的聊天ID
+export const setSelectedChatIds = (chatIds: string[]) => {
+  return {
+    type: ChatActionType.SET_SELECTED_CHAT_IDS,
+    chatIds,
+  }
+}
+
+// 切换单个聊天选择状态
+export const toggleChatSelection = (chatId: string) => {
+  return {
+    type: ChatActionType.TOGGLE_CHAT_SELECTION,
+    chatId,
+  }
+}
+
+// 全选聊天
+export const selectAllChats = () => {
+  return {
+    type: ChatActionType.SELECT_ALL_CHATS,
+  }
+}
+
+// 清空聊天选择
+export const clearChatSelection = () => {
+  return {
+    type: ChatActionType.CLEAR_CHAT_SELECTION,
+  }
+}

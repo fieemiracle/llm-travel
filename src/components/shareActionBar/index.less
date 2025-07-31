@@ -1,0 +1,123 @@
+.share-action-bar {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: #fff;
+    border-top: 1rpx solid #E8E8E8;
+    z-index: 1000;
+    box-shadow: 0 -4rpx 20rpx rgba(0, 0, 0, 0.1);
+
+    .hidden-canvas {
+        position: absolute;
+        left: -9999rpx;
+        top: -9999rpx;
+        width: 750rpx;
+        height: 3000rpx;
+        opacity: 0;
+        pointer-events: none;
+    }
+
+    .share-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 24rpx 32rpx 16rpx;
+        border-bottom: 1rpx solid #F0F0F0;
+
+        .share-cancel {
+            padding: 12rpx 24rpx;
+            background: #F5F5F5;
+            border-radius: 20rpx;
+
+            &:active {
+                background: #E8E8E8;
+            }
+
+            .cancel-text {
+                font-size: 28rpx;
+                color: #666;
+            }
+        }
+
+        .share-title {
+            flex: 1;
+            text-align: center;
+
+            .title-text {
+                font-size: 30rpx;
+                color: #333;
+                font-weight: 500;
+            }
+        }
+
+        .share-select-all {
+            padding: 12rpx 24rpx;
+            background: #F0F9FF;
+            border-radius: 20rpx;
+            border: 1rpx solid #00CCC9;
+
+            &:active {
+                background: #E0F7FA;
+            }
+
+            .select-all-text {
+                font-size: 28rpx;
+                color: #00CCC9;
+                font-weight: 500;
+            }
+        }
+    }
+
+    .share-actions {
+        display: flex;
+        gap: 32rpx;
+        padding: 24rpx 32rpx 40rpx;
+
+        .share-option {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 16rpx;
+            padding: 32rpx 24rpx;
+            background: #F8F9FA;
+            border-radius: 20rpx;
+
+            &:active {
+                background: #E9ECEF;
+                transform: scale(0.98);
+            }
+
+            .share-option-icon {
+                width: 80rpx;
+                height: 80rpx;
+                background: #fff;
+                border-radius: 50%;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                box-shadow: 0 4rpx 12rpx rgba(0, 0, 0, 0.1);
+
+                .share-icon {
+                    font-size: 40rpx;
+                }
+
+                &.wechat {
+                    background: #09CC5E;
+
+                    .wechat-icon {
+                        font-size: 40rpx;
+                        filter: brightness(0) invert(1);
+                    }
+                }
+            }
+
+            .share-option-text {
+                font-size: 28rpx;
+                color: #333;
+                font-weight: 500;
+            }
+        }
+    }
+}

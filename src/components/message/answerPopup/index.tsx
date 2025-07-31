@@ -7,7 +7,7 @@ import markdownit from 'markdown-it'
 import logoImage from '@/assets/iconfont/youxiaozhu.png'
 import Taro from '@tarojs/taro'
 import { useDispatch } from 'react-redux'
-import { updateChatItem } from '@/store/actions/chat'
+import { updateChatItem, setShareMode } from '@/store/actions/chat'
 import { COPY_FAIL_TEXT, COPY_SUCCESS_TEXT, THUMB_DOWN_TEXT, THUMB_UP_TEXT } from '@/utils/const'
 import IconFont from '@/components/common/iconfont'
 import { ICONFONT_ICONS } from '@/utils/iconfont'
@@ -119,6 +119,11 @@ export default function AnswerPopup(props: AnswerPopupProps) {
     }
   }
 
+  // 分享
+  const onShare = () => {
+    dispatch(setShareMode(true))
+  }
+
   return (
     <View className='answer-popup'>
       <View className='answer-popup-header'>
@@ -175,6 +180,10 @@ export default function AnswerPopup(props: AnswerPopupProps) {
               {/* 重新生成 */}
               <View className='tool-item resend' onClick={onRegenerate}>
                 <Image className='tool-item-image resend-image' src='https://s3-gz01.didistatic.com/packages-mait/img/jUcWCrIeHk1745933187753.png'></Image>
+              </View>
+              {/* 分享 */}
+              <View className='tool-item share' onClick={onShare}>
+                <Text className='share-icon'>📤</Text>
               </View>
             </View>
             <View className='regenerate'>

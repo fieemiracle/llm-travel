@@ -9,7 +9,9 @@ import { generateRandomHash } from '@/utils/tools'
 import QueryPopup from '@/components/message/queryPopup'
 import AnswerPopup from '@/components/message/answerPopup'
 import SuggestedQuestions from '@/components/message/suggestedQuestions'
-import { useEffect, useCallback, useRef } from 'react'
+import ChatSelection from '@/components/chatSelection'
+import ShareActionBar from '@/components/shareActionBar'
+import { useEffect, useCallback, useRef, useState } from 'react'
 import {
   DMXAPI_REQUEST_URL,
   DMXAPI_REQUEST_TIMEOUT,
@@ -31,6 +33,7 @@ type ChatProps = {
 export default function Chat(props: ChatProps) {
   const chatList = useSelector((state: RootState) => state.chat.chatList)
   const queryText = useSelector((state: RootState) => state.chat.queryText)
+  const shareMode = useSelector((state: RootState) => state.chat.shareMode)
   const dispatch = useDispatch()
   
   // 使用 ref 来存储最新的 chatList，避免闭包问题
@@ -43,8 +46,11 @@ export default function Chat(props: ChatProps) {
   
   // 存储当前的请求任务，用于清理
   const currentRequestTaskRef = useRef<any>(null)
-
-  // TODO: 自动滚动到底部
+  
+  // 自动滚动相关状态
+  const [scrollTop, setScrollTop] = useState(0)
+  const [shouldAutoScroll, setShouldAutoScroll] = useState(true)
+  const scrollViewRef = useRef<any>(null)
 
   // 添加调试信息，监控 chatList 变化
   // useEffect(() => {
@@ -86,6 +92,19 @@ export default function Chat(props: ChatProps) {
 
   // sse
   const sendMessage = useCallback((userChatItem: ChatItem, assistantChatItem: ChatItem) => {
+    console.log('sendMessage>>>>>>>', userChatItem, assistantChatItem)
+    // 模拟产生数据
+    dispatch(updateChatItem({
+        chatId: assistantChatItem.chatId,
+        content: '111111模拟数据',
+        chunks: [],
+        isLoading: false,
+        isStreaming: true,
+        isFinished: true,
+        isThumbUp: false,
+        isThumbDown: false,
+    }))
+    return;
     // console.log('sendMessage>>>>>>>', userChatItem, assistantChatItem)
     let updateContent = ''
     let updateChunks = [] as ChatChunk[]
@@ -205,6 +224,8 @@ export default function Chat(props: ChatProps) {
   // 重新生成处理函数
   const handleRegenerate = useCallback((chatId: string) => {
     console.log('handleRegenerate>>>>>>>', chatId)
+    // 重新生成前确保自动滚动开启
+    setShouldAutoScroll(true)
     
     // 找到要重新生成的聊天项
     const chatItem = chatList.find(item => item.chatId === chatId)
@@ -234,24 +255,69 @@ export default function Chat(props: ChatProps) {
   }, [dispatch, chatList, sendMessage])
 
   const onSendQuery = useCallback((query: string) => {
+    // 发送消息前确保自动滚动开启
+    setShouldAutoScroll(true)
+    
     const userChatItem = formatChatItem(query, ChatRole.USER)
     dispatch(addChatItem(userChatItem))
     const assistantChatItem = formatChatItem('', ChatRole.ASSISTANT, { isLoading: true })
     dispatch(addChatItem(assistantChatItem))
     dispatch(setQueryText(''))
     sendMessage(userChatItem, assistantChatItem)
-  }, [dispatch, formatChatItem,sendMessage])
+  }, [dispatch, formatChatItem, sendMessage])
 
   useEffect(() => {
     if (queryText) {
       console.log('useEffect queryText>>>>>>>', queryText)
+      // 发送消息前确保自动滚动开启
+      setShouldAutoScroll(true)
+      
       const userChatItem = formatChatItem(queryText, ChatRole.USER)
       dispatch(addChatItem(userChatItem))
       const assistantChatItem = formatChatItem('', ChatRole.ASSISTANT, { isLoading: true })
       dispatch(addChatItem(assistantChatItem))
       sendMessage(userChatItem, assistantChatItem)
     }
-  }, [queryText, dispatch, formatChatItem,sendMessage])
+  }, [queryText, dispatch, formatChatItem, sendMessage])
+
+  // 自动滚动到底部
+  const scrollToBottom = useCallback(() => {
+    if (shouldAutoScroll) {
+      // 延迟执行滚动，确保DOM更新完成
+      setTimeout(() => {
+        setScrollTop(999999) // 设置一个很大的值确保滚动到底部
+      }, 100)
+    }
+  }, [shouldAutoScroll])
+
+  // 监听 chatList 变化，自动滚动到底部
+  useEffect(() => {
+    if (chatList.length > 0) {
+      scrollToBottom()
+    }
+  }, [chatList.length, scrollToBottom])
+
+  // 监听消息内容变化（流式更新时）
+  useEffect(() => {
+    const lastMessage = chatList[chatList.length - 1]
+    if (lastMessage && lastMessage.role === ChatRole.ASSISTANT && lastMessage.isStreaming) {
+      scrollToBottom()
+    }
+  }, [chatList, scrollToBottom])
+
+  // 处理用户手动滚动
+  const handleScroll = useCallback((e: any) => {
+    const { scrollTop, scrollHeight, clientHeight } = e.detail
+    // 如果用户滚动到接近底部（容忍50px误差），则开启自动滚动
+    const isNearBottom = scrollHeight - scrollTop - clientHeight < 50
+    setShouldAutoScroll(isNearBottom)
+  }, [])
+
+  // 手动滚动到底部
+  const handleScrollToBottom = useCallback(() => {
+    setShouldAutoScroll(true)
+    scrollToBottom()
+  }, [scrollToBottom])
 
   // 组件卸载时清理请求任务
   useEffect(() => {
@@ -275,44 +341,66 @@ export default function Chat(props: ChatProps) {
       }
       <ScrollView
         className='chat-content'
-        ref={chatContentRef}
+        ref={scrollViewRef}
         scrollY
         scrollWithAnimation
         enhanced
         showScrollbar={false}
-        scrollTop={0}
+        scrollTop={scrollTop}
+        onScroll={handleScroll}
       >
         {
           chatList.map((item: ChatItem) => {
             return (
-              <View className='chat-item' key={item.chatId}>
-                {
-                  item.role === ChatRole.USER && (
-                    <QueryPopup queryText={item.content} />
-                  )
-                }
-                {
-                  item.role === ChatRole.ASSISTANT && (
-                    <AnswerPopup
-                      answerText={item.content}
-                      isLoading={item.isLoading!}
-                      isStreaming={item.isStreaming!}
-                      isFinished={item.isFinished!}
-                      isThumbUp={item.isThumbUp!}
-                      isThumbDown={item.isThumbDown!}
-                      chatId={item.chatId}
-                      onRegenerate={handleRegenerate}
-                    />
-                  )
-                }
+              <View className={`chat-item ${shareMode ? 'share-mode' : ''}`} key={item.chatId}>
+                <View className='chat-item-content'>
+                  {/* 分享模式下显示选择框 */}
+                  <ChatSelection chatId={item.chatId} />
+                  
+                  <View className='chat-item-message'>
+                    {
+                      item.role === ChatRole.USER && (
+                        <QueryPopup queryText={item.content} />
+                      )
+                    }
+                    {
+                      item.role === ChatRole.ASSISTANT && (
+                        <AnswerPopup
+                          answerText={item.content}
+                          isLoading={item.isLoading!}
+                          isStreaming={item.isStreaming!}
+                          isFinished={item.isFinished!}
+                          isThumbUp={item.isThumbUp!}
+                          isThumbDown={item.isThumbDown!}
+                          chatId={item.chatId}
+                          onRegenerate={handleRegenerate}
+                        />
+                      )
+                    }
+                  </View>
+                </View>
               </View>
             )
           })
         }
       </ScrollView>
-      <View className='chat-input'>
-        <FormInput onSend={(query) => onSendQuery(query)} onHeightChange={(height) => props.getInputHeight?.(height)} />
-      </View>
+      
+      {/* 分享模式下隐藏输入框，显示分享操作栏 */}
+      {!shareMode && (
+        <View className='chat-input'>
+          <FormInput onSend={(query) => onSendQuery(query)} onHeightChange={(height) => props.getInputHeight?.(height)} />
+        </View>
+      )}
+      
+      {/* 回到底部按钮 */}
+      {!shouldAutoScroll && !shareMode && (
+        <View className='scroll-to-bottom' onClick={handleScrollToBottom}>
+          <View className='scroll-icon'>↓</View>
+        </View>
+      )}
+
+      {/* 分享操作栏 */}
+      <ShareActionBar />
     </View>
   )
 }

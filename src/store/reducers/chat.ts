@@ -3,6 +3,8 @@ import { ChatStateT, ChatActionType, ChatActionReturnT } from "@/store/types"
 const initialState: ChatStateT = {
   chatList: [],
   queryText: '',
+  shareMode: false,
+  selectedChatIds: [],
 }
 
 export const chatReducer = (state = initialState, action: ChatActionReturnT) => {
@@ -38,6 +40,37 @@ export const chatReducer = (state = initialState, action: ChatActionReturnT) => 
       return {
         ...state,
         queryText: action.queryText,
+      }
+    case ChatActionType.SET_SHARE_MODE:
+      return {
+        ...state,
+        shareMode: action.shareMode || false,
+        // 进入分享模式时默认选中所有对话
+        selectedChatIds: action.shareMode ? state.chatList.map(item => item.chatId) : [],
+      }
+    case ChatActionType.SET_SELECTED_CHAT_IDS:
+      return {
+        ...state,
+        selectedChatIds: action.chatIds || [],
+      }
+    case ChatActionType.TOGGLE_CHAT_SELECTION:
+      const chatId = action.chatId
+      const isSelected = state.selectedChatIds.includes(chatId!)
+      return {
+        ...state,
+        selectedChatIds: isSelected 
+          ? state.selectedChatIds.filter(id => id !== chatId)
+          : [...state.selectedChatIds, chatId!],
+      }
+    case ChatActionType.SELECT_ALL_CHATS:
+      return {
+        ...state,
+        selectedChatIds: state.chatList.map(item => item.chatId),
+      }
+    case ChatActionType.CLEAR_CHAT_SELECTION:
+      return {
+        ...state,
+        selectedChatIds: [],
       }
     default:
       return state

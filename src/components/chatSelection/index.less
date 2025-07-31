@@ -1,0 +1,35 @@
+.chat-selection {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 16rpx;
+    margin-right: 16rpx;
+
+    .selection-checkbox {
+        width: 40rpx;
+        height: 40rpx;
+        border: 2rpx solid #00CCC9;
+        border-radius: 8rpx;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: #fff;
+        transition: all 0.3s;
+        cursor: pointer;
+
+        &.checked {
+            background: #00CCC9;
+            border-color: #00CCC9;
+
+            .check-icon {
+                color: #fff;
+                font-size: 24rpx;
+                font-weight: bold;
+            }
+        }
+
+        &:active {
+            transform: scale(0.95);
+        }
+    }
+}

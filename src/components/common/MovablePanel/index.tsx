@@ -1,8 +1,8 @@
-import { MovableArea, MovableView, ScrollView, View, Slot, CommonEventFunction, BaseTouchEvent } from "@tarojs/components"
-import { useMemo, useRef, useState } from "react"
+import { MovableArea, MovableView, ScrollView, View, Slot } from "@tarojs/components"
+import { useEffect, useMemo, useRef, useState } from "react"
 import { EstimateContain, EstimateContainValues } from "@/utils/enum"
-import initCard, { computeMvViewHeight, getCustomeStyle, getPosition } from "./useUniversalCard"
-import { isAlipay, isH5 } from "@/utils/env"
+import { computeMvViewHeight, getCustomeStyle, getPosition, getScrollOffset } from "./useUniversalCard"
+import { isAlipay, isH5, isWeapp } from "@/utils/env"
 import "./index.less"
 
 export type MovablePanelPropsT = {
@@ -29,8 +29,8 @@ export type MovablePanelPropsT = {
   disable?: boolean // 默认值false
   isShowTouchBarForFull?: boolean // 默认值false
   placeholderStyleSetting?: string // 默认值''
-  onChangeStatus?: (status: EstimateContainValues) => void
-  onDragDown?: (isChange: boolean) => void
+  onChangeStatus: (status: EstimateContainValues) => void
+  onDragDown: (isChange: boolean) => void
 }
 
 const DEFAULT_PADDING = [0, 0, 0, 0]
@@ -68,9 +68,47 @@ export default function MovablePanel(props: MovablePanelPropsT) {
   const [isFirstDragDown, setIsFirstDragDown] = useState<boolean>(false) // 是否是第一次下拉
   const scrollViewRef = useRef<any>(null)
 
+  const initCard = () => {
+    let scrollY = 0 // 仅用于点击back时重置scroll-view的scrollTop
+    function setCardStatus(status: EstimateContainValues) {
+      if (status !== cardStatus) {
+        props.onChangeStatus && props.onChangeStatus(status)
+      }
+    }
+    // 是否在滚动态
+    let isScroll = false
+    function scrollToTop(status: EstimateContainValues) {
+      isScroll = true
+      // 触发支付宝的更新
+      //  当scrollY=0时 强制触发更新
+      if (status !== EstimateContain.FULL) scrollY = scrollY ? 0 : 0.01
+      setTimeout(() => {
+        isScroll = false
+      }, 300)
+    }
+    function scrollTo(top: number) {
+      isScroll = true
+      scrollY = top
+      isScroll = false
+    }
+    scrollToTop(cardStatus)
+  
+    return {
+      setCardStatus,
+      scrollToTop,
+      scrollTo,
+      isScroll,
+      scrollY
+    }
+  }
+
   const { mvViewHeight, positionStyle, getFinalOffset, getScreenStatus } = getPosition({padding, maxOffset, initialOffset, transitionDiff})
   const { touchBarClass, placeholderHeight } = getCustomeStyle(props, { cardStatus, mvViewHeight })
-  const { setCardStatus, scrollToTop, scrollTo, isScroll, scrollY } = initCard(props, cardStatus)
+  const { setCardStatus, isScroll, scrollY } = initCard()
+
+  useEffect(() => {
+    setIsAnimation(true) // 组件挂载后执行
+  }, []) // 空依赖数组表示只在 mount 时执行
 
   // 非第一次时会使用的展示高度
   const finalOffset = useMemo(() => {
@@ -78,17 +116,16 @@ export default function MovablePanel(props: MovablePanelPropsT) {
   }, [cardStatus, getFinalOffset])
 
   const canScroll = useMemo(() => {
-    return cardStatus === EstimateContain.HALF && !(isScrolledTop && offsetY > 0)
-  }, [cardStatus, isScrolledTop, offsetY])
+    return cardStatus === EstimateContain.HALF && isScrolledTop
+  }, [cardStatus, isScrolledTop])
 
   // movable-area 是否可以移动
   const disabled = useMemo(() => {
     return disable || (isTouchingBar && canScroll)
-  }, [disable, cardStatus])
+  }, [disable, isTouchingBar, canScroll])
 
   const triggerDragDown = (isChange: boolean) => {
     // 下拉超过偏移量时，抛出事件，通知父组件提前漏出地图
-    this.triggerEvent('dragDown', { isChange })
     props.onDragDown && props.onDragDown(isChange)
     // 单次只触发一次
     setIsFirstDragDown(isChange)
@@ -103,6 +140,7 @@ export default function MovablePanel(props: MovablePanelPropsT) {
   }
 
   const dealScreenStatus = () => {
+    console.log('dealScreenStatus>>>>>>>', cardStatus, offsetY)
     const oldCardStatus = cardStatus
     const oldOffsetX = Math.abs(offsetX)
     // 横向滑动 > 竖向滑动 的时候不收起表单
@@ -118,6 +156,7 @@ export default function MovablePanel(props: MovablePanelPropsT) {
       status = EstimateContain.HALF
     }
     // 统一设置状态
+    console.log('dealScreenStatus>>>>>>>1111', status)
     if (!disable) setCardStatus(status) 
     // 兼容universe-card内部有点击事件时，会同时触发movable-view的touch，未变更卡片状态时更新 y 值，当y偏移量小于3时，不强制更新
     if (status === oldCardStatus && Math.abs(offsetY) > 3) {
@@ -133,6 +172,7 @@ export default function MovablePanel(props: MovablePanelPropsT) {
     }
     const { scrollTop } = res
     setIsScrolledTop(scrollTop < 15)
+    console.log('processScroll>>>>>>>', canScroll, isTouchingBar)
     if (canScroll && !isTouchingBar) {
       // 全屏下拉然后又回到原处时，通知隐藏地图
       triggerDragDown(false)
@@ -144,25 +184,19 @@ export default function MovablePanel(props: MovablePanelPropsT) {
   // 可移动面板事件
   // 顶部触控区触摸事件，用于解开movable的锁定
   const handlerTouchStart = (e: any) => {
-    console.log('handlerTouchStart', e)
+    // console.log('handlerTouchStart', e)
     const { pageX, pageY } = e.touches[0]
     setStartX(pageX)
     setStartY(pageY)
-    if (scrollViewRef && scrollViewRef.current) {
-      if (isH5) {
-        scrollViewRef.current.scrollOffset((res: { scrollTop: number }) => {
-          console.log('scrollOffset', res)
-          if (res) {
-            setIsScrolledTop(res.scrollTop < 15)
-          }
-        }).exec()
-      }
-    }
+    getScrollOffset(scrollViewRef, (res: { scrollTop: number }) => {
+      console.log('scrollOffset', res)
+      setIsScrolledTop(res.scrollTop < 15)
+    })
   }
   // 手指移动事件，主要用于从FULL状态向下移动时，锁定滚动条
   const handlerTouchMove = (e: any) => {
-    console.log('handlerTouchMove', e)
-    if (isAlipay || isFirstDragDown || offsetY > 0) {
+    // console.log('handlerTouchMove', e)
+    if (isAlipay || isFirstDragDown) {
       return false
     }
     const { pageX, pageY } = e.touches[0]
@@ -170,14 +204,14 @@ export default function MovablePanel(props: MovablePanelPropsT) {
     const diffY = pageY - startY
     setOffsetX(diffX)
     setOffsetY(diffY)
-    if (!isFirstDragDown && offsetY > transitionDiff) {
+    if (!isFirstDragDown && diffY > transitionDiff) {
       triggerDragDown(true)
     }
     return false
   }
   // 手指抬起，记录最终位置，进行计算，将卡片落入合适的状态中
   const handlerTouchEnd = (e: any) => {
-    console.log('handlerTouchEnd', e)
+    // console.log('handlerTouchEnd', e)
     if (disable) {
       return
     }
@@ -187,17 +221,10 @@ export default function MovablePanel(props: MovablePanelPropsT) {
     setOffsetX(diffX)
     setOffsetY(diffY)
     if (transitionDiff) {
-      if (scrollViewRef && scrollViewRef.current) {
-        if (isH5) {
-          scrollViewRef.current.scrollOffset((res: { scrollTop: number }) => {
-            console.log('scrollOffset', res)
-            if (res) {
-              processScroll(res)
-            }
-          }).exec()
-        }
-
-      }
+      getScrollOffset(scrollViewRef, (res: { scrollTop: number }) => {
+        // console.log('scrollOffset', res)
+        processScroll(res)
+      })
     } else {
       clearEffects()
     }
@@ -264,6 +291,13 @@ export default function MovablePanel(props: MovablePanelPropsT) {
                 enhanced={true}
                 show-scrollbar={false}
                 style='max-height: calc(100vh - 200rpx)'
+                onScroll={(e) => {
+                  // 监听滚动事件，用于微信小程序环境
+                  if (isWeapp) {
+                    const { scrollTop } = e.detail
+                    setIsScrolledTop(scrollTop < 15)
+                  }
+                }}
               >
                 {/* 这里是为了规避因为下面的占位节点导致 slot 内组件设置 height 100% 包含占位高度的问题*/}
                 <View

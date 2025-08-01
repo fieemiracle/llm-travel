@@ -1,6 +1,6 @@
 import { View, Map as GMap } from "@tarojs/components"
 import type { MapProps } from '@tarojs/components'
-// import { getStatusBarHeight } from "@/utils/system"
+import { getMenuButtonBoundingClientRect, getStatusBarHeight } from "@/utils/system"
 import { EstimateContain, EstimateContainValues } from "@/utils/enum"
 import { useEffect, useState } from "react"
 import {
@@ -30,8 +30,10 @@ const DEFAULT_INCLUDE_PADDING: IncludePaddingStyleT = {
 }
 
 export default function Map() {
-  // 顶部状态栏高度
-  // const statusBarHeight = getStatusBarHeight()
+  // 获取胶囊按钮信息
+  const menuInfo = getMenuButtonBoundingClientRect()
+  const paddingTop = menuInfo.height + menuInfo.top
+
 
   const [mapConfig, setMapConfig] = useState<MapConfigType>(DEFAULT_MAP_CONFIG)
   const [gMapMarkers, setGMapMarkers] = useState<MapProps.marker[]>([])
@@ -41,11 +43,16 @@ export default function Map() {
   const [gMapIncludePadding, setGMapIncludePadding] = useState<IncludePaddingStyleT>(DEFAULT_INCLUDE_PADDING)
   const [gMapCustomMapStyle, setGMapCustomMapStyle] = useState<CustomMapStyleT>('default')
 
+  useEffect(() => {
+    setMapConfig(DEFAULT_MAP_CONFIG)
+  }, [])
+
   const [isShowCover, setIsShowCover] = useState(false)
   const [estCardStatus, setEstCardStatus] = useState<EstimateContainValues>(EstimateContain.HALF)
 
   useEffect(() => {
     const isFullScreen = estCardStatus === EstimateContain.FULL
+    console.log('estCardStatus>>>>>>>', estCardStatus)
     // const isCollapse = estCardStatus === EstimateContain.COLLAPSE
     setIsShowCover(isFullScreen)
   }, [estCardStatus])
@@ -104,16 +111,23 @@ export default function Map() {
       {/* 返回按钮 */}
       <Back
         status={estCardStatus === EstimateContain.FULL ? 'down' : 'normal'}
-        onChangePanelStatus={(status) => setEstCardStatus(status)}
+        onChangePanelStatus={(status) => {
+          console.log('返回按钮>>>>>>>', status)
+          setEstCardStatus(status)
+        }}
         onEstimateBack={() => Taro.navigateBack({ delta: 1 })}
       />
 
       {/* 可移动面板 */}
       <MovablePanel
         cardStatus={estCardStatus}
-        onChangeStatus={(status) => setEstCardStatus(status)}
+        padding={[paddingTop, 0, 0, 0]}
+        onChangeStatus={(status) => {
+          console.log('可移动面板 onChangeStatus>>>>>>>', status)
+          setEstCardStatus(status)
+        }}
         onDragDown={(isChange) => {
-          console.log('onDragDown>>>>>>>', isChange)
+          console.log('可移动面板 onDragDown>>>>>>>', isChange)
         }}
       />
     </View>

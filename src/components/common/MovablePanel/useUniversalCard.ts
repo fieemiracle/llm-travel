@@ -1,11 +1,12 @@
 import { EstimateContain, EstimateContainValues } from "@/utils/enum"
 import { getSystemInfo } from "@/utils/system"
+import { isH5 } from "@/utils/env"
 import { MovablePanelPropsT } from "./index"
 
 /**
  * 计算MovableView的最终高度
  * @function computeMvViewHeight
- * */ 
+ * */
 export const computeMvViewHeight = (padding: number[]) => {
   const systemInfo = getSystemInfo()
   const screenHeight = systemInfo.windowHeight
@@ -15,7 +16,7 @@ export const computeMvViewHeight = (padding: number[]) => {
 type GetPositionParamsT = {
   padding: number[],
   maxOffset: number, // 组件最小屏
-  initialOffset:number, /** 组件初始化时展示的偏移量(半屏偏移)，即：负展示高度 */
+  initialOffset: number, /** 组件初始化时展示的偏移量(半屏偏移)，即：负展示高度 */
   transitionDiff: number,
 }
 
@@ -55,11 +56,11 @@ export function getPosition(params: GetPositionParamsT) {
       // COLLAPSE HALF FULL 三段
       if (offsetY > transitionDiff) {
         newStatus =
-        oldStatus === EstimateContain.FULL
-          ? offsetY - mvViewHeight > initialOffset // 手指抬起时卡片展示高度小于中间卡片展示高度的阈值，就直接拉到最低
-            ? EstimateContain.COLLAPSE
-            : EstimateContain.HALF
-          : EstimateContain.COLLAPSE
+          oldStatus === EstimateContain.FULL
+            ? offsetY - mvViewHeight > initialOffset // 手指抬起时卡片展示高度小于中间卡片展示高度的阈值，就直接拉到最低
+              ? EstimateContain.COLLAPSE
+              : EstimateContain.HALF
+            : EstimateContain.COLLAPSE
       } else if (offsetY < -transitionDiff) {
         newStatus =
           oldStatus === EstimateContain.COLLAPSE
@@ -100,7 +101,7 @@ export function getCustomeStyle(props: MovablePanelPropsT, { cardStatus, mvViewH
   }
 }
 
-function getPlaceholderHeight(cardStatus:EstimateContainValues, mvViewHeight: number, initialOffset?: number, maxOffset?: number) {
+function getPlaceholderHeight(cardStatus: EstimateContainValues, mvViewHeight: number, initialOffset?: number, maxOffset?: number) {
   // todo: 这里尝试加了条件控制tempScroll=true时才补height，但是滚动不到位
   initialOffset = initialOffset || 0
   maxOffset = maxOffset || 0
@@ -111,38 +112,33 @@ function getPlaceholderHeight(cardStatus:EstimateContainValues, mvViewHeight: nu
 }
 
 /**
- * 初始化卡片
+ * 通用滚动偏移获取函数
+ * @param scrollViewRef ScrollView的ref引用
+ * @param callback 回调函数，接收scrollTop参数
  */
-export default function initCard(props: MovablePanelPropsT, cardStatus: EstimateContainValues) {
-  let scrollY = 0 // 仅用于点击back时重置scroll-view的scrollTop
-  function setCardStatus(status: EstimateContainValues) {
-    if (status !== cardStatus) {
-      props.onChangeStatus && props.onChangeStatus(status)
+export function getScrollOffset(scrollViewRef: any, callback: (res: { scrollTop: number }) => void) {
+  if (!scrollViewRef?.current) {
+    callback({ scrollTop: 0 })
+    return
+  }
+
+  if (isH5) {
+    // H5环境使用scrollOffset方法
+    try {
+      scrollViewRef.current.scrollOffset((res: { scrollTop: number }) => {
+        if (res) {
+          callback(res)
+        } else {
+          callback({ scrollTop: 0 })
+        }
+      }).exec()
+    } catch (error) {
+      console.warn('H5获取滚动偏移失败:', error)
+      callback({ scrollTop: 0 })
     }
-  }
-  // 是否在滚动态
-  let isScroll = false
-  function scrollToTop(status: EstimateContainValues) {
-    isScroll = true
-    // 触发支付宝的更新
-      //  当scrollY=0时 强制触发更新
-      if (status !== EstimateContain.FULL) scrollY = scrollY ? 0 : 0.01
-      setTimeout(() => {
-        isScroll = false
-      }, 300)
-  }
-  function scrollTo(top: number) {
-    isScroll = true
-      scrollY = top
-      isScroll = false
-  }
-  scrollToTop(cardStatus)
-  
-  return {
-    setCardStatus,
-    scrollToTop,
-    scrollTo,
-    isScroll,
-    scrollY
+  } else {
+    // 微信小程序等其他平台，直接返回默认值
+    // 在微信小程序中，我们通过onScroll事件来获取滚动状态
+    callback({ scrollTop: 0 })
   }
 }

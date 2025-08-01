@@ -31,3 +31,13 @@ export const GlobalStatus = {
 
 // 定义 GlobalStatus 值的类型
 export type GlobalStatusValues = typeof GlobalStatus[keyof typeof GlobalStatus];
+
+// 容器状态
+export const EstimateContain = {
+  HALF: 'HALF', // 半屏
+  COLLAPSE: 'COLLAPSE', // 收起
+  FULL: 'FULL' // 全屏
+} as const
+
+// 定义 EstimateContain 值的类型
+export type EstimateContainValues = typeof EstimateContain[keyof typeof EstimateContain];

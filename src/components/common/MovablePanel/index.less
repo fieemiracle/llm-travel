@@ -1,0 +1,144 @@
+.panel-static-container {
+  // position absolute
+  position: fixed;
+  bottom: 0;
+  height: 0; // 尝试修复move-view滑动超过move-area的问题
+  width: 100%;
+  pointer-events: auto;
+  // z-index 1
+  
+  .panel-wrap {
+    position: relative;
+    // z-index 3
+    bottom: 0;
+    width: 100%;
+    height: 2px; // 初始值要大于mv-area
+    display: flex;
+    flex-direction: column;
+    // .panel-scroll-container
+    // display flex //这里不能使用flex，会导致微信组件显示异常
+    // flex-direction column
+    // position relative
+    // width 100%
+    // height 100%
+    // padding-bottom 50px // +50 是保证能够被下面的操作按钮覆盖
+  }
+  
+  .panel-header-view {
+    position: absolute;
+    z-index: 0; // 一般来讲header部分层级要高于其他，这里加一下
+    top: 0;
+    left: 0;
+    width: 100%;
+    /* use px */
+    transform: translateY(calc(1px - 100%)); // 直接-100%会有一个明显的分离断层，这里+1rpx
+  }
+  
+  .touch-wrapper {
+    position: relative;
+  }
+  
+  .panel-scroll-container {
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    z-index: 0;
+    width: 100%;
+    height: 100%;
+    // border-radius 16px 16px 0 0
+    overflow: hidden;
+    /* use px */
+    padding-top: 10px;
+    box-sizing: border-box;
+    // overflow hidden
+    background: #fff;
+    /* use px */
+    border-radius: 16px 16px 0 0; // 外层设置了 overflow以及radius，但是这里有的机型还是会显示直角，这里在内层也加上样式
+    /* use px */
+    box-shadow: 0 6px 20px 0 rgba(0, 0, 0, 0.12);
+    
+    .panel-scroll-content {
+      display: flex;
+      flex-direction: row;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+    }
+    
+    /* transitionDiff=0 无吸附场景下 不限制高度 */
+    &.auto, &.auto .panel-scroll-content {
+      height: auto;
+      overflow: visible;
+    }
+    
+    .scroll-container {
+      flex: 1;
+      height: 100%;
+      // d-flex()
+    }
+  }
+  
+  .touchBar {
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 1; // 漏出滚动时的无bar的白条
+    width: 100%;
+    /* use px */
+    height: 10px;
+    /* use px */
+    border-radius: 16px 16px 0 0;
+    
+    .barHandler {
+      position: absolute;
+      z-index: 1; // 漏出bar
+      transform: translateX(-50%);
+      /* use px */
+      width: 40px;
+      /* use px */
+      height: 3px;
+      /* use px */
+      top: 4px;
+      left: 50%;
+      transition: all 0.3s ease;
+      
+      &.FULL {
+        opacity: 0;
+      }
+      
+      &.COLLAPSE {
+        top: 2px;
+        
+        .left {
+          transform: rotate(-10deg);
+        }
+        
+        .right {
+          transform: rotate(10deg);
+        }
+      }
+      
+      .item {
+        position: absolute;
+        top: 0;
+        /* use px */
+        width: 20px;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.15);
+        transition: all 0.5s ease;
+      }
+      
+      .left {
+        left: 0;
+        transform-origin: right center;
+        border-radius: 4px 0 0 4px;
+      }
+      
+      .right {
+        right: 0;
+        transform-origin: left center;
+        border-radius: 0 4px 4px 0;
+      }
+    }
+  }
+}

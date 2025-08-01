@@ -258,6 +258,7 @@ export default function Chat(props: ChatProps) {
       dispatch(setGlobalStatus(GlobalStatus.LOADING))
       dispatch(addChatItem(assistantChatItem))
       sendMessage(userChatItem, assistantChatItem)
+      dispatch(setQueryText(''))
     }
   }, [queryText, dispatch, formatChatItem, sendMessage])
 
@@ -378,7 +379,7 @@ export default function Chat(props: ChatProps) {
       {!shouldAutoScroll && !shareMode && (
         <View className='scroll-to-bottom' onClick={handleScrollToBottom}>
             <IconFont 
-            type={ICONFONT_ICONS.ARROW_DOWN}
+            type={ICONFONT_ICONS.ANCHOR_DOWN}
             color='#BBBBBB'
             size={16}
           />

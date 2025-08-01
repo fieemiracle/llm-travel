@@ -4,6 +4,7 @@ import Carousel from '@/components/carousel'
 import Weather from '@/components/weather'
 import RecommendList from '@/components/recommendList'
 import { CAROUSEL_DATA, WEATHER_DATA, RECOMMEND_TABS, RECOMMEND_DATA } from '@/mock'
+import Taro from '@tarojs/taro'
 import './index.less'
 
 export default function TravelRoute() {
@@ -17,11 +18,17 @@ export default function TravelRoute() {
   // 处理轮播图点击
   const handleCarouselClick = (item: any) => {
     console.log('轮播图点击:', item)
+    Taro.navigateTo({
+      url: '/pages/map/index'
+    })
   }
 
   // 处理推荐项点击
   const handleRecommendClick = (item: any) => {
     console.log('推荐项点击:', item)
+    Taro.navigateTo({
+      url: '/pages/map/index'
+    })
   }
 
   return (

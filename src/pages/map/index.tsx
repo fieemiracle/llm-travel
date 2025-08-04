@@ -10,8 +10,9 @@ import {
 } from "@/types/map"
 import Back from "@/components/map/back"
 import Taro from "@tarojs/taro"
-import './index.less'
 import MovablePanel from "@/components/common/MovablePanel"
+import { getMenuButtonBoundingClientRect } from "@/utils/system"
+import './index.less'
 
 const DEFAULT_MAP_CONFIG: MapConfigType = {
   longitude: 116.397428,
@@ -32,6 +33,9 @@ const DEFAULT_INCLUDE_PADDING: IncludePaddingStyleT = {
 export default function Map() {
   // 顶部状态栏高度
   // const statusBarHeight = getStatusBarHeight()
+  // 获取胶囊按钮信息
+  const menuInfo = getMenuButtonBoundingClientRect()
+  const paddingTop = menuInfo.height + menuInfo.top
 
   const [mapConfig, setMapConfig] = useState<MapConfigType>(DEFAULT_MAP_CONFIG)
   const [gMapMarkers, setGMapMarkers] = useState<MapProps.marker[]>([])
@@ -43,7 +47,13 @@ export default function Map() {
 
   const [isShowCover, setIsShowCover] = useState(false)
   const [estCardStatus, setEstCardStatus] = useState<EstimateContainValues>(EstimateContain.HALF)
+  console.log('estCardStatus>>>>>>>', estCardStatus)
 
+
+  // useEffect(() => {
+  //   setMapConfig(DEFAULT_MAP_CONFIG)
+  // }, [])
+  
   useEffect(() => {
     const isFullScreen = estCardStatus === EstimateContain.FULL
     // const isCollapse = estCardStatus === EstimateContain.COLLAPSE
@@ -111,6 +121,7 @@ export default function Map() {
       {/* 可移动面板 */}
       <MovablePanel
         cardStatus={estCardStatus}
+        padding={[paddingTop, 0, 0, 0]}
         onChangeStatus={(status) => setEstCardStatus(status)}
         onDragDown={(isChange) => {
           console.log('onDragDown>>>>>>>', isChange)

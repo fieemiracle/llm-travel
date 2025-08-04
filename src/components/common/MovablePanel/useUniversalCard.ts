@@ -5,7 +5,7 @@ import { MovablePanelPropsT } from "./index"
 /**
  * 计算MovableView的最终高度
  * @function computeMvViewHeight
- * */ 
+ * */
 export const computeMvViewHeight = (padding: number[]) => {
   const systemInfo = getSystemInfo()
   const screenHeight = systemInfo.windowHeight
@@ -15,7 +15,7 @@ export const computeMvViewHeight = (padding: number[]) => {
 type GetPositionParamsT = {
   padding: number[],
   maxOffset: number, // 组件最小屏
-  initialOffset:number, /** 组件初始化时展示的偏移量(半屏偏移)，即：负展示高度 */
+  initialOffset: number, /** 组件初始化时展示的偏移量(半屏偏移)，即：负展示高度 */
   transitionDiff: number,
 }
 
@@ -55,11 +55,11 @@ export function getPosition(params: GetPositionParamsT) {
       // COLLAPSE HALF FULL 三段
       if (offsetY > transitionDiff) {
         newStatus =
-        oldStatus === EstimateContain.FULL
-          ? offsetY - mvViewHeight > initialOffset // 手指抬起时卡片展示高度小于中间卡片展示高度的阈值，就直接拉到最低
-            ? EstimateContain.COLLAPSE
-            : EstimateContain.HALF
-          : EstimateContain.COLLAPSE
+          oldStatus === EstimateContain.FULL
+            ? offsetY - mvViewHeight > initialOffset // 手指抬起时卡片展示高度小于中间卡片展示高度的阈值，就直接拉到最低
+              ? EstimateContain.COLLAPSE
+              : EstimateContain.HALF
+            : EstimateContain.COLLAPSE
       } else if (offsetY < -transitionDiff) {
         newStatus =
           oldStatus === EstimateContain.COLLAPSE
@@ -100,7 +100,7 @@ export function getCustomeStyle(props: MovablePanelPropsT, { cardStatus, mvViewH
   }
 }
 
-function getPlaceholderHeight(cardStatus:EstimateContainValues, mvViewHeight: number, initialOffset?: number, maxOffset?: number) {
+function getPlaceholderHeight(cardStatus: EstimateContainValues, mvViewHeight: number, initialOffset?: number, maxOffset?: number) {
   // todo: 这里尝试加了条件控制tempScroll=true时才补height，但是滚动不到位
   initialOffset = initialOffset || 0
   maxOffset = maxOffset || 0
@@ -125,19 +125,19 @@ export default function initCard(props: MovablePanelPropsT, cardStatus: Estimate
   function scrollToTop(status: EstimateContainValues) {
     isScroll = true
     // 触发支付宝的更新
-      //  当scrollY=0时 强制触发更新
-      if (status !== EstimateContain.FULL) scrollY = scrollY ? 0 : 0.01
-      setTimeout(() => {
-        isScroll = false
-      }, 300)
+    //  当scrollY=0时 强制触发更新
+    if (status !== EstimateContain.FULL) scrollY = scrollY ? 0 : 0.01
+    setTimeout(() => {
+      isScroll = false
+    }, 300)
   }
   function scrollTo(top: number) {
     isScroll = true
-      scrollY = top
-      isScroll = false
+    scrollY = top
+    isScroll = false
   }
   scrollToTop(cardStatus)
-  
+
   return {
     setCardStatus,
     scrollToTop,

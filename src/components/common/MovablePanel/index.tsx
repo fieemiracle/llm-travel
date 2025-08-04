@@ -1,9 +1,10 @@
-import { MovableArea, MovableView, ScrollView, View, Slot, CommonEventFunction, BaseTouchEvent } from "@tarojs/components"
+import { MovableArea, MovableView, ScrollView, View, Slot } from "@tarojs/components"
 import { useMemo, useRef, useState } from "react"
 import { EstimateContain, EstimateContainValues } from "@/utils/enum"
 import initCard, { computeMvViewHeight, getCustomeStyle, getPosition } from "./useUniversalCard"
 import { isAlipay, isH5 } from "@/utils/env"
 import "./index.less"
+import Taro from "@tarojs/taro"
 
 export type MovablePanelPropsT = {
   cardStatus: EstimateContainValues
@@ -156,18 +157,27 @@ export default function MovablePanel(props: MovablePanelPropsT) {
             setIsScrolledTop(res.scrollTop < 15)
           }
         }).exec()
+      } else {
+        const scrollViewQuery = Taro.createSelectorQuery()
+        scrollViewQuery.select('.scroll-container').scrollOffset()
+        scrollViewQuery.exec((res) => {
+          console.log('scrollOffset', res)
+          const { scrollTop } = res?.[0]
+          setIsScrolledTop(scrollTop < 15)
+        })
       }
     }
   }
   // 手指移动事件，主要用于从FULL状态向下移动时，锁定滚动条
   const handlerTouchMove = (e: any) => {
-    console.log('handlerTouchMove', e)
+    console.log('handlerTouchMove', isAlipay, isFirstDragDown, offsetY)
     if (isAlipay || isFirstDragDown || offsetY > 0) {
       return false
     }
     const { pageX, pageY } = e.touches[0]
     const diffX = pageX - startX
     const diffY = pageY - startY
+    console.log('handlerTouchMove', diffX, diffY, isFirstDragDown, offsetY, transitionDiff)
     setOffsetX(diffX)
     setOffsetY(diffY)
     if (!isFirstDragDown && offsetY > transitionDiff) {
@@ -177,13 +187,14 @@ export default function MovablePanel(props: MovablePanelPropsT) {
   }
   // 手指抬起，记录最终位置，进行计算，将卡片落入合适的状态中
   const handlerTouchEnd = (e: any) => {
-    console.log('handlerTouchEnd', e)
+    console.log('handlerTouchEnd', disable, e.changedTouches[0].pageX, e.changedTouches[0].pageY)
     if (disable) {
       return
     }
     const { pageX, pageY } = e.changedTouches[0]
     const diffX = pageX - startX
     const diffY = pageY - startY
+    console.log('handlerTouchEnd', diffX, diffY, transitionDiff)
     setOffsetX(diffX)
     setOffsetY(diffY)
     if (transitionDiff) {
@@ -195,6 +206,13 @@ export default function MovablePanel(props: MovablePanelPropsT) {
               processScroll(res)
             }
           }).exec()
+        } else {
+          const scrollViewQuery = Taro.createSelectorQuery()
+          scrollViewQuery.select('.scroll-container').scrollOffset()
+          scrollViewQuery.exec((res) => {
+            console.log('scrollOffset', res)
+            processScroll(res?.[0])
+          })
         }
 
       }

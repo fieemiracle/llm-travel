@@ -1,0 +1,72 @@
+.floating-panel {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: #fff;
+  border-radius: 16px 16px 0 0;
+  box-shadow: 0 -4px 16px rgba(0, 0, 0, 0.1);
+  z-index: 1000;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+
+  &__handle {
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #fff;
+    border-bottom: 1px solid #f0f0f0;
+    cursor: pointer;
+    user-select: none;
+    touch-action: none;
+
+    &-indicator {
+      width: 32px;
+      height: 4px;
+      background: #e0e0e0;
+      border-radius: 2px;
+    }
+  }
+
+  &__content {
+    flex: 1;
+    overflow: hidden;
+    position: relative;
+
+    &--scrollable {
+      overflow-y: auto;
+      -webkit-overflow-scrolling: touch;
+    }
+  }
+
+  // 拖拽时的样式
+  &.dragging {
+    transition: none;
+  }
+
+  // 安全区适配
+  &.safe-area {
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+}
+
+// 动画效果
+.floating-panel-enter {
+  transform: translateY(100%);
+}
+
+.floating-panel-enter-active {
+  transform: translateY(0);
+  transition: transform 300ms ease-out;
+}
+
+.floating-panel-exit {
+  transform: translateY(0);
+}
+
+.floating-panel-exit-active {
+  transform: translateY(100%);
+  transition: transform 300ms ease-out;
+}

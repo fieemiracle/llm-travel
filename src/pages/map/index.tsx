@@ -1,4 +1,4 @@
-import { View, Map as GMap, Slot } from "@tarojs/components"
+import { View, Map as GMap, Text } from "@tarojs/components"
 import type { MapProps } from '@tarojs/components'
 // import { getStatusBarHeight } from "@/utils/system"
 import { EstimateContain, EstimateContainValues } from "@/utils/enum"
@@ -10,9 +10,9 @@ import {
 } from "@/types/map"
 import Back from "@/components/map/back"
 import Taro from "@tarojs/taro"
-import MovablePanel from "@/components/common/MovablePanel"
-import { getMenuButtonBoundingClientRect } from "@/utils/system"
+import { getMenuButtonBoundingClientRect, getSystemInfo } from "@/utils/system"
 import './index.less'
+import FloatingPanel from "@/components/common/floating-panel"
 
 const DEFAULT_MAP_CONFIG: MapConfigType = {
   longitude: 116.397428,
@@ -31,12 +31,6 @@ const DEFAULT_INCLUDE_PADDING: IncludePaddingStyleT = {
 }
 
 export default function Map() {
-  // 顶部状态栏高度
-  // const statusBarHeight = getStatusBarHeight()
-  // 获取胶囊按钮信息
-  const menuInfo = getMenuButtonBoundingClientRect()
-  const paddingTop = menuInfo.height + menuInfo.top
-
   const [mapConfig, setMapConfig] = useState<MapConfigType>(DEFAULT_MAP_CONFIG)
   const [gMapMarkers, setGMapMarkers] = useState<MapProps.marker[]>([])
   const [gMapPolylines, setGMapPolylines] = useState<MapProps.polyline[]>([])
@@ -47,18 +41,8 @@ export default function Map() {
 
   const [isShowCover, setIsShowCover] = useState(false)
   const [estCardStatus, setEstCardStatus] = useState<EstimateContainValues>(EstimateContain.HALF)
-  console.log('面板状态>>>>>>>', estCardStatus)
-
-
-  // useEffect(() => {
-  //   setMapConfig(DEFAULT_MAP_CONFIG)
-  // }, [])
-  
-  useEffect(() => {
-    const isFullScreen = estCardStatus === EstimateContain.FULL
-    // const isCollapse = estCardStatus === EstimateContain.COLLAPSE
-    setIsShowCover(isFullScreen)
-  }, [estCardStatus])
+  // console.log('面板状态>>>>>>>', estCardStatus)
+  const [height, setHeight] = useState(100)
   
   return (
     <View
@@ -114,33 +98,32 @@ export default function Map() {
       {/* 返回按钮 */}
       <Back
         status={estCardStatus === EstimateContain.FULL ? 'down' : 'normal'}
-        onChangePanelStatus={(status) => setEstCardStatus(status)}
+        onChangePanelStatus={(status) => {
+          console.log('onChangePanelStatus>>>>>>>', status)
+        }}
         onEstimateBack={() => Taro.navigateBack({ delta: 1 })}
       />
 
-      {/* 可移动面板 */}
-      <MovablePanel
-        cardStatus={estCardStatus}
-        padding={[paddingTop, 0, 0, 0]}
-        onChangeStatus={(status) => setEstCardStatus(status)}
-        onDragDown={(isChange) => {
-          console.log('onDragDown>>>>>>>', isChange)
-        }}
+      {/* 悬浮面板 */}
+      <FloatingPanel
+        height={height}
+        onHeightChange={(newHeight) => setHeight(newHeight)}
+        contentDraggable={true}
+        showScrollbar={true}
+        duration={300}
       >
-        <Slot name="header">
-          {
-            estCardStatus === EstimateContain.FULL ? (
-              <View className="header-nav">
-                header
-              </View>
-            ) : (
-              <View className="header-container">
-                header container
-              </View>
-            )
-          }
-        </Slot>
-      </MovablePanel>
+        <View style={{ padding: '16px' }}>
+          <Text style={{ 
+            fontSize: '16px', 
+            fontWeight: 'bold', 
+            marginBottom: '16px',
+            display: 'block'
+          }}>
+            自定义锚点面板 - 当前高度: {height.toFixed(0)}px
+          </Text>
+          
+        </View>
+      </FloatingPanel>
     </View>
   )
 }

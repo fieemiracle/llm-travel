@@ -42,7 +42,6 @@ export default function Map() {
   const [isShowCover, setIsShowCover] = useState(false)
   const [estCardStatus, setEstCardStatus] = useState<EstimateContainValues>(EstimateContain.HALF)
   // console.log('面板状态>>>>>>>', estCardStatus)
-  const [height, setHeight] = useState(100)
   
   return (
     <View
@@ -106,8 +105,11 @@ export default function Map() {
 
       {/* 悬浮面板 */}
       <FloatingPanel
-        height={height}
-        onHeightChange={(newHeight) => setHeight(newHeight)}
+        onHeightChange={(newHeight, status) => {
+          console.log('onHeightChange>>>>>>>', newHeight, status)
+          setEstCardStatus(status)
+          setIsShowCover(status === EstimateContain.FULL)
+        }}
         contentDraggable={true}
         showScrollbar={true}
         duration={300}
@@ -119,7 +121,7 @@ export default function Map() {
             marginBottom: '16px',
             display: 'block'
           }}>
-            自定义锚点面板 - 当前高度: {height.toFixed(0)}px
+            自定义锚点面板
           </Text>
           
         </View>

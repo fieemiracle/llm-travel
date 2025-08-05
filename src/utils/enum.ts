@@ -36,7 +36,8 @@ export type GlobalStatusValues = typeof GlobalStatus[keyof typeof GlobalStatus];
 export const EstimateContain = {
   HALF: 'HALF', // 半屏
   COLLAPSE: 'COLLAPSE', // 收起
-  FULL: 'FULL' // 全屏
+  FULL: 'FULL', // 全屏
+  OTHER: 'OTHER' // 其他
 } as const
 
 // 定义 EstimateContain 值的类型

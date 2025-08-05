@@ -1,7 +1,8 @@
-import React, { useState, useEffect, useRef } from 'react'
+import React, { useState, useRef } from 'react'
 import { View } from '@tarojs/components'
 import { getMenuButtonBoundingClientRect, getSystemInfo } from '@/utils/system'
 import './index.less'
+import { EstimateContain, EstimateContainValues } from '@/utils/enum'
 
 interface FloatingPanelProps {
   /** 当前面板的显示高度 */
@@ -17,7 +18,7 @@ interface FloatingPanelProps {
   /** 是否开启滚动条 */
   showScrollbar?: boolean
   /** 面板高度改变回调 */
-  onHeightChange?: (height: number) => void
+  onHeightChange?: (height: number, status: EstimateContainValues) => void
   /** 自定义样式类 */
   customClass?: string
   /** 自定义样式 */
@@ -27,8 +28,6 @@ interface FloatingPanelProps {
 }
 
 export default function FloatingPanel({
-  height: propHeight,
-  anchors = [],
   duration = 300,
   contentDraggable = true,
   safeAreaInsetBottom = false,
@@ -40,58 +39,25 @@ export default function FloatingPanel({
 }: FloatingPanelProps) {
   // 系统信息
   const systemInfo = getSystemInfo()
-  const { windowHeight } = systemInfo
   const menuInfo = getMenuButtonBoundingClientRect()
+  const panelHeight = systemInfo.windowHeight - menuInfo.height - menuInfo.top
   const EstPanelAnchor = {
-    COLLAPSE: 0,
-    HALF: Math.round(0.6 * systemInfo.windowHeight),
-    FULL: Math.round(systemInfo.windowHeight - menuInfo.height - menuInfo.top)
+    COLLAPSE: 24,
+    HALF: Math.round(0.5 * panelHeight),
+    FULL: panelHeight
   }
 
-  const [height, setHeight] = useState(0)
+  const [height, setHeight] = useState(EstPanelAnchor.HALF)
   const [isDragging, setIsDragging] = useState(false)
   const [startY, setStartY] = useState(0)
-  const [startHeight, setStartHeight] = useState(0)
+  const [startHeight, setStartHeight] = useState(EstPanelAnchor.HALF)
   const panelRef = useRef<HTMLDivElement>(null)
-
-  // 默认锚点
-  const defaultAnchors = [EstPanelAnchor.COLLAPSE, EstPanelAnchor.HALF, EstPanelAnchor.FULL]
-  const finalAnchors = anchors.length > 0 ? anchors : defaultAnchors
-
-  // 确保锚点至少有一个有效值
-  const validAnchors = finalAnchors.length > 0 ? finalAnchors : [EstPanelAnchor.HALF]
-
-  // 初始化高度
-  useEffect(() => {
-    if (propHeight !== undefined) {
-      setHeight(propHeight)
-    } else {
-      setHeight(validAnchors[0])
-    }
-  }, [propHeight, validAnchors])
-
-  // 找到最近的锚点
-  const findNearestAnchor = (currentHeight: number) => {
-    let nearest = validAnchors[0]
-    let minDistance = Math.abs(currentHeight - validAnchors[0])
-
-    for (const anchor of validAnchors) {
-      const distance = Math.abs(currentHeight - anchor)
-      if (distance < minDistance) {
-        minDistance = distance
-        nearest = anchor
-      }
-    }
-
-    return nearest
-  }
 
   // 处理触摸开始
   const onTouchStart = (e: any) => {
     console.log('Touch start:', e.touches?.[0]?.clientY)
     setIsDragging(true)
     setStartY(e.touches?.[0]?.clientY || 0)
-    setStartHeight(height)
   }
 
   // 处理触摸移动
@@ -100,21 +66,29 @@ export default function FloatingPanel({
 
     const currentY = e.touches?.[0]?.clientY || 0
     const deltaY = startY - currentY
-    const newHeight = Math.max(0, Math.min(windowHeight, startHeight + deltaY))
-    
-    console.log('Touch move:', { currentY, deltaY, newHeight })
-    setHeight(newHeight)
+    if (Math.abs(deltaY) > 10) {
+      console.log('deltaY>>>>>>>', startY, currentY, deltaY, startHeight, EstPanelAnchor.HALF)
+      const newHeight = Math.max(EstPanelAnchor.COLLAPSE, Math.min(EstPanelAnchor.FULL, startHeight + deltaY))
+      console.log('Touch move:', { currentY, deltaY, newHeight })
+      setHeight(newHeight)
+      setStartHeight(newHeight)
+    }
   }
 
   // 处理触摸结束
   const onTouchEnd = () => {
     if (!isDragging) return
 
-    console.log('Touch end, current height:', height)
     setIsDragging(false)
-    const nearestAnchor = findNearestAnchor(height)
-    setHeight(nearestAnchor)
-    onHeightChange?.(nearestAnchor)
+    const status = height === EstPanelAnchor.FULL
+      ? EstimateContain.FULL
+      : height === EstPanelAnchor.HALF
+        ? EstimateContain.HALF
+        : height === EstPanelAnchor.COLLAPSE
+          ? EstimateContain.COLLAPSE
+          : EstimateContain.OTHER
+    console.log('Touch end, current height:', height, status)
+    onHeightChange?.(height, status)
   }
 
   // 处理内容区域触摸
@@ -142,13 +116,13 @@ export default function FloatingPanel({
   const panelClassName = `floating-panel ${customClass} ${safeAreaInsetBottom ? 'safe-area' : ''} ${isDragging ? 'dragging' : ''}`
 
   return (
-    <View 
+    <View
       className={panelClassName}
       style={panelStyle}
       ref={panelRef}
     >
       {/* 拖拽手柄 */}
-      <View 
+      <View
         className="floating-panel__handle"
         onTouchStart={onTouchStart}
         onTouchMove={onTouchMove}
@@ -158,7 +132,7 @@ export default function FloatingPanel({
       </View>
 
       {/* 内容区域 */}
-      <View 
+      <View
         className={`floating-panel__content ${showScrollbar ? 'floating-panel__content--scrollable' : ''}`}
         onTouchStart={onContentTouchStart}
         onTouchMove={onContentTouchMove}

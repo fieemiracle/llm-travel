@@ -1,11 +1,9 @@
 .panel-static-container {
-  // position absolute
   position: fixed;
   bottom: 0;
   height: 0; // 尝试修复move-view滑动超过move-area的问题
   width: 100%;
   pointer-events: auto;
-  // z-index 1
 
   .panel-wrap {
     position: relative;
@@ -44,9 +42,12 @@
       z-index: 1; // 漏出滚动时的无bar的白条
       width: 100%;
       /* use px */
-      height: 20rpx;
+      height: 40rpx;
       /* use px */
       border-radius: 32rpx 32rpx 0 0;
+      /* 确保触摸区域足够大 */
+      min-height: 40rpx;
+      pointer-events: auto;
 
       .barHandler {
         position: absolute;
@@ -57,12 +58,13 @@
         /* use px */
         height: 6rpx;
         /* use px */
-        top: 8rpx;
+        top: 50%;
         left: 50%;
+        transform: translate(-50%, -50%);
         transition: all 0.3s ease;
 
         &.FULL {
-          opacity: 0;
+          opacity: 1;
         }
 
         &.COLLAPSE {

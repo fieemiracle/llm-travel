@@ -1,10 +1,12 @@
 import { MovableArea, MovableView, ScrollView, View, Slot } from "@tarojs/components"
 import { useMemo, useRef, useState } from "react"
+import React from "react"
 import { EstimateContain, EstimateContainValues } from "@/utils/enum"
 import initCard, { computeMvViewHeight, getCustomeStyle, getPosition } from "./useUniversalCard"
 import { isAlipay, isH5 } from "@/utils/env"
 import "./index.less"
 import Taro from "@tarojs/taro"
+import { getSystemInfo } from "@/utils/system"
 
 export type MovablePanelPropsT = {
   cardStatus: EstimateContainValues
@@ -30,14 +32,18 @@ export type MovablePanelPropsT = {
   disable?: boolean // 默认值false
   isShowTouchBarForFull?: boolean // 默认值false
   placeholderStyleSetting?: string // 默认值''
-  onChangeStatus?: (status: EstimateContainValues) => void
-  onDragDown?: (isChange: boolean) => void
+  onChangeStatus: (status: EstimateContainValues) => void
+  onDragDown: (isChange: boolean) => void
+  children?: React.ReactNode
 }
 
+const systemInfo = getSystemInfo()
 const DEFAULT_PADDING = [0, 0, 0, 0]
-const DEFAULT_INITIAL_OFFSET = -274
-const DEFAULT_MAX_OFFSET = -72
-const DEFAULT_TRANSITION_DIFF = 30
+// 初始半屏偏移量
+const DEFAULT_INITIAL_OFFSET = -systemInfo.windowHeight * 0.4
+// 组件最大偏移量(收起状态偏移)，即：负展示高度，设置为负值以支持 COLLAPSE 状态
+const DEFAULT_MAX_OFFSET = -systemInfo.windowHeight * 0.9
+const DEFAULT_TRANSITION_DIFF = 10
 
 MovablePanel.defaultProps = {
   padding: DEFAULT_PADDING,
@@ -76,7 +82,7 @@ export default function MovablePanel(props: MovablePanelPropsT) {
   // 非第一次时会使用的展示高度
   const finalOffset = useMemo(() => {
     return getFinalOffset(cardStatus) - randomH
-  }, [cardStatus, getFinalOffset])
+  }, [cardStatus, getFinalOffset, randomH])
 
   const canScroll = useMemo(() => {
     return cardStatus === EstimateContain.HALF && !(isScrolledTop && offsetY > 0)
@@ -89,8 +95,7 @@ export default function MovablePanel(props: MovablePanelPropsT) {
 
   const triggerDragDown = (isChange: boolean) => {
     // 下拉超过偏移量时，抛出事件，通知父组件提前漏出地图
-    this.triggerEvent('dragDown', { isChange })
-    props.onDragDown && props.onDragDown(isChange)
+    props.onDragDown(isChange)
     // 单次只触发一次
     setIsFirstDragDown(isChange)
   }
@@ -108,14 +113,17 @@ export default function MovablePanel(props: MovablePanelPropsT) {
     const oldOffsetX = Math.abs(offsetX)
     // 横向滑动 > 竖向滑动 的时候不收起表单
     if (oldOffsetX > transitionDiff && oldOffsetX > Math.abs(offsetY)) {
+      console.log('横向滑动 > 竖向滑动 的时候不收起表单', oldOffsetX, transitionDiff, Math.abs(offsetY))
       return
     }
     let status = getScreenStatus(cardStatus, offsetY)
+    console.log('dealScreenStatus', status)
     if (status === EstimateContain.FULL) {
       triggerDragDown(false)
     }
     // 尾部特殊处理，当中屏高度和收起高度一致时（车型数量不足导致），不设置为中屏，统一设置为COLLAPSE
-    if (maxOffset === initialOffset) {
+    // 注意：只有在 maxOffset 和 initialOffset 都不为 0 且相等时才强制设置为 HALF
+    if (maxOffset !== 0 && initialOffset !== 0 && maxOffset === initialOffset) {
       status = EstimateContain.HALF
     }
     // 统一设置状态
@@ -128,13 +136,13 @@ export default function MovablePanel(props: MovablePanelPropsT) {
   }
 
   const processScroll = (res: { scrollTop: number }) => {
-    console.log('processScroll', res)
     if (!res) {
       return
     }
     const { scrollTop } = res
     setIsScrolledTop(scrollTop < 15)
     if (canScroll && !isTouchingBar) {
+      console.log('全屏下拉然后又回到原处时，通知隐藏地图', canScroll, isTouchingBar)
       // 全屏下拉然后又回到原处时，通知隐藏地图
       triggerDragDown(false)
       return clearEffects()
@@ -145,39 +153,44 @@ export default function MovablePanel(props: MovablePanelPropsT) {
   // 可移动面板事件
   // 顶部触控区触摸事件，用于解开movable的锁定
   const handlerTouchStart = (e: any) => {
-    console.log('handlerTouchStart', e)
+    // console.log('handlerTouchStart', e)
+    setIsTouchingBar(true)
     const { pageX, pageY } = e.touches[0]
+    console.log('handlerTouchStart', pageX, pageY)
     setStartX(pageX)
     setStartY(pageY)
-    if (scrollViewRef && scrollViewRef.current) {
-      if (isH5) {
-        scrollViewRef.current.scrollOffset((res: { scrollTop: number }) => {
-          console.log('scrollOffset', res)
-          if (res) {
-            setIsScrolledTop(res.scrollTop < 15)
-          }
-        }).exec()
-      } else {
-        const scrollViewQuery = Taro.createSelectorQuery()
-        scrollViewQuery.select('.scroll-container').scrollOffset()
-        scrollViewQuery.exec((res) => {
-          console.log('scrollOffset', res)
-          const { scrollTop } = res?.[0]
-          setIsScrolledTop(scrollTop < 15)
-        })
-      }
+    
+    if (isH5) {
+      scrollViewRef.current.scrollOffset((res: { scrollTop: number }) => {
+        console.log('scrollOffset', res)
+        if (res) {
+          setIsScrolledTop(res.scrollTop < 15)
+        }
+      }).exec()
+    } else {
+      const scrollViewQuery = Taro.createSelectorQuery()
+      scrollViewQuery.select('.scroll-container').scrollOffset()
+      scrollViewQuery.exec((res) => {
+        console.log('handlerTouchStart scrollOffset', res)
+        const { scrollTop } = res?.[0]
+        setIsScrolledTop(scrollTop < 15)
+      })
     }
   }
   // 手指移动事件，主要用于从FULL状态向下移动时，锁定滚动条
   const handlerTouchMove = (e: any) => {
-    console.log('handlerTouchMove', isAlipay, isFirstDragDown, offsetY)
     if (isAlipay || isFirstDragDown || offsetY > 0) {
       return false
     }
     const { pageX, pageY } = e.touches[0]
+    if (!startX || !startY) {
+      handlerTouchStart(e)
+      return false
+    }
     const diffX = pageX - startX
     const diffY = pageY - startY
-    console.log('handlerTouchMove', diffX, diffY, isFirstDragDown, offsetY, transitionDiff)
+    console.log('移动的时候', 'offsetY=',  `pageY(${pageY}) -`,  `startY(${startY}) = `, pageY-startY);
+    
     setOffsetX(diffX)
     setOffsetY(diffY)
     if (!isFirstDragDown && offsetY > transitionDiff) {
@@ -197,35 +210,47 @@ export default function MovablePanel(props: MovablePanelPropsT) {
     console.log('handlerTouchEnd', diffX, diffY, transitionDiff)
     setOffsetX(diffX)
     setOffsetY(diffY)
-    if (transitionDiff) {
-      if (scrollViewRef && scrollViewRef.current) {
-        if (isH5) {
-          scrollViewRef.current.scrollOffset((res: { scrollTop: number }) => {
-            console.log('scrollOffset', res)
-            if (res) {
-              processScroll(res)
-            }
-          }).exec()
-        } else {
-          const scrollViewQuery = Taro.createSelectorQuery()
-          scrollViewQuery.select('.scroll-container').scrollOffset()
-          scrollViewQuery.exec((res) => {
-            console.log('scrollOffset', res)
-            processScroll(res?.[0])
-          })
-        }
-
-      }
-    } else {
+    
+    // 立即计算新的状态，避免回弹效果
+    const oldCardStatus = cardStatus
+    const oldOffsetX = Math.abs(diffX)
+    // 横向滑动 > 竖向滑动 的时候不收起表单
+    if (oldOffsetX > transitionDiff && oldOffsetX > Math.abs(diffY)) {
+      console.log('横向滑动 > 竖向滑动 的时候不收起表单', oldOffsetX, transitionDiff, Math.abs(diffY))
       clearEffects()
+      return
     }
+    
+    // 立即计算新状态
+    const { getScreenStatus } = getPosition({padding, maxOffset, initialOffset, transitionDiff})
+    let status = getScreenStatus(cardStatus, diffY)
+    console.log('dealScreenStatus', status)
+    if (status === EstimateContain.FULL) {
+      triggerDragDown(false)
+    }
+    // 尾部特殊处理，当中屏高度和收起高度一致时（车型数量不足导致），不设置为中屏，统一设置为COLLAPSE
+    // 注意：只有在 maxOffset 和 initialOffset 都不为 0 且相等时才强制设置为 HALF
+    if (maxOffset !== 0 && initialOffset !== 0 && maxOffset === initialOffset) {
+      status = EstimateContain.HALF
+    }
+    // 立即设置状态，避免延迟
+    if (!disable) {
+      setCardStatus(status)
+      // 强制更新 y 值，确保立即吸附到正确位置
+      setRandomH(Math.random())
+    }
+    
+    clearEffects()
   }
 
   return (
     <MovableArea
       className='panel-static-container'
       style={`${positionStyle} ${wrapperStyle}`}
-      onTouchStart={handlerTouchStart}
+      onTouchStart={(e) => {
+        console.log('111111111111')
+        handlerTouchStart(e)
+      }}
     >
       <MovableView
         className='panel-wrap'
@@ -234,11 +259,14 @@ export default function MovablePanel(props: MovablePanelPropsT) {
         outOfBounds={false}
         damping={40}
         friction={1}
-        inertia={true}
+        inertia={false}
         disabled={disabled}
         y={finalOffset}
-        animation={isAnimation}
-        onTouchStart={handlerTouchStart}
+        animation={true}
+        onTouchStart={(e) => {
+          console.log('2222222222222')
+          handlerTouchStart(e)
+        }}
         onTouchMove={handlerTouchMove}
         onTouchEnd={handlerTouchEnd}
       >
@@ -246,11 +274,30 @@ export default function MovablePanel(props: MovablePanelPropsT) {
         <View className='panel-header-view' style={headerStyle ? headerStyle : ''}>
           <Slot name="header"></Slot>
         </View>
-        <View className="touch-wrapper" onTouchStart={() => setIsTouchingBar(true)}>
+        <View className="touch-wrapper">
           {/* touchbar */}
           {
             !shouldHiddenTouchBar && (
-              <View className='touchBar'>
+              <View 
+                className='touchBar'
+                onTouchStart={(e) => {
+                  console.log('touchBar onTouchStart triggered')
+                  setIsTouchingBar(true)
+                  // 阻止事件冒泡到MovableArea
+                  e.stopPropagation()
+                  return false
+                }}
+                onTouchMove={(e) => {
+                  console.log('touchBar onTouchMove triggered')
+                  e.stopPropagation()
+                  return false
+                }}
+                onTouchEnd={(e) => {
+                  console.log('touchBar onTouchEnd triggered')
+                  e.stopPropagation()
+                  return false
+                }}
+              >
                 <View className={`barHandler ${touchBarClass}`}>
                   <View className="item left"></View>
                   <View className="item right"></View>

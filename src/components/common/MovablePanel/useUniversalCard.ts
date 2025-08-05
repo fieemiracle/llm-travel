@@ -35,15 +35,22 @@ export function getPosition(params: GetPositionParamsT) {
         ? -mvViewHeight // 全屏 -100%
         : cardStatus === EstimateContain.HALF
           ? initialOffset || maxOffset // 中间状态
-          : maxOffset // 底部状态
+          : -(mvViewHeight - 100) // 收起状态，只显示头部（留出100px显示头部）
     } else {
       return maxOffset || initialOffset
     }
   }
 
   function getScreenStatus(cardStatus: EstimateContainValues, offsetY: number) {
+    console.log('getScreenStatus', cardStatus, offsetY)
     const oldStatus = cardStatus
     let newStatus = oldStatus
+    console.log('状态判断参数:', { initialOffset, mvViewHeight, maxOffset, transitionDiff, offsetY })
+    // initialOffset = -274
+    // mvViewHeight = 611
+    // maxOffset = -72
+    // transitionDiff = 30
+    // offsetY = 343
     if (initialOffset <= -mvViewHeight) {
       // this.initialOffset <= -this.mvViewHeight, COLLAPSE HALF 两段
       if (offsetY > transitionDiff) {
@@ -53,6 +60,7 @@ export function getPosition(params: GetPositionParamsT) {
       }
     } else if (initialOffset && maxOffset) {
       // COLLAPSE HALF FULL 三段
+      console.log('offsetY', offsetY, transitionDiff)
       if (offsetY > transitionDiff) {
         newStatus =
           oldStatus === EstimateContain.FULL
@@ -63,7 +71,7 @@ export function getPosition(params: GetPositionParamsT) {
       } else if (offsetY < -transitionDiff) {
         newStatus =
           oldStatus === EstimateContain.COLLAPSE
-            ? maxOffset + offsetY < initialOffset // 从底部向上滑动超过卡片HALF展示高度阈值，就直接拉到全屏
+            ? -(mvViewHeight - 100) + offsetY < initialOffset // 从底部向上滑动超过卡片HALF展示高度阈值，就直接拉到全屏
               ? EstimateContain.FULL
               : EstimateContain.HALF
             : EstimateContain.FULL
@@ -77,7 +85,10 @@ export function getPosition(params: GetPositionParamsT) {
       }
     }
     // 尾部特殊处理，当中屏高度和收起高度一致时（车型数量不足导致），不设置为中屏，统一设置为COLLAPSE
-    maxOffset === initialOffset && (newStatus = EstimateContain.HALF)
+    // 注意：只有在 maxOffset 和 initialOffset 都不为 0 且相等时才强制设置为 HALF
+    if (maxOffset !== 0 && initialOffset !== 0 && maxOffset === initialOffset) {
+      newStatus = EstimateContain.HALF
+    }
     return newStatus
   }
 
@@ -106,7 +117,12 @@ function getPlaceholderHeight(cardStatus: EstimateContainValues, mvViewHeight: n
   maxOffset = maxOffset || 0
   if (cardStatus === EstimateContain.FULL) return 0
   let padHeight = cardStatus === EstimateContain.HALF ? initialOffset : maxOffset
-  padHeight += mvViewHeight
+  // 对于 COLLAPSE 状态，使用与 getFinalOffset 一致的偏移量
+  if (cardStatus === EstimateContain.COLLAPSE) {
+    padHeight = -(mvViewHeight - 100) + mvViewHeight
+  } else {
+    padHeight += mvViewHeight
+  }
   return padHeight
 }
 
@@ -117,7 +133,7 @@ export default function initCard(props: MovablePanelPropsT, cardStatus: Estimate
   let scrollY = 0 // 仅用于点击back时重置scroll-view的scrollTop
   function setCardStatus(status: EstimateContainValues) {
     if (status !== cardStatus) {
-      props.onChangeStatus && props.onChangeStatus(status)
+      props.onChangeStatus(status)
     }
   }
   // 是否在滚动态

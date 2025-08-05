@@ -1,4 +1,4 @@
-import { View, Map as GMap } from "@tarojs/components"
+import { View, Map as GMap, Slot } from "@tarojs/components"
 import type { MapProps } from '@tarojs/components'
 // import { getStatusBarHeight } from "@/utils/system"
 import { EstimateContain, EstimateContainValues } from "@/utils/enum"
@@ -47,7 +47,7 @@ export default function Map() {
 
   const [isShowCover, setIsShowCover] = useState(false)
   const [estCardStatus, setEstCardStatus] = useState<EstimateContainValues>(EstimateContain.HALF)
-  console.log('estCardStatus>>>>>>>', estCardStatus)
+  console.log('面板状态>>>>>>>', estCardStatus)
 
 
   // useEffect(() => {
@@ -126,7 +126,21 @@ export default function Map() {
         onDragDown={(isChange) => {
           console.log('onDragDown>>>>>>>', isChange)
         }}
-      />
+      >
+        <Slot name="header">
+          {
+            estCardStatus === EstimateContain.FULL ? (
+              <View className="header-nav">
+                header
+              </View>
+            ) : (
+              <View className="header-container">
+                header container
+              </View>
+            )
+          }
+        </Slot>
+      </MovablePanel>
     </View>
   )
 }

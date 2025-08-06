@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react'
+import React, { useState, useRef, useEffect } from 'react'
 import { View } from '@tarojs/components'
 import { getMenuButtonBoundingClientRect, getSystemInfo } from '@/utils/system'
 import './index.less'
@@ -48,10 +48,22 @@ export default function FloatingPanel({
   }
 
   const [height, setHeight] = useState(EstPanelAnchor.HALF)
+  onHeightChange?.(height, EstimateContain.HALF)
   const [isDragging, setIsDragging] = useState(false)
   const [startY, setStartY] = useState(0)
   const [startHeight, setStartHeight] = useState(EstPanelAnchor.HALF)
   const panelRef = useRef<HTMLDivElement>(null)
+
+  useEffect(() => {
+    const status = height === EstPanelAnchor.FULL
+    ? EstimateContain.FULL
+    : height === EstPanelAnchor.HALF
+      ? EstimateContain.HALF
+      : height === EstPanelAnchor.COLLAPSE
+        ? EstimateContain.COLLAPSE
+        : EstimateContain.OTHER
+    onHeightChange?.(height, status)
+  }, [height])
 
   // 处理触摸开始
   const onTouchStart = (e: any) => {

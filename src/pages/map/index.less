@@ -26,4 +26,40 @@
     background-color: rgba(243, 243, 243, 1);
     transition: all .5s ease;
   }
+
+  .panel-header {
+    height: 100rpx;
+    padding: 20rpx;
+    box-sizing: border-box;
+    width: 100%;
+    position: fixed;
+    left: 0;
+    right: 0;
+
+    &-tab-pane {
+      height: 100%;
+      width: 100%;
+      display: flex;
+      align-items: center;
+      gap: 20rpx;
+
+      &-item {
+        height: fit-content;
+        padding: 10rpx 18rpx;
+        box-sizing: border-box;
+        border-radius: 20rpx;
+        background: #fff;
+        border: 2rpx solid #A8F8F7;
+        font-size: 24rpx;
+      }
+
+      .active {
+        background: #A8F8F7;
+        border: 2rpx solid #41C9A9;
+        color: #41C9A9;
+        font-weight: bold;
+      }
+    }
+  }
+
 }

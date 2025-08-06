@@ -39,17 +39,17 @@ export type MapConfigType = {
 // callout 气泡窗口类型
 export type MarkerCalloutType = {
   content: string
-  color: string
-  fontSize: number
-  bgColor: string
-  anchorX: number
-  anchorY: number
-  borderWidth: number
-  borderRadius: number
-  borderColor: string
-  padding: number
-  display: 'BYCLICK' | 'ALWAYS' // 'BYCLICK':点击显示; 'ALWAYS':常显
-  textAlign: 'left' | 'center' | 'right' // 文本对齐方式
+  color?: string
+  fontSize?: number
+  bgColor?: string
+  anchorX?: number
+  anchorY?: number
+  borderWidth?: number
+  borderRadius?: number
+  borderColor?: string
+  padding?: number
+  display?: 'BYCLICK' | 'ALWAYS' // 'BYCLICK':点击显示; 'ALWAYS':常显
+  textAlign?: 'left' | 'center' | 'right' // 文本对齐方式
 }
 
 // marker 上的自定义气泡 customCallout
@@ -69,10 +69,10 @@ export type AnchorType = {
 export type MapMarkerType = {
   latitude: number
   longitude: number
-  iconPath: string // 显示的图标
-  id?: string // 标记点id
+  iconPath?: string // 显示的图标
+  id?: number // 标记点id
   title?: string // 标注点名
-  zIndex: number // 标注点层级
+  zIndex?: number // 标注点层级
   alpha?: number // 标注点透明度
   width?: number
   height?: number
@@ -85,7 +85,10 @@ export type MapMarkerType = {
 
 // polyline 折线类型 指定一系列坐标点，从数组第一项连线至最后一项
 export type MapPolylineType = {
-  points: MapProps.point[] // [{latitude: 0, longitude: 0}]
+  points: {
+    latitude: number
+    longitude: number
+  }[] // [{latitude: 0, longitude: 0}]
   color?: string // 十六进制
   width?: number
   dottedLine?: boolean // 是否使用虚线，默认false

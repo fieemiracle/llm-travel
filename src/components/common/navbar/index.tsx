@@ -22,7 +22,6 @@ export default function Navbar (props: NavbarProps) {
   const menuInfo = getMenuButtonBoundingClientRect()
   const menuHeight = menuInfo.height
   const menuWidth = menuInfo.width
-  console.log('menuInfo===', props, menuInfo)
 
   // 当前选中的路由，默认是 RouterName.INDEX
   const currentRouteName = useSelector((state: RootState) => state.common.currentRouteName)

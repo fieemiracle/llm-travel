@@ -18,7 +18,6 @@ export default function Back({
   onEstimateBack,
 }: BackProps) {
   const [backStyle, setBackStyle] = useState<React.CSSProperties>({})
-  console.log('status===', status)
 
   const handlerTap = () => {
     if (status === 'down') {
@@ -33,10 +32,8 @@ export default function Back({
     const statusBarHeight = getStatusBarHeight()
     // 获取胶囊按钮信息
     const menuInfo = getMenuButtonBoundingClientRect()
-    console.log('menuInfo===', menuInfo)
     // 获取系统信息
     const systemInfo = getSystemInfo()
-    console.log('systemInfo===', systemInfo, systemInfo.windowWidth - menuInfo.right)
     const left = systemInfo.windowWidth - menuInfo.right
     
     const styleObj = {

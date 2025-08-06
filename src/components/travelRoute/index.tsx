@@ -19,7 +19,7 @@ export default function TravelRoute() {
   const handleCarouselClick = (item: any) => {
     console.log('轮播图点击:', JSON.stringify(item))
     Taro.navigateTo({
-      url: `/pages/map/index?point=${encodeURIComponent(JSON.stringify(item))}`
+      url: `/pages/map/index?mytour=${encodeURIComponent(JSON.stringify(item))}`
     })
   }
 
@@ -27,7 +27,7 @@ export default function TravelRoute() {
   const handleRecommendClick = (item: any) => {
     console.log('推荐项点击:', JSON.stringify(item))
     Taro.navigateTo({
-      url: `/pages/map/index?point=${encodeURIComponent(JSON.stringify(item))}`
+      url: `/pages/map/index?mytour=${encodeURIComponent(JSON.stringify(item))}`
     })
   }
 

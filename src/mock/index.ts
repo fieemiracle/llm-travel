@@ -29,58 +29,120 @@ export const HOME_BOTTOM_TIPS = [
 export const CAROUSEL_DATA = [
   {
     id: '1',
-    title: '湖海园韵',
-    subtitle: '1天15个地点',
+    title: '湖海园韵·杭州经典游',
+    subtitle: '1天5个地点',
     image: 'https://picsum.photos/600/300?random=1',
     tags: ['游', '吃', '娱'],
-    location: {
-      latitude: 30.2741,      // 杭州西湖
-      longitude: 120.1551
-    }
+    tourdetail: [
+      {
+        day: 'Day 1',
+        footprint: [
+          {
+            address: '西湖断桥',
+            location: { latitude: 30.2550, longitude: 120.1475 },
+            time: '09:00-11:00'
+          },
+          {
+            address: '雷峰塔',
+            location: { latitude: 30.2333, longitude: 120.1485 },
+            time: '11:30-13:00'
+          },
+          {
+            address: '楼外楼餐厅',
+            location: { latitude: 30.2538, longitude: 120.1465 },
+            time: '13:00-14:30'
+          },
+          {
+            address: '灵隐寺',
+            location: { latitude: 30.2464, longitude: 120.0969 },
+            time: '15:00-17:00'
+          },
+          {
+            address: '河坊街夜市',
+            location: { latitude: 30.2375, longitude: 120.1682 },
+            time: '18:30-21:00'
+          }
+        ]
+      }
+    ]
   },
   {
     id: '2',
-    title: '故宫·天安门游',
-    subtitle: '1天14个地点',
+    title: '故宫·天安门深度游',
+    subtitle: '1天4个地点',
     image: 'https://picsum.photos/600/300?random=2',
-    tags: ['游', '吃', '娱'],
-    location: {
-      latitude: 39.9163,      // 北京故宫
-      longitude: 116.3972
-    }
+    tags: ['游', '史'],
+    tourdetail: [
+      {
+        day: 'Day 1',
+        footprint: [
+          {
+            address: '天安门广场',
+            location: { latitude: 39.9035, longitude: 116.3976 },
+            time: '08:00-10:00'
+          },
+          {
+            address: '故宫博物院',
+            location: { latitude: 39.9163, longitude: 116.3972 },
+            time: '10:30-14:00'
+          },
+          {
+            address: '景山公园',
+            location: { latitude: 39.9235, longitude: 116.3912 },
+            time: '14:30-16:00'
+          },
+          {
+            address: '王府井大街',
+            location: { latitude: 39.9139, longitude: 116.4137 },
+            time: '17:00-20:00'
+          }
+        ]
+      }
+    ]
   },
   {
     id: '3',
-    title: '经典双园',
-    subtitle: '1天14个地点',
+    title: '桂林山水2日游',
+    subtitle: '2天8个地点',
     image: 'https://picsum.photos/600/300?random=3',
-    tags: ['游', '吃', '娱'],
-    location: {
-      latitude: 31.2304,      // 上海外滩
-      longitude: 121.4737
-    }
-  },
-  {
-    id: '4',
-    title: '山水甲天下',
-    subtitle: '2天20个地点',
-    image: 'https://picsum.photos/600/300?random=4',
     tags: ['游', '摄'],
-    location: {
-      latitude: 25.2736,      // 桂林漓江
-      longitude: 110.2900
-    }
-  },
-  {
-    id: '5',
-    title: '古城探秘',
-    subtitle: '3天25个地点',
-    image: 'https://picsum.photos/600/300?random=5',
-    tags: ['游', '古'],
-    location: {
-      latitude: 34.3416,      // 西安兵马俑
-      longitude: 108.9398
-    }
+    tourdetail: [
+      {
+        day: 'Day 1',
+        footprint: [
+          {
+            address: '漓江游船',
+            location: { latitude: 25.2736, longitude: 110.2900 },
+            time: '09:00-12:00'
+          },
+          {
+            address: '象鼻山公园',
+            location: { latitude: 25.2625, longitude: 110.2964 },
+            time: '13:30-15:30'
+          },
+          {
+            address: '两江四湖夜游',
+            location: { latitude: 25.2775, longitude: 110.2947 },
+            time: '19:00-21:00'
+          }
+        ]
+      },
+      {
+        day: 'Day 2',
+        footprint: [
+          {
+            address: '龙脊梯田',
+            location: { latitude: 25.7589, longitude: 110.1492 },
+            time: '08:00-12:00'
+          },
+          {
+            address: '阳朔西街',
+            location: { latitude: 24.7785, longitude: 110.4966 },
+            time: '14:00-17:00'
+          }
+        ]
+      }
+    ]
   }
 ]
 

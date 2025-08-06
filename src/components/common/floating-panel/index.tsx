@@ -55,13 +55,13 @@ export default function FloatingPanel({
   const panelRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
-    const status = height === EstPanelAnchor.FULL
-    ? EstimateContain.FULL
-    : height === EstPanelAnchor.HALF
-      ? EstimateContain.HALF
-      : height === EstPanelAnchor.COLLAPSE
-        ? EstimateContain.COLLAPSE
-        : EstimateContain.OTHER
+    const getStatus = (h: number) => {
+      if (h === EstPanelAnchor.FULL) return EstimateContain.FULL
+      if (h === EstPanelAnchor.HALF) return EstimateContain.HALF  
+      if (h === EstPanelAnchor.COLLAPSE) return EstimateContain.COLLAPSE
+      return EstimateContain.OTHER // 自由位置
+    }
+    const status = getStatus(height)
     onHeightChange?.(height, status)
   }, [height])
 
@@ -69,7 +69,9 @@ export default function FloatingPanel({
   const onTouchStart = (e: any) => {
     // console.log('Touch start:', e.touches?.[0]?.clientY)
     setIsDragging(true)
-    setStartY(e.touches?.[0]?.clientY || 0)
+    const clientY = e.touches?.[0]?.clientY || 0
+    setStartY(clientY)
+    setStartHeight(height) // 在触摸开始时设置起始高度
   }
 
   // 处理触摸移动
@@ -78,12 +80,12 @@ export default function FloatingPanel({
 
     const currentY = e.touches?.[0]?.clientY || 0
     const deltaY = startY - currentY
-    if (Math.abs(deltaY) > 10) {
-      // console.log('deltaY>>>>>>>', startY, currentY, deltaY, startHeight, EstPanelAnchor.HALF)
+    
+    if (Math.abs(deltaY) > 3) { // 降低拖拽阈值，让响应更灵敏
+      // console.log('deltaY>>>>>>>', startY, currentY, deltaY, startHeight)
       const newHeight = Math.max(EstPanelAnchor.COLLAPSE, Math.min(EstPanelAnchor.FULL, startHeight + deltaY))
       // console.log('Touch move:', { currentY, deltaY, newHeight })
       setHeight(newHeight)
-      setStartHeight(newHeight)
     }
   }
 
@@ -92,15 +94,23 @@ export default function FloatingPanel({
     if (!isDragging) return
 
     setIsDragging(false)
-    const status = height === EstPanelAnchor.FULL
-      ? EstimateContain.FULL
-      : height === EstPanelAnchor.HALF
-        ? EstimateContain.HALF
-        : height === EstPanelAnchor.COLLAPSE
-          ? EstimateContain.COLLAPSE
-          : EstimateContain.OTHER
-    // console.log('Touch end, current height:', height, status)
-    onHeightChange?.(height, status)
+    
+    // 不再强制吸附到锚点，保持当前位置
+    // 只需要确保在合理范围内
+    const finalHeight = Math.max(EstPanelAnchor.COLLAPSE, Math.min(EstPanelAnchor.FULL, height))
+    setHeight(finalHeight)
+    
+    // 根据当前高度判断状态
+    const getStatus = (h: number) => {
+      if (h === EstPanelAnchor.FULL) return EstimateContain.FULL
+      if (h === EstPanelAnchor.HALF) return EstimateContain.HALF  
+      if (h === EstPanelAnchor.COLLAPSE) return EstimateContain.COLLAPSE
+      return EstimateContain.OTHER // 自由位置
+    }
+    
+    const status = getStatus(finalHeight)
+    // console.log('Touch end, final height:', finalHeight, status)
+    onHeightChange?.(finalHeight, status)
   }
 
   // 处理内容区域触摸

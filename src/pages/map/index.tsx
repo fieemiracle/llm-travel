@@ -252,7 +252,7 @@ export default function Map() {
       {/* 悬浮面板 */}
       <FloatingPanel
         onHeightChange={(newHeight, status) => {
-          // console.log('onHeightChange>>>>>>>', newHeight, status)
+          console.log('高度发生改变>>>>>>>', newHeight, status, EstimateContain.FULL)
           setEstCardStatus(status)
           setPanelHeight(newHeight)
           setIsShowCover(status === EstimateContain.FULL)
@@ -268,7 +268,7 @@ export default function Map() {
             marginBottom: '16px',
             display: 'block'
           }}>
-            自定义锚点面板
+            自定义锚点面板 {JSON.stringify(estCardStatus)}
           </Text>
           
         </View>

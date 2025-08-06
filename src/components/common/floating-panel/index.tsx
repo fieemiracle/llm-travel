@@ -48,22 +48,40 @@ export default function FloatingPanel({
   }
 
   const [height, setHeight] = useState(EstPanelAnchor.HALF)
-  onHeightChange?.(height, EstimateContain.HALF)
+//   onHeightChange?.(height, EstimateContain.HALF)
   const [isDragging, setIsDragging] = useState(false)
   const [startY, setStartY] = useState(0)
   const [startHeight, setStartHeight] = useState(EstPanelAnchor.HALF)
   const panelRef = useRef<HTMLDivElement>(null)
 
-  useEffect(() => {
-    const getStatus = (h: number) => {
-      if (h === EstPanelAnchor.FULL) return EstimateContain.FULL
-      if (h === EstPanelAnchor.HALF) return EstimateContain.HALF  
-      if (h === EstPanelAnchor.COLLAPSE) return EstimateContain.COLLAPSE
-      return EstimateContain.OTHER // 自由位置
+  // 公共的状态判断函数
+  const getStatus = (h: number) => {
+    // 使用分层容差，避免状态边界重叠
+    const fullTolerance = 40 // FULL状态容差
+    const collapseTolerance = 20 // COLLAPSE状态容差  
+    const halfTolerance = 25 // HALF状态容差
+    
+    // 优先判断极端位置，避免冲突
+    // 接近FULL位置时返回FULL状态（优先级最高）
+    if (h >= EstPanelAnchor.FULL - fullTolerance) return EstimateContain.FULL
+    
+    // 接近COLLAPSE位置时返回COLLAPSE状态（优先级第二）
+    if (h <= EstPanelAnchor.COLLAPSE + collapseTolerance) return EstimateContain.COLLAPSE
+    
+    // 在中间区域且接近HALF位置时返回HALF状态
+    if (h > EstPanelAnchor.COLLAPSE + collapseTolerance + 10 && 
+        h < EstPanelAnchor.FULL - fullTolerance - 10 &&
+        Math.abs(h - EstPanelAnchor.HALF) <= halfTolerance) {
+      return EstimateContain.HALF
     }
-    const status = getStatus(height)
-    onHeightChange?.(height, status)
-  }, [height])
+    
+    return EstimateContain.OTHER // 自由位置
+  }
+
+//   useEffect(() => {
+//         const newStatus = getStatus(height)
+//         onHeightChange?.(height, newStatus)
+//   }, [height, isDragging])
 
   // 处理触摸开始
   const onTouchStart = (e: any) => {
@@ -100,16 +118,9 @@ export default function FloatingPanel({
     const finalHeight = Math.max(EstPanelAnchor.COLLAPSE, Math.min(EstPanelAnchor.FULL, height))
     setHeight(finalHeight)
     
-    // 根据当前高度判断状态
-    const getStatus = (h: number) => {
-      if (h === EstPanelAnchor.FULL) return EstimateContain.FULL
-      if (h === EstPanelAnchor.HALF) return EstimateContain.HALF  
-      if (h === EstPanelAnchor.COLLAPSE) return EstimateContain.COLLAPSE
-      return EstimateContain.OTHER // 自由位置
-    }
-    
+    // 拖拽结束后立即更新状态
     const status = getStatus(finalHeight)
-    // console.log('Touch end, final height:', finalHeight, status)
+    console.log(finalHeight, status, 'status>>>>此时的状态');
     onHeightChange?.(finalHeight, status)
   }
 

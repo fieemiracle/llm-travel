@@ -78,10 +78,10 @@ export default function FloatingPanel({
     return EstimateContain.OTHER // 自由位置
   }
 
-//   useEffect(() => {
-//         const newStatus = getStatus(height)
-//         onHeightChange?.(height, newStatus)
-//   }, [height, isDragging])
+  useEffect(() => {
+        const newStatus = getStatus(height)
+        onHeightChange?.(height, newStatus)
+  }, [height, isDragging])
 
   // 处理触摸开始
   const onTouchStart = (e: any) => {

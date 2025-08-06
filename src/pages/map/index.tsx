@@ -16,17 +16,18 @@ import { genMarker, genPolyline } from "@/utils/map"
 const DEFAULT_MAP_CONFIG: MapConfigType = {
   longitude: 116.397428,
   latitude: 39.90923,
-  scale: 10,
-  minScale: 3,
+  scale: 14, // 进一步提高默认缩放级别，让标点更居中
+  minScale: 5, // 提高最小缩放级别，避免过度缩小
   maxScale: 20,
-  showLocation: true
+  showLocation: true,
+  enableZoom: true // 确保启用缩放功能
 }
 
 const DEFAULT_INCLUDE_PADDING: IncludePaddingStyleT = {
-  left: 100,
-  right: 100,
-  top: 100,
-  bottom: 100
+    left: 100,
+    right: 100,
+    top: 100,
+    bottom: 100
 }
 
 export default function Map() {
@@ -79,10 +80,18 @@ export default function Map() {
           setTabPane(day)
           setGMapMarkers(markers)
           setGMapPolylines([polyline])
-          setMapConfig({
-            ...mapConfig,
-            includePoints: points
-          })
+          
+          // 使用手动计算的中心点和缩放级别
+          const centerInfo = calculateMapCenter(markers)
+          if (centerInfo) {
+            setMapConfig({
+              ...mapConfig,
+              longitude: centerInfo.centerLng,
+              latitude: centerInfo.centerLat,
+              scale: centerInfo.scale,
+              includePoints: undefined // 不使用自动缩放
+            })
+          }
         }
         return {
           ...tourItem,
@@ -98,16 +107,51 @@ export default function Map() {
     }
   })
 
+  // 计算所有标点的中心位置和合适的缩放级别
+  const calculateMapCenter = (markers: any[]) => {
+    if (!markers || markers.length === 0) return null
+
+    const latitudes = markers.map(m => m.latitude)
+    const longitudes = markers.map(m => m.longitude)
+    
+    const centerLat = (Math.max(...latitudes) + Math.min(...latitudes)) / 2
+    const centerLng = (Math.max(...longitudes) + Math.min(...longitudes)) / 2
+    
+    // 计算距离范围来确定合适的缩放级别
+    const latRange = Math.max(...latitudes) - Math.min(...latitudes)
+    const lngRange = Math.max(...longitudes) - Math.min(...longitudes)
+    const maxRange = Math.max(latRange, lngRange)
+    
+    // 根据范围计算缩放级别，范围越大缩放级别越小
+    let scale = 14 // 默认较高的缩放级别
+    if (maxRange > 0.1) scale = 12
+    if (maxRange > 0.5) scale = 10
+    if (maxRange > 1) scale = 8
+    if (maxRange > 2) scale = 6
+    
+    console.log('计算中心点:', { centerLat, centerLng, scale, maxRange })
+    
+    return { centerLat, centerLng, scale: 14 }
+  }
+
   const onTabPaneChange = (tourItem: any) => {
     console.log('onTabPaneChange>>>>>>>', tourItem)
     const { day, markers, polyline } = tourItem
     setTabPane(day)
     setGMapMarkers(markers)
     setGMapPolylines([polyline])
-    setMapConfig({
-      ...mapConfig,
-      includePoints: polyline.points
-    })
+    
+    // 计算中心点和缩放级别
+    const centerInfo = calculateMapCenter(markers)
+    if (centerInfo) {
+      setMapConfig({
+        ...mapConfig,
+        longitude: centerInfo.centerLng,
+        latitude: centerInfo.centerLat,
+        scale: centerInfo.scale,
+        includePoints: undefined // 不使用自动缩放
+      })
+    }
   }
 
   return (
@@ -129,6 +173,8 @@ export default function Map() {
           maxScale={mapConfig.maxScale}
           showCompass={!!mapConfig.showCompass}
           enableZoom={!!mapConfig.enableZoom}
+          enableScroll={true} // 启用滚动
+          enableRotate={true} // 启用旋转
           includePoints={mapConfig.includePoints}
           includePadding={DEFAULT_INCLUDE_PADDING}
           // customMapStyle={gMapCustomMapStyle}
@@ -138,11 +184,11 @@ export default function Map() {
           // polygons={gMapPolygons}
           // 组件错误时触发
           onError={({ detail }) => {
-            console.log('onError>>>>>>>', detail)
+            console.log('地图错误>>>>>>>', detail)
           }}
           // 视野发生变化时触发
           onRegionChange={({ detail }) => {
-            console.log('onRegionChange>>>>>>>', detail)
+            console.log('地图视野变化>>>>>>>', detail)
           }}
           // 点击定位时触发
           onAnchorPointTap={({ detail }) => {

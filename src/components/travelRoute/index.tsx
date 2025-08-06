@@ -17,17 +17,17 @@ export default function TravelRoute() {
 
   // 处理轮播图点击
   const handleCarouselClick = (item: any) => {
-    console.log('轮播图点击:', item)
+    console.log('轮播图点击:', JSON.stringify(item))
     Taro.navigateTo({
-      url: '/pages/map/index'
+      url: `/pages/map/index?point=${encodeURIComponent(JSON.stringify(item))}`
     })
   }
 
   // 处理推荐项点击
   const handleRecommendClick = (item: any) => {
-    console.log('推荐项点击:', item)
+    console.log('推荐项点击:', JSON.stringify(item))
     Taro.navigateTo({
-      url: '/pages/map/index'
+      url: `/pages/map/index?point=${encodeURIComponent(JSON.stringify(item))}`
     })
   }
 

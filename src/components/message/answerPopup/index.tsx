@@ -14,7 +14,7 @@ import { ICONFONT_ICONS } from '@/utils/iconfont'
 import './index.less'
 import styles from './markdown.module.less'
 
-console.log('styles>>>>>>>', styles, styles?.markdownModule, styles?.testModule)
+// console.log('styles>>>>>>>', styles, styles?.markdownModule, styles?.testModule)
 
 type AnswerPopupProps = {
   answerText: string

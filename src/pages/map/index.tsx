@@ -1,18 +1,17 @@
 import { View, Map as GMap, Text } from "@tarojs/components"
 import type { MapProps } from '@tarojs/components'
-// import { getStatusBarHeight } from "@/utils/system"
 import { EstimateContain, EstimateContainValues } from "@/utils/enum"
-import { useEffect, useState } from "react"
+import { useState } from "react"
 import {
   MapConfigType,
   IncludePaddingStyleT,
   CustomMapStyleT
 } from "@/types/map"
 import Back from "@/components/map/back"
-import Taro from "@tarojs/taro"
-import { getMenuButtonBoundingClientRect, getSystemInfo } from "@/utils/system"
-import './index.less'
+import Taro, { useLoad } from "@tarojs/taro"
 import FloatingPanel from "@/components/common/floating-panel"
+import pointIcon from '@/assets/iconfont/point.png'
+import './index.less'
 
 const DEFAULT_MAP_CONFIG: MapConfigType = {
   longitude: 116.397428,
@@ -42,7 +41,57 @@ export default function Map() {
   const [isShowCover, setIsShowCover] = useState(false)
   const [estCardStatus, setEstCardStatus] = useState<EstimateContainValues>(EstimateContain.HALF)
   // console.log('面板状态>>>>>>>', estCardStatus)
-  
+
+  // 接收参数
+  const { point } = Taro.getCurrentInstance().router?.params || {}
+  console.log('point>>>>>>>', point)
+  useLoad((options) => {
+    console.log('options>>>>>>>', options, options.point)
+    if (options.point) {
+      try {
+        const point = JSON.parse(decodeURIComponent(options.point))
+        const { location } = point
+        console.log('经纬度>>>>>>>', location)
+        
+        if (location && location.longitude && location.latitude) {
+          setMapConfig({
+            ...mapConfig,
+            longitude: location.longitude,
+            latitude: location.latitude
+          })
+          setGMapMarkers([
+            {
+              latitude: location.latitude,
+              longitude: location.longitude,
+              iconPath: pointIcon,
+              width: 32,
+              height: 32,
+              callout: {
+                content: point.title,
+                color: '#000',
+                fontSize: 12,
+                bgColor: '#fff',
+                anchorX: .5,
+                anchorY: .5,
+                borderRadius: 10,
+                borderWidth: 1,
+                borderColor: '#000',
+                padding: 10,
+                display: 'ALWAYS',
+                textAlign: 'center'
+              }
+            }
+          ])
+          // console.log('接收到的数据>>>>>>>', point)
+        } else {
+          console.error('location数据不完整:', location)
+        }
+      } catch (error) {
+        console.error('解析point参数失败:', error)
+      }
+    }
+  })
+
   return (
     <View
       className='map-page-wrapper'

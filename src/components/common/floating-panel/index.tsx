@@ -55,7 +55,7 @@ export default function FloatingPanel({
 
   // 处理触摸开始
   const onTouchStart = (e: any) => {
-    console.log('Touch start:', e.touches?.[0]?.clientY)
+    // console.log('Touch start:', e.touches?.[0]?.clientY)
     setIsDragging(true)
     setStartY(e.touches?.[0]?.clientY || 0)
   }
@@ -67,9 +67,9 @@ export default function FloatingPanel({
     const currentY = e.touches?.[0]?.clientY || 0
     const deltaY = startY - currentY
     if (Math.abs(deltaY) > 10) {
-      console.log('deltaY>>>>>>>', startY, currentY, deltaY, startHeight, EstPanelAnchor.HALF)
+      // console.log('deltaY>>>>>>>', startY, currentY, deltaY, startHeight, EstPanelAnchor.HALF)
       const newHeight = Math.max(EstPanelAnchor.COLLAPSE, Math.min(EstPanelAnchor.FULL, startHeight + deltaY))
-      console.log('Touch move:', { currentY, deltaY, newHeight })
+      // console.log('Touch move:', { currentY, deltaY, newHeight })
       setHeight(newHeight)
       setStartHeight(newHeight)
     }
@@ -87,7 +87,7 @@ export default function FloatingPanel({
         : height === EstPanelAnchor.COLLAPSE
           ? EstimateContain.COLLAPSE
           : EstimateContain.OTHER
-    console.log('Touch end, current height:', height, status)
+    // console.log('Touch end, current height:', height, status)
     onHeightChange?.(height, status)
   }
 

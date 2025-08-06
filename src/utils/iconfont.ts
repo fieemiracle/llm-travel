@@ -29,6 +29,6 @@ export const ICONFONT_ICONS_ENTITY = {
 } as const;
 
 export const ICONFONT_ICONS = convertIconfontEntitiesToUnicode(ICONFONT_ICONS_ENTITY)
-console.log('ICONFONT_ICONS>>>>>>>', ICONFONT_ICONS)
+// console.log('ICONFONT_ICONS>>>>>>>', ICONFONT_ICONS)
 
 export type IconFontType = typeof ICONFONT_ICONS[keyof typeof ICONFONT_ICONS]; 

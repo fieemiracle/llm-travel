@@ -1,9 +1,11 @@
-import { View, Text } from '@tarojs/components'
+import { View, Text, Button } from '@tarojs/components'
 import { HOME_WELCOME_TEXT } from '@/utils/const'
 import { formatArrayByCustomLength } from '@/utils/tools'
 import { HOME_BOTTOM_TIPS } from '@/mock'
 import FormInput from '@/components/common/formInput'
 import TravelRoute from '@/components/travelRoute'
+import FloatLayout from '@/components/common/float-layout'
+import { useState } from 'react'
 import './index.less'
 
 type HomeProps = {
@@ -14,9 +16,20 @@ type HomeProps = {
 export default function Home(props: HomeProps) {
   const homeTipsList = formatArrayByCustomLength(HOME_BOTTOM_TIPS, 2)
 
+  // 展示弹窗
+  const [showPopup, setShowPopup] = useState(true)
+  console.log('Home showPopup:', showPopup)
+
   // 点击词条
-  const onTipsClick = (tipText: string) => {
-    props.getTipText(tipText)
+  const onTipsClick = (item: { type: string, name: string }) => {
+    console.log('onTipsClick:', item)
+    if (item.type === 'text') {
+      props.getTipText(item.name)
+    }
+    if (item.type === 'popup') {
+      console.log('Setting showPopup to true')
+      setShowPopup(true)
+    }
   }
 
   // 发送查询
@@ -35,6 +48,7 @@ export default function Home(props: HomeProps) {
       <View className='home-welcome'>
         <Text>{HOME_WELCOME_TEXT}</Text>
       </View>
+      
       {/* 内容区 */}
       <View className='home-content'>
         <TravelRoute />
@@ -47,7 +61,7 @@ export default function Home(props: HomeProps) {
               <View className='home-tip' key={listIndex}>
                 {listItem.map((item, index) => (
                   <View key={index} className='home-tips-item' onClick={() => onTipsClick(item)}>
-                    <Text>{item}</Text>
+                    <Text>{item.name}</Text>
                   </View>
                 ))}
               </View>
@@ -60,6 +74,16 @@ export default function Home(props: HomeProps) {
           <FormInput onSend={(inputText) => onSendQuery(inputText)} />
         </View>
       </View>
+
+      {/* 弹窗 */}
+      <FloatLayout 
+        isOpened={showPopup} 
+        title='创建行程' 
+        onClose={() => {
+          console.log('FloatLayout onClose called')
+          setShowPopup(false)
+        }} 
+      />
     </View>
   )
 }

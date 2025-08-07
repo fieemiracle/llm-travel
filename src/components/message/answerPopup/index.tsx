@@ -11,8 +11,12 @@ import { updateChatItem, setShareMode } from '@/store/actions/chat'
 import { COPY_FAIL_TEXT, COPY_SUCCESS_TEXT, THUMB_DOWN_TEXT, THUMB_UP_TEXT } from '@/utils/const'
 import IconFont from '@/components/common/iconfont'
 import { ICONFONT_ICONS } from '@/utils/iconfont'
-import './index.less'
 import styles from './markdown.module.less'
+import MapSection from '@/components/common/map-section'
+import './index.less'
+import { MapMarkerType, MapPolylineType } from '@/types/map'
+import pointIcon from "@/assets/iconfont/point-purple.png"
+import { generateRandomHash } from '@/utils/tools'
 
 // console.log('styles>>>>>>>', styles, styles?.markdownModule, styles?.testModule)
 
@@ -50,6 +54,72 @@ const md = markdownit({
   breaks: true, // 转换段落里的 '\n' 到 <br>
   quotes: '“”‘’'
 })
+
+// 示例数据
+const callout = {
+  content: '天安门广场',
+  bgColor: '#fff',
+  color: '#000',
+  fontSize: 12,
+  borderRadius: 10,
+  borderWidth: 1,
+  borderColor: '#000',
+  display: 'ALWAYS',
+  textAlign: 'center',
+  padding: 10,
+  anchorX: 0.5,
+  anchorY: 0.5,
+} as const
+const exampleMarkers: MapMarkerType[] = [
+  {
+    id: Number(generateRandomHash('0123456789', 6)),
+    latitude: 39.90923,
+    longitude: 116.397428,
+    iconPath: pointIcon,
+    width: 32,
+    height: 32,
+    callout: {
+      ...callout,
+      content: '天安门广场'
+    }
+  },
+  {
+    id: Number(generateRandomHash('0123456789', 6)),
+    latitude: 39.91923,
+    longitude: 116.407428,
+    iconPath: pointIcon,
+    width: 32,
+    height: 32,
+    callout: {
+      ...callout,
+      content: '故宫博物院'
+    }
+  },
+  {
+    id: Number(generateRandomHash('0123456789', 6)),
+    latitude: 39.92923,
+    longitude: 116.417428,
+    iconPath: pointIcon,
+    width: 32,
+    height: 32,
+    callout: {
+      ...callout,
+      content: '景山公园'
+    }
+  }
+]
+
+const examplePolylines: MapPolylineType[] = [
+  {
+    points: [
+      { latitude: 39.90923, longitude: 116.397428 },
+      { latitude: 39.91923, longitude: 116.407428 },
+      { latitude: 39.92923, longitude: 116.417428 }
+    ],
+    color: '#667eea',
+    width: 6,
+  }
+]
 
 export default function AnswerPopup(props: AnswerPopupProps) {
   const dispatch = useDispatch()
@@ -90,7 +160,7 @@ export default function AnswerPopup(props: AnswerPopupProps) {
           }
           return prev
         })
-      }, 1000) // 每1秒切换一个步骤
+      }, 500) // 每.5秒切换一个步骤
 
       return () => clearInterval(interval)
     } else if (props.isFinished) {
@@ -137,7 +207,7 @@ export default function AnswerPopup(props: AnswerPopupProps) {
         isThumbUp: false, // 取消点赞
       }))
     }
-    
+
     // 显示反馈提示
     if (props.isThumbUp || props.isThumbDown) {
       Taro.showToast({
@@ -172,7 +242,7 @@ export default function AnswerPopup(props: AnswerPopupProps) {
           {props.isFinished && <Text>{AnswerPopupStatus.FINISHED}</Text>}
         </View>
       </View>
-      
+
       {/* 进度步骤显示 - 与状态同步 */}
       {(props.isLoading || props.isStreaming) && (
         <View className='progress-steps'>
@@ -188,7 +258,7 @@ export default function AnswerPopup(props: AnswerPopupProps) {
           ))}
         </View>
       )}
-      
+
       {
         props.answerText ? (
           <View className='answer-popup-content'>
@@ -200,6 +270,17 @@ export default function AnswerPopup(props: AnswerPopupProps) {
           </View>
         ) : (
           <View></View>
+        )
+      }
+      {
+        props.isFinished && (
+          <View className='custom-section-wrapper'>
+            <MapSection
+              markers={exampleMarkers}
+              polylines={examplePolylines}
+              onRegenerate={onRegenerate}
+            />
+          </View>
         )
       }
       {
@@ -236,7 +317,7 @@ export default function AnswerPopup(props: AnswerPopupProps) {
               </View>
               {/* 分享 */}
               <View className='tool-item share' onClick={onShare}>
-                <IconFont 
+                <IconFont
                   type={ICONFONT_ICONS.SHARE1}
                   size={24}
                 />
@@ -250,7 +331,7 @@ export default function AnswerPopup(props: AnswerPopupProps) {
         ) : (
           <View className='answer-popup-footer'>
             <View className='loading-icon'>
-              <IconFont 
+              <IconFont
                 type={ICONFONT_ICONS.LOADING}
                 color='#90F9F2'
                 size={24}

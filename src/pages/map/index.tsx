@@ -106,6 +106,16 @@ export default function Map() {
         tourdetail: formatTour,
       })
     }
+    if (options.markers) {
+      const markers = JSON.parse(decodeURIComponent(options.markers))
+      console.log('markers>>>>>>>', markers)
+      setGMapMarkers(markers)
+    }
+    if (options.polylines) {
+      const polylines = JSON.parse(decodeURIComponent(options.polylines))
+      setGMapPolylines(polylines)
+      console.log('polylines>>>>>>>', polylines)
+    }
   })
 
   // 计算所有标点的中心位置和合适的缩放级别

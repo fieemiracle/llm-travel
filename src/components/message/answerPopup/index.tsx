@@ -30,9 +30,17 @@ type AnswerPopupProps = {
 
 const AnswerPopupStatus = {
   LOADING: '正在理解您的需求...',
-  STREAMING: '正在思考...',
+  STREAMING: '兜兜正在思考...',
   FINISHED: '已深度思考',
 }
+
+// 进度步骤配置
+const PROGRESS_STEPS = [
+  { key: 'analyze', label: '分析问题', active: false },
+  { key: 'search', label: '寻找信息', active: false },
+  { key: 'organize', label: '整理结果', active: false },
+  { key: 'summarize', label: '总结答案', active: false }
+]
 
 const md = markdownit({
   html: false, // 允许解析 HTML 标签
@@ -48,6 +56,7 @@ export default function AnswerPopup(props: AnswerPopupProps) {
   // console.log('props>>>>>>>', props)
   // const [richNodes, setRichNodes] = useState<RichNodeT[]>([])
   const [htmlString, setHtmlString] = useState('')
+  const [currentStep, setCurrentStep] = useState(0)
 
   useEffect(() => {
     // console.log('props.answerText>>>>>>>', props.answerText)
@@ -66,6 +75,32 @@ export default function AnswerPopup(props: AnswerPopupProps) {
     // }]
     // setRichNodes(nodes)
   }, [props.answerText])
+
+  // 模拟进度步骤动画 - 与状态同步
+  useEffect(() => {
+    if (props.isLoading) {
+      // 加载状态：重置到第一步
+      setCurrentStep(0)
+    } else if (props.isStreaming && !props.isFinished) {
+      // 流式状态：逐步推进
+      const interval = setInterval(() => {
+        setCurrentStep(prev => {
+          if (prev < PROGRESS_STEPS.length - 1) {
+            return prev + 1
+          }
+          return prev
+        })
+      }, 1000) // 每1秒切换一个步骤
+
+      return () => clearInterval(interval)
+    } else if (props.isFinished) {
+      // 完成状态：显示最后一步
+      setCurrentStep(PROGRESS_STEPS.length - 1)
+    } else {
+      // 其他状态：重置进度
+      setCurrentStep(0)
+    }
+  }, [props.isLoading, props.isStreaming, props.isFinished])
 
   // 复制
   const onCopy = () => {
@@ -137,6 +172,23 @@ export default function AnswerPopup(props: AnswerPopupProps) {
           {props.isFinished && <Text>{AnswerPopupStatus.FINISHED}</Text>}
         </View>
       </View>
+      
+      {/* 进度步骤显示 - 与状态同步 */}
+      {(props.isLoading || props.isStreaming) && (
+        <View className='progress-steps'>
+          {PROGRESS_STEPS.map((step, index) => (
+            <View key={step.key} className='progress-step'>
+              <View className={`step-circle ${index <= currentStep ? 'active' : ''}`}>
+                {index < currentStep && <View className='step-dot'></View>}
+              </View>
+              <Text className={`step-label ${index <= currentStep ? 'active' : ''}`}>
+                {step.label}
+              </Text>
+            </View>
+          ))}
+        </View>
+      )}
+      
       {
         props.answerText ? (
           <View className='answer-popup-content'>

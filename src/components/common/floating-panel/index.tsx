@@ -48,12 +48,11 @@ export default function FloatingPanel({
     FULL: panelHeight
   }
 
-  const [height, setHeight] = useState(EstPanelAnchor.HALF)
-//   onHeightChange?.(height, EstimateContain.HALF)
+  const [height, setHeight] = useState(EstPanelAnchor.COLLAPSE)
   const [isDragging, setIsDragging] = useState(false)
   const [startY, setStartY] = useState(0)
-  const [startHeight, setStartHeight] = useState(EstPanelAnchor.HALF)
-  const [estPanelStatus, setEstPanelStatus] = useState<EstimateContainValues>(EstimateContain.HALF)
+  const [startHeight, setStartHeight] = useState(EstPanelAnchor.COLLAPSE)
+  const [estPanelStatus, setEstPanelStatus] = useState<EstimateContainValues>(EstimateContain.COLLAPSE)
   const panelRef = useRef<HTMLDivElement>(null)
 
   // 公共的状态判断函数

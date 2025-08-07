@@ -8,6 +8,7 @@ import { setQueryText } from '@/store/actions/chat'
 import { setCurrentRouteName } from '@/store/actions/common'
 import { RouterName } from '@/utils/enum'
 import './index.less'
+import { getMenuButtonBoundingClientRect, getStatusBarHeight } from '@/utils/system'
 
 const AFTER_FIX = '行程定制'
 
@@ -90,6 +91,9 @@ export default function Options() {
   const [selectedEntertainment, setSelectedEntertainment] = useState<string>('')
   const [prefixText, setPrefixText] = useState('')
 
+  const statusBarHeight = getStatusBarHeight()
+  const menuButtonHeight = getMenuButtonBoundingClientRect().height
+
   const dispatch = useDispatch()
 
   useLoad((options) => {
@@ -144,7 +148,12 @@ export default function Options() {
     <View className='options-wrapper'>
       <UserNavBar title={title} />
       
-      <View className='options-content'>
+      <View
+        className='options-content'
+        style={{
+          height: `calc(100vh - ${(statusBarHeight + menuButtonHeight + 96) * 2}rpx)`
+        }}
+      >
         {/* 美食偏好 */}
         <View className='preference-section'>
           <View className='preference-header'>

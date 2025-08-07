@@ -125,7 +125,7 @@ export default function Index () {
 
   return (
     <View className='user-wrapper'>
-      <UserNavBar />
+      <UserNavBar title='个人中心' />
       
       {/* 用户信息区域 */}
       <View className='user-info-section'>

@@ -1,5 +1,6 @@
 import { View, Text, Button } from '@tarojs/components'
 import { useEffect, useState } from 'react'
+import Taro from '@tarojs/taro'
 import './index.less'
 
 type FloatLayoutProps = {
@@ -33,9 +34,9 @@ const DEFAULT_DATE_OPTIONS = [
 const DEFAULT_PURPOSE_OPTIONS = ['经典游', '约会', '遛娃', '朋友', '团建', '一人行', '家庭']
 
 export default function FloatLayout(props: FloatLayoutProps) {
-  const [selectedTime, setSelectedTime] = useState(DEFAULT_TIME_OPTIONS[1])
-  const [selectedDate, setSelectedDate] = useState('还没定')
-  const [selectedPurpose, setSelectedPurpose] = useState('经典游')
+  const [selectedTime, setSelectedTime] = useState('')
+  const [selectedDate, setSelectedDate] = useState('')
+  const [selectedPurpose, setSelectedPurpose] = useState('')
 
   const timeOptions = DEFAULT_TIME_OPTIONS
   const purposeOptions = DEFAULT_PURPOSE_OPTIONS
@@ -43,6 +44,7 @@ export default function FloatLayout(props: FloatLayoutProps) {
 
   useEffect(() => {
     if (props.customDate) {
+      console.log('props.customDate', props.customDate)
       setSelectedDate(props.customDate)
       setDateOptions([
         ...DEFAULT_DATE_OPTIONS.slice(0, DEFAULT_DATE_OPTIONS.length - 1),
@@ -66,15 +68,19 @@ export default function FloatLayout(props: FloatLayoutProps) {
       date: selectedDate,
       purpose: selectedPurpose
     })
-    // TODO: 添加创建行程的逻辑
+    if (!selectedTime || !selectedDate || !selectedPurpose) {
+      return
+    }
+    Taro.navigateTo({
+      url: `/pages/options/index?time=${selectedTime}&date=${selectedDate}&purpose=${selectedPurpose}`
+    })
     props.onClose()
+    clearData()
   }
 
   const handleClose = () => {
     // 重置选择状态
-    setSelectedTime('下午')
-    setSelectedDate('还没定')
-    setSelectedPurpose('经典游')
+    clearData()
     props.onClose()
   }
 
@@ -84,6 +90,12 @@ export default function FloatLayout(props: FloatLayoutProps) {
     if (type === 'custom') {
       props.openCalendar()
     }
+  }
+
+  const clearData = () => {
+    setSelectedTime('')
+    setSelectedDate('')
+    setSelectedPurpose('')
   }
 
   if (!props.isOpened) {
@@ -168,7 +180,7 @@ export default function FloatLayout(props: FloatLayoutProps) {
         {/* 底部按钮 */}
         <View className="float-layout-footer">
           <Button 
-            className="float-layout-create-btn"
+            className={selectedTime && selectedDate && selectedPurpose ? 'float-layout-create-btn' : 'float-layout-create-btn disabled'}
             onClick={handleCreateItinerary}
           >
             创建行程

@@ -7,7 +7,11 @@ import { RouterName } from '@/utils/enum'
 import { useDispatch } from 'react-redux'
 import './index.less'
 
-export default function UserNavBar () {
+type UserNavBarProps = {
+  title: string
+}
+
+export default function UserNavBar (props: UserNavBarProps) {
   // 顶部导航栏高度（状态栏+胶囊按钮）
   const statusBarHeight = getStatusBarHeight()
   const navbarHeight = getNavBarHeight()
@@ -55,7 +59,7 @@ export default function UserNavBar () {
           marginRight: `${menuWidth + 16}PX`
         }}
       >
-        <Text>个人中心</Text>
+        <Text>{props.title}</Text>
       </View>
     </View>
   )

@@ -3,7 +3,8 @@ export default defineAppConfig({
     'pages/layout/index',
     'pages/user/index',
     'pages/settings/index',
-    'pages/map/index'
+    'pages/map/index',
+    'pages/options/index'
   ],
   window: {
     // backgroundTextStyle: 'light',

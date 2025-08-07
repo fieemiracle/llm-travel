@@ -1,0 +1,166 @@
+.options-wrapper {
+  min-height: 100vh;
+  background: linear-gradient(to bottom, #f8f9fa 0%, #ffffff 100%);
+  padding-bottom: 120rpx;
+}
+
+.options-content {
+  padding: 40rpx 32rpx;
+}
+
+/* 偏好选择区域 */
+.preference-section {
+  margin-bottom: 60rpx;
+  background: #fff;
+  border-radius: 24rpx;
+  padding: 40rpx 32rpx;
+  box-shadow: 0 4rpx 20rpx rgba(0, 0, 0, 0.05);
+}
+
+.preference-header {
+  display: flex;
+  align-items: center;
+  margin-bottom: 32rpx;
+  
+  .preference-icon {
+    font-size: 36rpx;
+    margin-right: 16rpx;
+  }
+  
+  .preference-title {
+    font-size: 32rpx;
+    font-weight: 600;
+    color: #333;
+  }
+}
+
+/* 美食偏好选项 */
+.food-options {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 20rpx;
+}
+
+.food-option {
+  padding: 20rpx 16rpx;
+  background: #f8f9fa;
+  border: 2rpx solid #e9ecef;
+  border-radius: 16rpx;
+  text-align: center;
+  font-size: 28rpx;
+  color: #666;
+  transition: all 0.3s ease;
+  
+  &.selected {
+    background: #41C9A9;
+    border-color: #41C9A9;
+    color: #fff;
+    transform: scale(1.05);
+    box-shadow: 0 4rpx 16rpx rgba(65, 201, 169, 0.3);
+  }
+  
+  &:active {
+    transform: scale(0.95);
+  }
+}
+
+/* 娱乐偏好选项 */
+.entertainment-options {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24rpx;
+}
+
+.entertainment-option {
+  background: #fff;
+  border: 2rpx solid #e9ecef;
+  border-radius: 20rpx;
+  padding: 32rpx 24rpx;
+  text-align: center;
+  transition: all 0.3s ease;
+  position: relative;
+  
+  &.selected {
+    background: #41C9A9;
+    border-color: #41C9A9;
+    color: #fff;
+    transform: scale(1.02);
+    box-shadow: 0 6rpx 20rpx rgba(65, 201, 169, 0.3);
+    
+    .entertainment-icon {
+      color: #fff;
+    }
+    
+    .entertainment-title {
+      color: #fff;
+    }
+    
+    .entertainment-subtitle {
+      color: rgba(255, 255, 255, 0.8);
+    }
+  }
+  
+  &:active {
+    transform: scale(0.98);
+  }
+}
+
+.entertainment-icon {
+  font-size: 48rpx;
+  margin-bottom: 16rpx;
+  color: #41C9A9;
+  display: block;
+}
+
+.entertainment-title {
+  font-size: 28rpx;
+  font-weight: 600;
+  color: #333;
+  margin-bottom: 8rpx;
+  display: block;
+}
+
+.entertainment-subtitle {
+  font-size: 22rpx;
+  color: #999;
+  line-height: 1.4;
+  display: block;
+}
+
+/* 底部操作区域 */
+.options-footer {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: #fff;
+  padding: 32rpx;
+  box-shadow: 0 -4rpx 20rpx rgba(0, 0, 0, 0.1);
+  border-radius: 24rpx 24rpx 0 0;
+}
+
+.complete-btn {
+  width: 100%;
+  height: 100rpx;
+  background: #222;
+  color: #41C9A9;
+  border: none;
+  border-radius: 50rpx;
+  font-size: 32rpx;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+  
+  &:active {
+    transform: scale(0.98);
+  }
+}
+
+.skip-text {
+  text-align: center;
+  font-size: 26rpx;
+  color: #999;
+  margin-top: 16rpx;
+}

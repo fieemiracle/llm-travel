@@ -1,11 +1,13 @@
-import { View, Text, Button } from '@tarojs/components'
+import { View, Text } from '@tarojs/components'
 import { HOME_WELCOME_TEXT } from '@/utils/const'
 import { formatArrayByCustomLength } from '@/utils/tools'
 import { HOME_BOTTOM_TIPS } from '@/mock'
 import FormInput from '@/components/common/formInput'
 import TravelRoute from '@/components/travelRoute'
 import FloatLayout from '@/components/common/float-layout'
+import Calendar from '@/components/common/calendar'
 import { useState } from 'react'
+import * as dayjs from 'dayjs'
 import './index.less'
 
 type HomeProps = {
@@ -17,7 +19,9 @@ export default function Home(props: HomeProps) {
   const homeTipsList = formatArrayByCustomLength(HOME_BOTTOM_TIPS, 2)
 
   // 展示弹窗
-  const [showPopup, setShowPopup] = useState(true)
+  const [showPopup, setShowPopup] = useState(false)
+  const [showCalendar, setShowCalendar] = useState(false)
+  const [selectedDate, setSelectedDate] = useState('')
   console.log('Home showPopup:', showPopup)
 
   // 点击词条
@@ -78,11 +82,37 @@ export default function Home(props: HomeProps) {
       {/* 弹窗 */}
       <FloatLayout 
         isOpened={showPopup} 
-        title='创建行程' 
+        title='创建行程'
+        customDate={selectedDate}
+        openCalendar={() => {
+          setShowCalendar(true)
+        }}
         onClose={() => {
           console.log('FloatLayout onClose called')
           setShowPopup(false)
         }} 
+      />
+
+      {/* 日历选择 */}
+      <Calendar
+        isOpened={showCalendar}
+        onClose={() => {
+          console.log('Calendar onClose called')
+          setShowCalendar(false)
+          setShowPopup(true)
+        }}
+        onConfirm={(date: any) => {
+          console.log('handleDateConfirm', date, dayjs(date).format('MM月DD日'))
+          const dateStr = dayjs(date).format('MM月DD日')
+          setSelectedDate(dateStr)
+          setShowCalendar(false)
+        }}
+        onCancel={() => {
+          console.log('handleDateCancel')
+          setShowCalendar(false)
+        }}
+        title='选择出发日期'
+        defaultDate={new Date()}
       />
     </View>
   )

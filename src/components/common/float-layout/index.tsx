@@ -1,22 +1,64 @@
 import { View, Text, Button } from '@tarojs/components'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import './index.less'
 
 type FloatLayoutProps = {
   isOpened: boolean
   title: string
+  customDate?: string
   onClose: () => void
+  openCalendar: () => void
   children?: React.ReactNode
 }
 
+const DEFAULT_TIME_OPTIONS = ['上午', '下午', '1天', '2天']
+const DEFAULT_DATE_OPTIONS = [
+  {
+    type: 'text',
+    name: '还没定'
+  },
+  {
+    type: 'text',
+    name: '今天'
+  },
+  {
+    type: 'text',
+    name: '明天'
+  },
+  {
+    type: 'custom',
+    name: '自定义'
+  }
+]
+const DEFAULT_PURPOSE_OPTIONS = ['经典游', '约会', '遛娃', '朋友', '团建', '一人行', '家庭']
+
 export default function FloatLayout(props: FloatLayoutProps) {
-  const [selectedTime, setSelectedTime] = useState('下午')
+  const [selectedTime, setSelectedTime] = useState(DEFAULT_TIME_OPTIONS[1])
   const [selectedDate, setSelectedDate] = useState('还没定')
   const [selectedPurpose, setSelectedPurpose] = useState('经典游')
 
-  const timeOptions = ['上午', '下午', '1天', '2天']
-  const dateOptions = ['还没定', '今天', '明天', '自定义']
-  const purposeOptions = ['经典游', '约会', '遛娃', '朋友', '团建', '一人行', '家庭']
+  const timeOptions = DEFAULT_TIME_OPTIONS
+  const purposeOptions = DEFAULT_PURPOSE_OPTIONS
+  const [dateOptions, setDateOptions] = useState(DEFAULT_DATE_OPTIONS)
+
+  useEffect(() => {
+    if (props.customDate) {
+      setSelectedDate(props.customDate)
+      setDateOptions([
+        ...DEFAULT_DATE_OPTIONS.slice(0, DEFAULT_DATE_OPTIONS.length - 1),
+        {
+          type: 'custom',
+          name: props.customDate
+        }
+      ])
+    }
+  }, [props.customDate])
+
+  useEffect(() => {
+    if (props.customDate) {
+      setSelectedDate(props.customDate)
+    }
+  }, [props.customDate])
 
   const handleCreateItinerary = () => {
     console.log('创建行程:', {
@@ -34,6 +76,14 @@ export default function FloatLayout(props: FloatLayoutProps) {
     setSelectedDate('还没定')
     setSelectedPurpose('经典游')
     props.onClose()
+  }
+
+  const onSelectDate = (option: { type: string, name: string }) => {
+    const { type, name } = option
+    setSelectedDate(name)
+    if (type === 'custom') {
+      props.openCalendar()
+    }
   }
 
   if (!props.isOpened) {
@@ -85,11 +135,11 @@ export default function FloatLayout(props: FloatLayoutProps) {
             <View className="float-layout-options">
               {dateOptions.map((option) => (
                 <View
-                  key={option}
-                  className={`float-layout-option ${selectedDate === option ? 'selected' : ''}`}
-                  onClick={() => setSelectedDate(option)}
+                  key={option.name}
+                  className={`float-layout-option ${selectedDate === option.name ? 'selected' : ''}`}
+                  onClick={() => onSelectDate(option)}
                 >
-                  <Text>{option}</Text>
+                  <Text>{option.name}</Text>
                 </View>
               ))}
             </View>

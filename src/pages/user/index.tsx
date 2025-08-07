@@ -1,30 +1,51 @@
 import { View, Text, Image } from '@tarojs/components'
-import { useLoad } from '@tarojs/taro'
 import Taro from '@tarojs/taro'
 import { useState } from 'react'
 import UserNavBar from '@/components/mine/userNavBar'
 import { MOCK_CHAT_HISTORY, MOCK_TRAVEL_PLANS, MOCK_USER_INFO } from '@/mock'
 import './index.less'
+import avatarIcon from '@/assets/iconfont/youxiaozhu.png'
+import settingIcon from '@/assets/iconfont/setting.png'
+import { setCurrentRouteName } from '@/store/actions/common'
+import { useDispatch } from 'react-redux'
+import { RouterName } from '@/utils/enum'
 
 type TabType = 'chat' | 'travel'
 
 export default function Index () {
   const [activeTab, setActiveTab] = useState<TabType>('chat')
 
-  useLoad(() => {
-    console.log('Page loaded.')
-  })
+  const dispatch = useDispatch()
 
   // 开始新对话
   const startNewChat = () => {
-    console.log('开始新对话')
-    // TODO: 跳转到聊天页面
+    dispatch(setCurrentRouteName(RouterName.CHAT))
+    Taro.navigateTo({
+      url: '/pages/layout/index'
+    }) 
   }
 
   // 进入设置页面
   const goToSettings = () => {
     Taro.navigateTo({
       url: '/pages/settings/index'
+    })
+  }
+
+  // 历史会话点击
+  const goToChat = (chat: any) => {
+    console.log('chat', chat)
+    dispatch(setCurrentRouteName(RouterName.CHAT))
+    Taro.navigateTo({
+      url: '/pages/layout/index'
+    })
+  }
+
+  // 行程点击
+  const goToTravel = (travel: any) => {
+    console.log('travel', travel)
+    Taro.navigateTo({
+      url: '/pages/map/index'
     })
   }
 
@@ -42,7 +63,7 @@ export default function Index () {
     return (
       <View className='content-list'>
         {MOCK_CHAT_HISTORY.map(chat => (
-          <View key={chat.id} className='chat-item'>
+          <View key={chat.id} className='chat-item' onClick={() => goToChat(chat)}>
             <View className='chat-content'>
               <Text className='chat-title'>{chat.title}</Text>
               <View className='chat-images'>
@@ -75,7 +96,7 @@ export default function Index () {
     return (
       <View className='content-list'>
         {MOCK_TRAVEL_PLANS.map(plan => (
-          <View key={plan.id} className='travel-item'>
+          <View key={plan.id} className='travel-item' onClick={() => goToTravel(plan)}>
             <Image className='travel-thumbnail' src={plan.thumbnail} />
             <View className='travel-content'>
               <View className='travel-tags'>
@@ -110,18 +131,16 @@ export default function Index () {
       <View className='user-info-section'>
         <View className='user-info'>
           <View className='user-avatar'>
-            <Text className='avatar-emoji'>{MOCK_USER_INFO.avatar}</Text>
+            <Image className='avatar-icon' src={avatarIcon} />
           </View>
           <View className='user-details'>
             <Text className='user-name'>{MOCK_USER_INFO.nickname}</Text>
             <Text className='user-companion'>
-              兔兔与你相识{MOCK_USER_INFO.companionDays}天了
+              游小猪与你相识{MOCK_USER_INFO.companionDays}天了
             </Text>
           </View>
           <View className='user-settings' onClick={goToSettings}>
-            <View className='settings-icon'>
-              <Text>⚙️</Text>
-            </View>
+            <Image className='settings-icon' src={settingIcon} />
           </View>
         </View>
       </View>
@@ -151,7 +170,7 @@ export default function Index () {
         {/* 在线状态 */}
         {MOCK_USER_INFO.isOnline && (
           <View className='online-status'>
-            <Text className='online-text'>我是有底线的</Text>
+            <Text className='online-text'>我是有底线的～</Text>
           </View>
         )}
       </View>

@@ -1,8 +1,9 @@
 import React, { useState, useRef, useEffect } from 'react'
-import { View } from '@tarojs/components'
+import { View, Image } from '@tarojs/components'
 import { getMenuButtonBoundingClientRect, getSystemInfo } from '@/utils/system'
 import './index.less'
 import { EstimateContain, EstimateContainValues } from '@/utils/enum'
+import arrowDownIcon from '@/assets/iconfont/arrow-down.png'
 
 interface FloatingPanelProps {
   /** 当前面板的显示高度 */
@@ -52,6 +53,7 @@ export default function FloatingPanel({
   const [isDragging, setIsDragging] = useState(false)
   const [startY, setStartY] = useState(0)
   const [startHeight, setStartHeight] = useState(EstPanelAnchor.HALF)
+  const [estPanelStatus, setEstPanelStatus] = useState<EstimateContainValues>(EstimateContain.HALF)
   const panelRef = useRef<HTMLDivElement>(null)
 
   // 公共的状态判断函数
@@ -79,8 +81,9 @@ export default function FloatingPanel({
   }
 
   useEffect(() => {
-        const newStatus = getStatus(height)
-        onHeightChange?.(height, newStatus)
+    const newStatus = getStatus(height)
+    setEstPanelStatus(newStatus)
+    onHeightChange?.(height, newStatus)
   }, [height, isDragging])
 
   // 处理触摸开始
@@ -161,7 +164,18 @@ export default function FloatingPanel({
         onTouchMove={onTouchMove}
         onTouchEnd={onTouchEnd}
       >
-        <View className="floating-panel__handle-indicator" />
+        {
+          (estPanelStatus === EstimateContain.OTHER || estPanelStatus === EstimateContain.HALF) && (
+            <View className="floating-panel__handle-indicator"></View>
+          )
+        }
+        {
+          (estPanelStatus === EstimateContain.FULL || estPanelStatus === EstimateContain.COLLAPSE) && (
+            <View className={`floating-panel__handle-image ${estPanelStatus === EstimateContain.FULL ? 'full' : estPanelStatus === EstimateContain.COLLAPSE ? 'collapse' : ''}`}>
+              <Image className='arrow-icon' src={arrowDownIcon} />
+            </View>
+          )
+        }
       </View>
 
       {/* 内容区域 */}

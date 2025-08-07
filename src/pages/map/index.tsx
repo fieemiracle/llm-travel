@@ -12,6 +12,8 @@ import Taro, { useLoad } from "@tarojs/taro"
 import FloatingPanel from "@/components/common/floating-panel"
 import './index.less'
 import { genMarker, genPolyline } from "@/utils/map"
+import IconFont from "@/components/common/iconfont"
+import { ICONFONT_ICONS } from "@/utils/iconfont"
 
 const DEFAULT_MAP_CONFIG: MapConfigType = {
   longitude: 116.397428,
@@ -66,16 +68,20 @@ export default function Map() {
             }
           })
         })
-        const polyline = genPolyline({
-          points,
-          color: '#41C9A9',
-          width: 6,
-        })
+        let polyline: MapProps.polyline | null = null
+        if (points.length > 1) {
+          polyline = genPolyline({
+            points,
+            color: '#41C9A9',
+            width: 6,
+          })
+        }
         if (tourIdx === 0) {
           setTabPane(day)
           setGMapMarkers(markers)
-          setGMapPolylines([polyline])
-          
+          if (polyline) {
+            setGMapPolylines([polyline])
+          }
           // 使用手动计算的中心点和缩放级别
           const centerInfo = calculateMapCenter(markers)
           if (centerInfo) {
@@ -134,7 +140,9 @@ export default function Map() {
     const { day, markers, polyline } = tourItem
     setTabPane(day)
     setGMapMarkers(markers)
-    setGMapPolylines([polyline])
+    if (polyline) {
+      setGMapPolylines([polyline])
+    }
     
     // 计算中心点和缩放级别
     const centerInfo = calculateMapCenter(markers)
@@ -228,11 +236,15 @@ export default function Map() {
                 )
               }
               <View className="panel-header-tab-pane-item">
-                <View className="panel-header-tab-pane-item-icon"></View>
+                <View className="panel-header-tab-pane-item-icon">
+                  <IconFont type={ICONFONT_ICONS.CHANGE} size={18} color="#41C9A9"/>
+                </View>
                 <View className="panel-header-tab-pane-item-text">换地点</View>
               </View>
               <View className="panel-header-tab-pane-item">
-                <View className="panel-header-tab-pane-item-icon"></View>
+                <View className="panel-header-tab-pane-item-icon">
+                  <IconFont type={ICONFONT_ICONS.DELETE} size={18} color="#D81F06"/>
+                </View>
                 <View className="panel-header-tab-pane-item-text">删地点</View>
               </View>
             </View>

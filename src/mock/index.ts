@@ -171,38 +171,42 @@ export const RECOMMEND_DATA = {
       duration: '3天',
       spots: 12,
       image: 'https://picsum.photos/200/150?random=10',
-      footprint: [
+      tourdetail: [
         {
-          address: '北京故宫',
-          latitude: 39.9163,
-          longitude: 116.3972,
-          visitTime: '2023-05-10 09:00'
-        },
-        {
-          address: '北京天安门广场',
-          latitude: 39.9035,
-          longitude: 116.3976,
-          visitTime: '2023-05-10 11:30'
-        },
-        {
-          address: '颐和园',
-          latitude: 39.9997,
-          longitude: 116.2754,
-          visitTime: '2023-05-11 10:00'
-        },
-        {
-          address: '八达岭长城',
-          latitude: 40.3596,
-          longitude: 116.0204,
-          visitTime: '2023-05-12 08:00'
-        },
-        {
-          address: '南锣鼓巷',
-          latitude: 39.9408,
-          longitude: 116.4036,
-          visitTime: '2023-05-12 19:00'
+          day: 'Day 1',
+          footprint: [
+            {
+              address: '北京故宫',
+              location: { latitude: 39.9163, longitude: 116.3972 },
+              visitTime: '2023-05-10 09:00'
+            },
+            {
+              address: '北京天安门广场',
+              location: { latitude: 39.9035, longitude: 116.3976 },
+              visitTime: '2023-05-10 11:30'
+            },
+            {
+              address: '颐和园',
+              location: { latitude: 39.9997, longitude: 116.2754 },
+              visitTime: '2023-05-11 10:00'
+            },
+          ]
+        }, {
+          day: 'Day 2',
+          footprint: [
+            {
+              address: '八达岭长城',
+              location: { latitude: 40.3596, longitude: 116.0204 },
+              visitTime: '2023-05-12 08:00'
+            },
+            {
+              address: '南锣鼓巷',
+              location: { latitude: 39.9408, longitude: 116.4036 },
+              visitTime: '2023-05-12 19:00'
+            }
+          ]
         }
-      ]
+      ],
     },
     {
       id: '2',
@@ -210,38 +214,43 @@ export const RECOMMEND_DATA = {
       duration: '2天',
       spots: 8,
       image: 'https://picsum.photos/200/150?random=11',
-      footprint: [
+      tourdetail: [
         {
-          address: '上海外滩',
-          latitude: 31.2397,
-          longitude: 121.4998,
-          visitTime: '2023-06-15 16:00'
+          day: 'Day 1',
+          footprint: [
+            {
+              address: '上海外滩',
+              location: { latitude: 31.2397, longitude: 121.4998 },
+              visitTime: '2023-06-15 16:00'
+            },
+            {
+              address: '东方明珠塔',
+              location: { latitude: 31.2399, longitude: 121.4997 },
+              visitTime: '2023-06-15 18:30'
+            },
+            {
+              address: '南京路步行街',
+              location: { latitude: 31.2385, longitude: 121.4773 },
+              visitTime: '2023-06-15 20:00'
+            },
+          ]
         },
         {
-          address: '东方明珠塔',
-          latitude: 31.2399,
-          longitude: 121.4997,
-          visitTime: '2023-06-15 18:30'
-        },
-        {
-          address: '南京路步行街',
-          latitude: 31.2385,
-          longitude: 121.4773,
-          visitTime: '2023-06-15 20:00'
-        },
-        {
-          address: '豫园',
-          latitude: 31.2270,
-          longitude: 121.4917,
-          visitTime: '2023-06-16 09:00'
-        },
-        {
-          address: '上海迪士尼乐园',
-          latitude: 31.1440,
-          longitude: 121.6570,
-          visitTime: '2023-06-16 13:00'
+          day: 'Day 2',
+          footprint: [
+            {
+              address: '豫园',
+              location: { latitude: 31.2270, longitude: 121.4917 },
+              visitTime: '2023-06-16 09:00'
+            },
+            {
+              address: '上海迪士尼乐园',
+              location: { latitude: 31.1440, longitude: 121.6570 },
+              visitTime: '2023-06-16 13:00'
+            }
+          ]
         }
-      ]
+      ],
     },
     {
       id: '3',
@@ -249,38 +258,43 @@ export const RECOMMEND_DATA = {
       duration: '4天',
       spots: 15,
       image: 'https://picsum.photos/200/150?random=12',
-      footprint: [
+      tourdetail: [
         {
-          address: '宽窄巷子',
-          latitude: 30.6636,
-          longitude: 104.0663,
-          visitTime: '2023-07-20 10:00'
+          day: 'Day 1',
+          footprint: [
+            {
+              address: '宽窄巷子',
+              location: { latitude: 30.6636, longitude: 104.0663 },
+              visitTime: '2023-07-20 10:00'
+            },
+            {
+              address: '锦里古街',
+              location: { latitude: 30.6459, longitude: 104.0484 },
+              visitTime: '2023-07-20 14:00'
+            },
+            {
+              address: '大熊猫繁育研究基地',
+              location: { latitude: 30.7335, longitude: 104.1587 },
+              visitTime: '2023-07-21 08:30'
+            },
+          ]
         },
         {
-          address: '锦里古街',
-          latitude: 30.6459,
-          longitude: 104.0484,
-          visitTime: '2023-07-20 14:00'
-        },
-        {
-          address: '大熊猫繁育研究基地',
-          latitude: 30.7335,
-          longitude: 104.1587,
-          visitTime: '2023-07-21 08:30'
-        },
-        {
-          address: '都江堰',
-          latitude: 31.0034,
-          longitude: 103.6131,
-          visitTime: '2023-07-22 09:00'
-        },
-        {
-          address: '青城山',
-          latitude: 30.9008,
-          longitude: 103.5736,
-          visitTime: '2023-07-23 07:00'
+          day: 'Day 2',
+          footprint: [
+            {
+              address: '都江堰',
+              location: { latitude: 31.0034, longitude: 103.6131 },
+              visitTime: '2023-07-22 09:00'
+            },
+            {
+              address: '青城山',
+              location: { latitude: 30.9008, longitude: 103.5736 },
+              visitTime: '2023-07-23 07:00'
+            }
+          ]
         }
-      ]
+      ],
     }
   ],
   classic: [
@@ -290,10 +304,38 @@ export const RECOMMEND_DATA = {
       duration: '1天',
       spots: 15,
       image: 'https://picsum.photos/200/150?random=20',
-      location: {
-        latitude: 30.2549,  // 西湖断桥残雪
-        longitude: 120.1474
-      }
+      tourdetail: [
+        {
+          day: 'Day 1',
+          footprint: [
+            {
+              address: '西湖断桥残雪',
+              location: { latitude: 30.2549, longitude: 120.1474 },
+              visitTime: '2023-05-10 09:00'
+            },
+            {
+              address: '雷峰塔',
+              location: { latitude: 30.2333, longitude: 120.1485 },
+              visitTime: '2023-05-10 11:30'
+            },
+            {
+              address: '楼外楼餐厅',
+              location: { latitude: 30.2538, longitude: 120.1465 },
+              visitTime: '2023-05-10 13:00'
+            },
+            {
+              address: '灵隐寺',
+              location: { latitude: 30.2464, longitude: 120.0969 },
+              visitTime: '2023-05-10 15:00'
+            },
+            {
+              address: '河坊街夜市',
+              location: { latitude: 30.2375, longitude: 120.1682 },
+              visitTime: '2023-05-10 18:30'
+            }
+          ]
+        }
+      ]
     },
     {
       id: '2',
@@ -301,10 +343,28 @@ export const RECOMMEND_DATA = {
       duration: '1天',
       spots: 14,
       image: 'https://picsum.photos/200/150?random=21',
-      location: {
-        latitude: 39.9163,  // 故宫博物院
-        longitude: 116.3972
-      }
+      tourdetail: [
+        {
+          day: 'Day 1',
+          footprint: [
+            {
+              address: '天安门广场',
+              location: { latitude: 39.9035, longitude: 116.3976 },
+              visitTime: '2023-05-10 09:00'
+            },
+            {
+              address: '故宫博物院',
+              location: { latitude: 39.9163, longitude: 116.3972 },
+              visitTime: '2023-05-10 11:30'
+            },
+            {
+              address: '景山公园',
+              location: { latitude: 39.9235, longitude: 116.3912 },
+              visitTime: '2023-05-10 14:30'
+            },
+          ]
+        }
+      ]
     },
     {
       id: '3',
@@ -312,10 +372,23 @@ export const RECOMMEND_DATA = {
       duration: '1天',
       spots: 14,
       image: 'https://picsum.photos/200/150?random=22',
-      location: {
-        latitude: 31.3260,  // 拙政园
-        longitude: 120.6273
-      }
+      tourdetail: [
+        {
+          day: 'Day 1',
+          footprint: [
+            {
+              address: '拙政园',
+              location: { latitude: 31.3260, longitude: 120.6273 },
+              visitTime: '2023-05-10 09:00'
+            },
+            {
+              address: '苏州博物馆',
+              location: { latitude: 31.3322, longitude: 120.6196 },
+              visitTime: '2023-05-10 11:30'
+            },
+          ]
+        }
+      ]
     }
   ],
   couple: [
@@ -325,10 +398,19 @@ export const RECOMMEND_DATA = {
       duration: '1天',
       spots: 6,
       image: 'https://picsum.photos/200/150?random=30',
-      location: {
-        latitude: 31.2397,  // 外滩观景台
-        longitude: 121.4998
-      }
+      tourdetail: [
+        {
+          day: 'Day 1',
+          footprint: [
+            {
+              address: '外滩观景台',
+              location: { latitude: 31.2397, longitude: 121.4998 },
+              visitTime: '2023-05-10 09:00'
+            },
+            {}
+          ]
+        }
+      ]
     },
     {
       id: '2',
@@ -336,10 +418,18 @@ export const RECOMMEND_DATA = {
       duration: '半天',
       spots: 4,
       image: 'https://picsum.photos/200/150?random=31',
-      location: {
-        latitude: 24.4480,  // 鼓浪屿最美转角
-        longitude: 118.0669
-      }
+      tourdetail: [
+        {
+          day: 'Day 1',
+          footprint: [
+            {
+              address: '鼓浪屿最美转角',
+              location: { latitude: 24.4480, longitude: 118.0669 },
+              visitTime: '2023-05-10 09:00'
+            }
+          ]
+        }
+      ]
     }
   ],
   parent: [
@@ -349,10 +439,18 @@ export const RECOMMEND_DATA = {
       duration: '1天',
       spots: 5,
       image: 'https://picsum.photos/200/150?random=40',
-      location: {
-        latitude: 23.0038,  // 长隆旅游度假区
-        longitude: 113.3246
-      }
+      tourdetail: [
+        {
+          day: 'Day 1',
+          footprint: [
+            {
+              address: '长隆欢乐世界',
+              location: { latitude: 23.0038, longitude: 113.3246 },
+              visitTime: '2023-05-10 09:00'
+            }
+          ]
+        }
+      ]
     },
     {
       id: '2',
@@ -360,10 +458,18 @@ export const RECOMMEND_DATA = {
       duration: '半天',
       spots: 3,
       image: 'https://picsum.photos/200/150?random=41',
-      location: {
-        latitude: 39.9138,  // 中国科技馆新馆
-        longitude: 116.4066
-      }
+      tourdetail: [
+        {
+          day: 'Day 1',
+          footprint: [
+            {
+              address: '中国科技馆新馆',
+              location: { latitude: 39.9138, longitude: 116.4066 },
+              visitTime: '2023-05-10 09:00'
+            }
+          ]
+        }
+      ]
     }
   ]
 }

@@ -36,7 +36,7 @@ export default function Map() {
   const [gMapPolylines, setGMapPolylines] = useState<MapProps.polyline[]>([])
   // const [gMapCircles, setGMapCircles] = useState<MapProps.circle[]>([])
   // const [gMapPolygons, setGMapPolygons] = useState<MapProps.polygon[]>([])
-  // const [gMapIncludePadding, setGMapIncludePadding] = useState<IncludePaddingStyleT>(DEFAULT_INCLUDE_PADDING)
+  const [gMapIncludePadding, setGMapIncludePadding] = useState<IncludePaddingStyleT>(DEFAULT_INCLUDE_PADDING)
   // const [gMapCustomMapStyle, setGMapCustomMapStyle] = useState<CustomMapStyleT>('default')
 
   const [isShowCover, setIsShowCover] = useState(false)
@@ -48,11 +48,6 @@ export default function Map() {
 
   // 接收参数
   useLoad((options) => {
-    // 单个景点
-    if (options.point) {
-      const point = JSON.parse(decodeURIComponent(options.point))
-      console.log('point>>>>>>>', point)
-    }
     // 出游路线
     if (options.mytour) {
       const mytour = JSON.parse(decodeURIComponent(options.mytour))
@@ -176,7 +171,7 @@ export default function Map() {
           enableScroll={true} // 启用滚动
           enableRotate={true} // 启用旋转
           includePoints={mapConfig.includePoints}
-          includePadding={DEFAULT_INCLUDE_PADDING}
+          includePadding={gMapIncludePadding}
           // customMapStyle={gMapCustomMapStyle}
           markers={gMapMarkers}
           polyline={gMapPolylines}
@@ -253,6 +248,10 @@ export default function Map() {
       <FloatingPanel
         onHeightChange={(newHeight, status) => {
           console.log('高度发生改变>>>>>>>', newHeight, status, EstimateContain.FULL)
+          setGMapIncludePadding({
+            ...gMapIncludePadding,
+            bottom: newHeight
+          })
           setEstCardStatus(status)
           setPanelHeight(newHeight)
           setIsShowCover(status === EstimateContain.FULL)

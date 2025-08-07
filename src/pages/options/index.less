@@ -21,12 +21,12 @@
   display: flex;
   align-items: center;
   margin-bottom: 32rpx;
-  
+
   .preference-icon {
     font-size: 36rpx;
     margin-right: 16rpx;
   }
-  
+
   .preference-title {
     font-size: 32rpx;
     font-weight: 600;
@@ -37,12 +37,13 @@
 /* 美食偏好选项 */
 .food-options {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: repeat(3, 1fr);
   gap: 20rpx;
 }
 
 .food-option {
   padding: 20rpx 16rpx;
+  box-sizing: border-box;
   background: #f8f9fa;
   border: 2rpx solid #e9ecef;
   border-radius: 16rpx;
@@ -50,7 +51,10 @@
   font-size: 28rpx;
   color: #666;
   transition: all 0.3s ease;
-  
+  display: flex;
+  justify-content: center;
+  align-content: center;
+
   &.selected {
     background: #41C9A9;
     border-color: #41C9A9;
@@ -58,7 +62,7 @@
     transform: scale(1.05);
     box-shadow: 0 4rpx 16rpx rgba(65, 201, 169, 0.3);
   }
-  
+
   &:active {
     transform: scale(0.95);
   }
@@ -79,30 +83,36 @@
   text-align: center;
   transition: all 0.3s ease;
   position: relative;
-  
-  &.selected {
-    background: #41C9A9;
-    border-color: #41C9A9;
-    color: #fff;
-    transform: scale(1.02);
-    box-shadow: 0 6rpx 20rpx rgba(65, 201, 169, 0.3);
-    
+
+  .entertainment-option-header {
+    display: flex;
+    align-items: center;
+
     .entertainment-icon {
-      color: #fff;
+      // color: #41C9A9;
+      margin-right: 10rpx;
     }
-    
+
     .entertainment-title {
-      color: #fff;
-    }
-    
-    .entertainment-subtitle {
-      color: rgba(255, 255, 255, 0.8);
+      color: #000;
     }
   }
-  
+
+  .entertainment-subtitle {
+    color: #666;
+  }
+
   &:active {
     transform: scale(0.98);
   }
+}
+
+.selected {
+  background: #41C9A9;
+  border-color: #41C9A9;
+  color: #fff;
+  transform: scale(1.02);
+  box-shadow: 0 6rpx 20rpx rgba(65, 201, 169, 0.3);
 }
 
 .entertainment-icon {
@@ -152,7 +162,7 @@
   align-items: center;
   justify-content: center;
   transition: all 0.3s ease;
-  
+
   &:active {
     transform: scale(0.98);
   }

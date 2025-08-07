@@ -177,8 +177,10 @@ export default function Options() {
                 className={`entertainment-option ${selectedEntertainment.includes(item.title) ? 'selected' : ''}`}
                 onClick={() => setSelectedEntertainment(item.title)}
               >
-                <Text className='entertainment-icon'>{item.icon}</Text>
-                <Text className='entertainment-title'>{item.title}</Text>
+                <View className='entertainment-option-header'>
+                  <Text className='entertainment-icon'>{item.icon}</Text>
+                  <Text className='entertainment-title'>{item.title}</Text>
+                </View>
                 <Text className='entertainment-subtitle'>{item.subtitle}</Text>
               </View>
             ))}

@@ -35,24 +35,19 @@ export default function Map() {
   const [mapConfig, setMapConfig] = useState<MapConfigType>(DEFAULT_MAP_CONFIG)
   const [gMapMarkers, setGMapMarkers] = useState<MapProps.marker[]>([])
   const [gMapPolylines, setGMapPolylines] = useState<MapProps.polyline[]>([])
-  // const [gMapCircles, setGMapCircles] = useState<MapProps.circle[]>([])
-  // const [gMapPolygons, setGMapPolygons] = useState<MapProps.polygon[]>([])
   const [gMapIncludePadding, setGMapIncludePadding] = useState<IncludePaddingStyleT>(DEFAULT_INCLUDE_PADDING)
-  // const [gMapCustomMapStyle, setGMapCustomMapStyle] = useState<CustomMapStyleT>('default')
 
   const [isShowCover, setIsShowCover] = useState(false)
   const [estCardStatus, setEstCardStatus] = useState<EstimateContainValues>(EstimateContain.HALF)
   const [panelHeight, setPanelHeight] = useState<number>(0)
   const [tabPane, setTabPane] = useState<string>('')
   const [mytour, setMytour] = useState<{title: string, tourdetail: any[]} | null>(null)
-  // console.log('面板状态>>>>>>>', estCardStatus)
 
   // 接收参数
   useLoad((options) => {
     // 出游路线
     if (options.mytour) {
       const mytour = JSON.parse(decodeURIComponent(options.mytour))
-      // console.log('mytour>>>>>>>', mytour)
       const { title, tourdetail } = mytour as any
       const formatTour = tourdetail.map((tourItem: { day: string,footprint: { address: string, location: { longitude: number, latitude: number } }[] }, tourIdx: number) => {
         const { day, footprint } = tourItem
@@ -99,7 +94,6 @@ export default function Map() {
           polyline
         }
       })
-      console.log('formatTour>>>>>>>', formatTour)
       setMytour({
         title,
         tourdetail: formatTour,
@@ -107,13 +101,11 @@ export default function Map() {
     }
     if (options.markers) {
       const markers = JSON.parse(decodeURIComponent(options.markers))
-      console.log('markers>>>>>>>', markers)
       setGMapMarkers(markers)
     }
     if (options.polylines) {
       const polylines = JSON.parse(decodeURIComponent(options.polylines))
       setGMapPolylines(polylines)
-      console.log('polylines>>>>>>>', polylines)
     }
   })
 
@@ -139,13 +131,11 @@ export default function Map() {
     if (maxRange > 1) scale = 8
     if (maxRange > 2) scale = 6
     
-    // console.log('计算中心点:', { centerLat, centerLng, scale, maxRange })
     
     return { centerLat, centerLng, scale: 14 }
   }
 
   const onTabPaneChange = (tourItem: any) => {
-    // console.log('onTabPaneChange>>>>>>>', tourItem)
     const { day, markers, polyline } = tourItem
     setTabPane(day)
     setGMapMarkers(markers)
@@ -196,11 +186,11 @@ export default function Map() {
           // polygons={gMapPolygons}
           // 组件错误时触发
           onError={({ detail }) => {
-            console.log('地图错误>>>>>>>', detail)
+            console.log('onError>>>>>>>', detail)
           }}
           // 视野发生变化时触发
           onRegionChange={({ detail }) => {
-            console.log('地图视野变化>>>>>>>', detail)
+            console.log('onRegionChange>>>>>>>', detail)
           }}
           // 点击定位时触发
           onAnchorPointTap={({ detail }) => {
@@ -268,7 +258,6 @@ export default function Map() {
       {/* 悬浮面板 */}
       <FloatingPanel
         onHeightChange={(newHeight, status) => {
-          // console.log('高度发生改变>>>>>>>', newHeight, status, EstimateContain.FULL)
           setGMapIncludePadding({
             ...gMapIncludePadding,
             bottom: newHeight

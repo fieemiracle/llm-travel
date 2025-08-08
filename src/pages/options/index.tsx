@@ -97,7 +97,6 @@ export default function Options() {
   const dispatch = useDispatch()
 
   useLoad((options) => {
-    console.log('options', options)
     const { time, date, purpose } = options
     setTitle(purpose + AFTER_FIX)
     const prefixQuery = `帮我规划${date}出发、${time}的${purpose}的${purpose}旅游行程。`
@@ -115,12 +114,6 @@ export default function Options() {
 
   // 完成创建
   const handleComplete = () => {
-    const preferences: UserPreferences = {
-      food: selectedFood,
-      entertainment: selectedEntertainment
-    }
-    
-    console.log('选择的偏好:', preferences)
     let afterText = ''
     if (selectedFood.length > 0) {
       afterText += `我喜欢${selectedFood.join('、')}`
@@ -137,7 +130,6 @@ export default function Options() {
 
   // 跳过，直接开启会话
   const handleSkip = () => {
-    console.log('跳过偏好设置，直接开启会话')
     Taro.navigateTo({
       url: '/pages/layout/index'
     })

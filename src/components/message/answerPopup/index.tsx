@@ -135,7 +135,6 @@ export default function AnswerPopup(props: AnswerPopupProps) {
 
   // 重新生成
   const onRegenerate = () => {
-    // console.log('onRegenerate>>>>>>>', props.chatId)
     if (props.onRegenerate) {
       props.onRegenerate(props.chatId)
     }
@@ -191,7 +190,6 @@ export default function AnswerPopup(props: AnswerPopupProps) {
           })
         },
         fail: (error) => {
-          console.log('调起美团失败:', error)
           Taro.showModal({
             title: '打开美团',
             content: '检测到您未安装美团，是否前往下载？',
@@ -237,7 +235,6 @@ export default function AnswerPopup(props: AnswerPopupProps) {
           })
         },
         fail: (error) => {
-          console.log('调起大众点评失败:', error)
           Taro.showModal({
             title: '打开大众点评',
             content: '检测到您未安装大众点评，是否前往下载？',
@@ -318,7 +315,6 @@ export default function AnswerPopup(props: AnswerPopupProps) {
               loading={false}
               showAppSelection={true}
               onItemClick={(item) => {
-                console.log('点击推荐项目:', item)
                 // 显示应用选择弹窗
                 handleAppSelection(item)
               }}

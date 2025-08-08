@@ -1,5 +1,5 @@
 import { View, Text } from '@tarojs/components'
-import { useLoad } from '@tarojs/taro'
+// import { useLoad } from '@tarojs/taro'
 import Taro from '@tarojs/taro'
 import { getStatusBarHeight, getNavBarHeight, getMenuButtonBoundingClientRect } from '@/utils/system'
 import backIcon from '@/assets/iconfont/arrow-left.png'
@@ -20,9 +20,9 @@ export default function Settings() {
   const menuHeight = menuInfo.height
   const menuWidth = menuInfo.width
 
-  useLoad(() => {
-    console.log('Settings page loaded.')
-  })
+  // useLoad(() => {
+  //   console.log('Settings page loaded.')
+  // })
 
   // 返回
   const goBack = () => {

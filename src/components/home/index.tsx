@@ -25,19 +25,16 @@ export default function Home(props: HomeProps) {
 
   // 点击词条
   const onTipsClick = (item: { type: string, name: string }) => {
-    console.log('onTipsClick:', item)
     if (item.type === 'text') {
       props.getTipText(item.name)
     }
     if (item.type === 'popup') {
-      console.log('Setting showPopup to true')
       setShowPopup(true)
     }
   }
 
   // 发送查询
   const onSendQuery = (inputText: string) => {
-    console.log(inputText, 'onSendQuery')
     const query = inputText.trim()
     if (!query) {
       return
@@ -87,7 +84,6 @@ export default function Home(props: HomeProps) {
           setShowCalendar(true)
         }}
         onClose={() => {
-          console.log('FloatLayout onClose called')
           setShowPopup(false)
         }} 
       />
@@ -96,18 +92,15 @@ export default function Home(props: HomeProps) {
       <Calendar
         isOpened={showCalendar}
         onClose={() => {
-          console.log('Calendar onClose called')
           setShowCalendar(false)
           setShowPopup(true)
         }}
         onConfirm={(date: any) => {
-          console.log('handleDateConfirm', date, dayjs(date).format('MM月DD日'))
           const dateStr = dayjs(date).format('MM月DD日')
           setSelectedDate(dateStr)
           setShowCalendar(false)
         }}
         onCancel={() => {
-          console.log('handleDateCancel')
           setShowCalendar(false)
         }}
         title='选择出发日期'

@@ -87,7 +87,6 @@ export default function FloatingPanel({
 
   // 处理触摸开始
   const onTouchStart = (e: any) => {
-    // console.log('Touch start:', e.touches?.[0]?.clientY)
     setIsDragging(true)
     const clientY = e.touches?.[0]?.clientY || 0
     setStartY(clientY)
@@ -102,9 +101,7 @@ export default function FloatingPanel({
     const deltaY = startY - currentY
     
     if (Math.abs(deltaY) > 3) { // 降低拖拽阈值，让响应更灵敏
-      // console.log('deltaY>>>>>>>', startY, currentY, deltaY, startHeight)
       const newHeight = Math.max(EstPanelAnchor.COLLAPSE, Math.min(EstPanelAnchor.FULL, startHeight + deltaY))
-      // console.log('Touch move:', { currentY, deltaY, newHeight })
       setHeight(newHeight)
     }
   }
@@ -122,7 +119,6 @@ export default function FloatingPanel({
     
     // 拖拽结束后立即更新状态
     const status = getStatus(finalHeight)
-    console.log(finalHeight, status, 'status>>>>此时的状态');
     onHeightChange?.(finalHeight, status)
   }
 

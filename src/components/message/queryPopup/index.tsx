@@ -1,5 +1,5 @@
 import { View, Text } from '@tarojs/components'
-import { useLoad } from '@tarojs/taro'
+// import { useLoad } from '@tarojs/taro'
 import IconFont from '@/components/common/iconfont'
 import { ICONFONT_ICONS } from '@/utils/iconfont'
 import Taro from '@tarojs/taro'
@@ -13,9 +13,9 @@ type QueryPopupProps = {
 }
 
 export default function QueryPopup (props: QueryPopupProps) {
-  useLoad(() => {
-    console.log('QueryPopup useLoad', props.queryText)
-  })
+  // useLoad(() => {
+  //   console.log('QueryPopup useLoad', props.queryText)
+  // })
 
   const dispatch = useDispatch()
 

@@ -36,7 +36,6 @@ export default function Index () {
 
   // 历史会话点击
   const goToChat = (chat: any) => {
-    console.log('chat', chat)
     const { history } = chat
     dispatch(setChatList(history))
     dispatch(setCurrentRouteName(RouterName.CHAT))

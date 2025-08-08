@@ -19,7 +19,6 @@ interface MapSectionProps {
   footerButtons?: {
     text: string
     type?: 'primary' | 'secondary'
-    onClick?: () => void
   }[]
   // 地图事件回调
   onMapError?: (error: any) => void
@@ -58,12 +57,10 @@ const DEFAULT_FOOTER_BUTTONS = [
   {
     text: '重新生成',
     type: 'secondary' as const,
-    onClick: () => console.log('重新生成')
   },
   {
     text: '查看行程',
     type: 'primary' as const,
-    onClick: () => console.log('查看行程')
   }
 ]
 
@@ -146,25 +143,21 @@ export default function MapSection(props: MapSectionProps) {
 
   // 地图错误处理
   const handleMapError = (error: any) => {
-    // console.log('地图错误:', error)
     onMapError?.(error)
   }
 
   // 地图视野变化处理
   const handleRegionChange = (region: any) => {
-    // console.log('地图视野变化:', region)
     onRegionChange?.(region)
   }
 
   // 标记点点击处理
   const handleMarkerTap = (marker: any) => {
-    console.log('标记点点击:', marker)
     onMarkerTap?.(marker)
   }
 
   // 气泡点击处理
   const handleCalloutTap = (callout: any) => {
-    console.log('气泡点击:', callout)
     onCalloutTap?.(callout)
   }
 

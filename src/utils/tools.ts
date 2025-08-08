@@ -22,7 +22,6 @@ export function formatArrayByCustomLength<T>(arr: T[], n: number): T[][] {
     start = end;
   }
   
-  // console.log('切割后的数组为=====', length, result)
   return result;
 }
 

@@ -59,12 +59,10 @@ export default function ShareActionBar() {
 
     // 生成对话截图
     const generateChatImage = async (messages: any[]) => {
-        console.log(messages, '>>>>>>messages');
 
         try {
             // 获取系统信息
             const systemInfo = Taro.getSystemInfoSync()
-            console.log('systemInfo:', systemInfo)
 
             // 创建画布来生成图片
             const canvas = Taro.createCanvasContext('chatCanvas')
@@ -84,13 +82,13 @@ export default function ShareActionBar() {
 
             const canvasHeight = Math.min(totalHeight + 150, CANVAS_MAX_HEIGHT) // 限制最大高度
 
-            console.log('canvasSize:', {
-                canvasWidth,
-                canvasHeight,
-                actualContentHeight: totalHeight + 150,
-                pixelRatio,
-                messageCount: messages.length
-            })
+            // console.log('canvasSize:', {
+            //     canvasWidth,
+            //     canvasHeight,
+            //     actualContentHeight: totalHeight + 150,
+            //     pixelRatio,
+            //     messageCount: messages.length
+            // })
 
             // 设置背景色
             canvas.setFillStyle('#FFFFFF')
@@ -120,7 +118,7 @@ export default function ShareActionBar() {
                 const textColor = isUser ? '#00CCC9' : '#388E3C'
                 const role = isUser ? '我' : '游小助'
 
-                console.log(`绘制第${index + 1}条消息，yPos: ${yPos}, canvasHeight: ${canvasHeight}`)
+                // console.log(`绘制第${index + 1}条消息，yPos: ${yPos}, canvasHeight: ${canvasHeight}`)
 
                 // 计算消息内容需要的行数和高度
                 const maxCharsPerLine = 30
@@ -166,11 +164,11 @@ export default function ShareActionBar() {
                     }
 
                     canvas.fillText(lineText, 60, textY)
-                    console.log(`绘制文本行 ${i + 1}: "${lineText}" at Y: ${textY}`)
+                    // console.log(`绘制文本行 ${i + 1}: "${lineText}" at Y: ${textY}`)
                 }
 
                 yPos += messageHeight + 30
-                console.log(`第${index + 1}条消息绘制完成，新yPos: ${yPos}`)
+                // console.log(`第${index + 1}条消息绘制完成，新yPos: ${yPos}`)
             }
 
             // 添加底部信息
@@ -183,8 +181,6 @@ export default function ShareActionBar() {
 
             // 绘制完成
             canvas.draw(true, () => {
-                console.log('Canvas绘制完成，开始转换为图片')
-
                 // 将画布内容转换为图片
                 Taro.canvasToTempFilePath({
                     canvasId: 'chatCanvas',
@@ -197,7 +193,6 @@ export default function ShareActionBar() {
                     fileType: 'png',
                     quality: 1,
                     success: async (res) => {
-                        console.log('图片生成成功:', res)
                         const tempFilePath = res.tempFilePath
                         try {
                             // 先请求保存图片权限
@@ -223,10 +218,8 @@ export default function ShareActionBar() {
                             await Taro.saveImageToPhotosAlbum({
                                 filePath: tempFilePath,
                                 success: () => {
-                                    console.log('图片保存成功')
                                 },
                                 fail: () => {
-                                    console.log('图片保存失败')
                                 }
                             })
 
@@ -316,7 +309,6 @@ export default function ShareActionBar() {
                 withShareTicket: true
             })
         } catch (error) {
-            console.log('分享功能暂不支持')
         }
 
         Taro.showToast({

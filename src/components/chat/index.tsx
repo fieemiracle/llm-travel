@@ -185,27 +185,23 @@ export default function Chat(props: ChatProps) {
 
   // 重新生成处理函数
   const handleRegenerate = useCallback((chatId: string) => {
-    console.log('handleRegenerate>>>>>>>', chatId)
     // 重新生成前确保自动滚动开启
     setShouldAutoScroll(true)
     
     // 找到要重新生成的聊天项
     const chatItem = chatList.find(item => item?.chatId === chatId)
     if (!chatItem) {
-      console.log('未找到对应的聊天项')
       return
     }
     
     // 找到对应的用户消息（通常是前一条消息）
     const userMessageIndex = chatList.findIndex(item => item.chatId === chatId)
     if (userMessageIndex <= 0) {
-      console.log('未找到对应的用户消息')
       return
     }
     
     const userChatItem = chatList[userMessageIndex - 1]
     if (!userChatItem || userChatItem.role !== ChatRole.USER) {
-      console.log('前一条消息不是用户消息')
       return
     }
     
@@ -231,7 +227,6 @@ export default function Chat(props: ChatProps) {
 
   useEffect(() => {
     if (queryText) {
-      console.log('useEffect queryText>>>>>>>', queryText)
       // 发送消息前确保自动滚动开启
       setShouldAutoScroll(true)
       

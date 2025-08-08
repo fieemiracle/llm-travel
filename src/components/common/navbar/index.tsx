@@ -36,14 +36,11 @@ export default function Navbar (props: NavbarProps) {
       const userInfo = Taro.getStorageSync('userInfo')
       if (!userInfo) {
         // 未登录，调起授权登录窗口
-        console.log('未登录，调起授权登录窗口')
         try {
           const profile = await Taro.getUserProfile({
             desc: '用于完善会员资料'
           })
-          console.log('profile===', profile)
-          const loginRes = await Taro.login()
-          console.log('loginRes===', loginRes)
+          await Taro.login()
           // 这里需要将 code 和 profile 发送到后端换取 session_key 并存储
           // 假设有个 loginByCode 方法处理后端交互
           // await loginByCode(loginRes.code, profile.userInfo)
@@ -71,8 +68,7 @@ export default function Navbar (props: NavbarProps) {
             const profile = await Taro.getUserProfile({
               desc: '用于完善会员资料'
             })
-            const loginRes = await Taro.login()
-            console.log('loginRes===', loginRes)
+            await Taro.login()
             // await loginByCode(loginRes.code, profile.userInfo)
             Taro.setStorageSync('userInfo', profile.userInfo)
             Taro.navigateTo({

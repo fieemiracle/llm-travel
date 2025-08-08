@@ -38,18 +38,14 @@ export default function FormInput(props: FormInputProps) {
         const firstRect = rect[0]
         if (firstRect) {
           const height = firstRect.height
-          // setWrapperHeight(height)
           // 调用父组件的高度变化回调
           props.onHeightChange?.(height)
-          // console.log('form-input-wrapper 高度1:', height, 'px')
         }
       } else if (rect && !Array.isArray(rect)) {
         // 如果是单个对象
         const height = rect.height
-        // setWrapperHeight(height)
         // 调用父组件的高度变化回调
         props.onHeightChange?.(height)
-        // console.log('form-input-wrapper 高度2:', height, 'px')
       }
     }).exec()
   }

@@ -44,7 +44,6 @@ export default function FloatLayout(props: FloatLayoutProps) {
 
   useEffect(() => {
     if (props.customDate) {
-      console.log('props.customDate', props.customDate)
       setSelectedDate(props.customDate)
       setDateOptions([
         ...DEFAULT_DATE_OPTIONS.slice(0, DEFAULT_DATE_OPTIONS.length - 1),
@@ -63,11 +62,6 @@ export default function FloatLayout(props: FloatLayoutProps) {
   }, [props.customDate])
 
   const handleCreateItinerary = () => {
-    console.log('创建行程:', {
-      time: selectedTime,
-      date: selectedDate,
-      purpose: selectedPurpose
-    })
     if (!selectedTime || !selectedDate || !selectedPurpose) {
       return
     }

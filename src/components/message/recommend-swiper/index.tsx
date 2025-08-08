@@ -13,7 +13,7 @@ type RecommendSwiperProps = {
 
 export default function RecommendSwiper(props: RecommendSwiperProps) {
   const { recommendList, title, onItemClick, loading = false, showAppSelection = false } = props
-  console.log('recommendList>>>>>>>', recommendList)
+  // console.log('recommendList>>>>>>>', recommendList)
 
   // 记录图片加载失败的索引
   const [failedImages, setFailedImages] = useState<Set<number>>(new Set())
@@ -46,7 +46,7 @@ export default function RecommendSwiper(props: RecommendSwiperProps) {
 
   // 处理图片加载失败
   const handleImageError = (index: number, originalUrl: string, type: string) => {
-    console.log('图片加载失败:', originalUrl, '类型:', type)
+    // console.log('图片加载失败:', originalUrl, '类型:', type)
     setFailedImages(prev => new Set([...prev, index]))
     setImageLoadingStates(prev => new Map(prev).set(index, 'error'))
   }

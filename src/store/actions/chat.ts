@@ -1,6 +1,14 @@
 import { ChatItem } from "@/utils/type"
 import { ChatActionType } from "@/store/types"
 
+// 设置聊天列表
+export const setChatList = (chatList: ChatItem[]) => {
+  return {
+    type: ChatActionType.SET_CHAT_LIST,
+    chatList,
+  }
+}
+
 // 添加聊天项
 export const addChatItem = (chatItem: ChatItem) => {
   return {

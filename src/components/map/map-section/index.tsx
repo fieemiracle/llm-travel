@@ -146,13 +146,13 @@ export default function MapSection(props: MapSectionProps) {
 
   // 地图错误处理
   const handleMapError = (error: any) => {
-    console.log('地图错误:', error)
+    // console.log('地图错误:', error)
     onMapError?.(error)
   }
 
   // 地图视野变化处理
   const handleRegionChange = (region: any) => {
-    console.log('地图视野变化:', region)
+    // console.log('地图视野变化:', region)
     onRegionChange?.(region)
   }
 

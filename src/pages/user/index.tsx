@@ -9,6 +9,7 @@ import settingIcon from '@/assets/iconfont/setting.png'
 import { setCurrentRouteName } from '@/store/actions/common'
 import { useDispatch } from 'react-redux'
 import { RouterName } from '@/utils/enum'
+import { setChatList } from '@/store/actions/chat'
 
 type TabType = 'chat' | 'travel'
 
@@ -35,9 +36,11 @@ export default function Index () {
   // 历史会话点击
   const goToChat = (chat: any) => {
     console.log('chat', chat)
+    const { history } = chat
+    dispatch(setChatList(history))
     dispatch(setCurrentRouteName(RouterName.CHAT))
     Taro.navigateTo({
-      url: '/pages/layout/index'
+      url: `/pages/layout/index`
     })
   }
 

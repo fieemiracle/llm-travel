@@ -168,7 +168,7 @@ const handleImageLoadSuccess = (index: number) => {
 
 // 图片加载失败
 const handleImageError = (index: number, originalUrl: string, type: string) => {
-  console.log('图片加载失败:', originalUrl, '类型:', type)
+  // console.log('图片加载失败:', originalUrl, '类型:', type)
   setFailedImages(prev => new Set([...prev, index]))
   setImageLoadingStates(prev => new Map(prev).set(index, 'error'))
 }

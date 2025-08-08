@@ -13,7 +13,8 @@ import './index.less'
 
 export default function Layout() {
   useLoad(() => {
-
+    // const { history } = JSON.parse(decodeURIComponent(options.history))
+    // console.log('history', history)
   })
 
   const currentRouteName = useSelector((state: RootState) => state.common.currentRouteName)

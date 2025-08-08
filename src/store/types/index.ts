@@ -10,6 +10,7 @@ export interface ChatStateT {
 }
 
 export const enum ChatActionType {
+  SET_CHAT_LIST = 'SET_CHAT_LIST',
   ADD_CHAT_ITEM = 'ADD_CHAT_ITEM',
   UPDATE_CHAT_ITEM = 'UPDATE_CHAT_ITEM',
   CLEAR_CHAT_LIST = 'CLEAR_CHAT_LIST',
@@ -30,6 +31,7 @@ export const enum ChatActionType {
 
 export type ChatActionReturnT = {
   type: ChatActionType
+  chatList?: ChatItem[]
   chatItem?: ChatItem
   queryText?: string
   shareMode?: boolean

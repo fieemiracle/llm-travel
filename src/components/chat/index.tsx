@@ -25,7 +25,6 @@ import Taro from '@tarojs/taro'
 import { TextDecoder } from 'text-encoding-shim'
 import IconFont from '@/components/common/iconfont'
 import { ICONFONT_ICONS } from '@/utils/iconfont'
-// import { debugRequestHeaders } from '@/utils/debug'
 import './index.less'
 import { setGlobalStatus } from '@/store/actions/common'
 
@@ -35,7 +34,7 @@ type ChatProps = {
 }
 
 export default function Chat(props: ChatProps) {
-  const chatList = useSelector((state: RootState) => state.chat.chatList)
+  const chatList = useSelector((state: RootState) => state.chat.chatList) || [] as ChatItem[]
   const queryText = useSelector((state: RootState) => state.chat.queryText)
   const shareMode = useSelector((state: RootState) => state.chat.shareMode)
   const globalStatus = useSelector((state: RootState) => state.common.globalStatus)
@@ -76,24 +75,8 @@ export default function Chat(props: ChatProps) {
 
   // sse
   const sendMessage = useCallback((userChatItem: ChatItem, assistantChatItem: ChatItem) => {
-    // console.log('sendMessage>>>>>>>', userChatItem, assistantChatItem)
-    // 模拟产生数据
-    // dispatch(updateChatItem({
-    //     chatId: assistantChatItem.chatId,
-    //     content: '111111模拟数据',
-    //     chunks: [],
-    //     isLoading: false,
-    //     isStreaming: true,
-    //     isFinished: true,
-    //     isThumbUp: false,
-    //     isThumbDown: false,
-    // }))
-    // return;
     let updateContent = ''
     let updateChunks = [] as ChatChunk[]
-    
-    // 调试请求头
-    // debugRequestHeaders()
     
     // 带上上下文 - 手动构建包含新消息的列表
     const currentChatList = [...chatListRef.current, userChatItem, assistantChatItem]
@@ -207,7 +190,7 @@ export default function Chat(props: ChatProps) {
     setShouldAutoScroll(true)
     
     // 找到要重新生成的聊天项
-    const chatItem = chatList.find(item => item.chatId === chatId)
+    const chatItem = chatList.find(item => item?.chatId === chatId)
     if (!chatItem) {
       console.log('未找到对应的聊天项')
       return
@@ -346,6 +329,7 @@ export default function Chat(props: ChatProps) {
                           isFinished={item.isFinished!}
                           isThumbUp={item.isThumbUp!}
                           isThumbDown={item.isThumbDown!}
+                          isLastItem={idx === chatList.length - 1}
                           isLast={idx === chatList.length - 1}
                           chatId={item.chatId}
                           onRegenerate={handleRegenerate}

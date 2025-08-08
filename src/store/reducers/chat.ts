@@ -9,6 +9,11 @@ const initialState: ChatStateT = {
 
 export const chatReducer = (state = initialState, action: ChatActionReturnT) => {
   switch (action.type) {
+    case ChatActionType.SET_CHAT_LIST:
+      return {
+        ...state,
+        chatList: action.chatList,
+      }
     case ChatActionType.ADD_CHAT_ITEM:
       return {
         ...state,

@@ -554,6 +554,42 @@ export const MOCK_CHAT_HISTORY = [
       'https://picsum.photos/150/150?random=1',
       'https://picsum.photos/150/150?random=2',
       'https://picsum.photos/150/150?random=3'
+    ],
+    history: [
+      {
+        chatId: '1',
+        content: '有哪些适合独处的咖啡厅？',
+        role: 'user',
+        createdAt: '2025-07-31T10:30:00Z'
+      },
+      {
+        chatId: '1',
+        content: '我推荐几家适合独处的咖啡厅：\n\n1. **星巴克臻选店** - 环境安静，有独立座位\n2. **猫屎咖啡** - 氛围温馨，适合看书\n3. **蓝山咖啡** - 音乐轻柔，座位舒适\n4. **漫咖啡** - 24小时营业，深夜好去处\n5. **瑞幸咖啡** - 性价比高，环境整洁\n\n这些咖啡厅都有WiFi，适合工作或学习。',
+        role: 'assistant',
+        createdAt: '2025-07-31T10:32:00Z',
+        isLoading: false,
+        isStreaming: false,
+        isFinished: true,
+        isThumbUp: true,
+        isThumbDown: false,
+      },
+      {
+        chatId: '1',
+        content: '能推荐一些更小众的吗？',
+        role: 'user',
+        createdAt: '2025-07-31T10:35:00Z'
+      },
+      {
+        chatId: '1',
+        content: '当然可以！这里是一些更小众的咖啡厅：\n\n1. **% Arabica** - 日式简约风格，咖啡品质极佳\n2. **Seesaw Coffee** - 工业风设计，适合拍照\n3. **Manner Coffee** - 性价比超高，口感不错\n4. **% Arabica** - 极简主义，环境安静\n5. **Peet\'s Coffee** - 美式风格，座位宽敞\n\n这些咖啡厅人流量相对较少，更适合独处。',
+        role: 'assistant',
+        createdAt: '2025-07-31T10:37:00Z',
+        isLoading: false,
+        isStreaming: false,
+        isFinished: true,
+        isThumbUp: false,
+        isThumbDown: false,
+      }
     ]
   },
   {
@@ -565,6 +601,42 @@ export const MOCK_CHAT_HISTORY = [
       'https://picsum.photos/150/150?random=4',
       'https://picsum.photos/150/150?random=5',
       'https://picsum.photos/150/150?random=6'
+    ],
+    history: [
+      {
+        chatId: '2',
+        content: '北京周末去哪玩？',
+        role: 'user',
+        createdAt: '2025-03-05T14:20:00Z'
+      },
+      {
+        chatId: '2',
+        content: '北京周末有很多好玩的地方：\n\n**文化景点：**\n- 故宫博物院（建议提前预约）\n- 天安门广场\n- 颐和园\n- 圆明园\n\n**现代娱乐：**\n- 三里屯太古里\n- 798艺术区\n- 南锣鼓巷\n- 王府井步行街\n\n**自然风光：**\n- 香山公园\n- 奥林匹克公园\n- 北海公园\n\n**美食推荐：**\n- 全聚德烤鸭\n- 老北京炸酱面\n- 豆汁儿\n\n建议根据天气和兴趣选择合适的地点。',
+        role: 'assistant',
+        createdAt: '2025-03-05T14:22:00Z',
+        isLoading: false,
+        isStreaming: false,
+        isFinished: true,
+        isThumbUp: true,
+        isThumbDown: false,
+      },
+      {
+        chatId: '2',
+        content: '有适合情侣的地方吗？',
+        role: 'user',
+        createdAt: '2025-03-05T14:25:00Z'
+      },
+      {
+        chatId: '2',
+        content: '当然有！北京有很多适合情侣的地方：\n\n**浪漫约会：**\n- 什刹海（划船、酒吧街）\n- 后海（夜景很美）\n- 南锣鼓巷（文艺小店）\n- 798艺术区（拍照打卡）\n\n**休闲娱乐：**\n- 蓝色港湾（购物、美食）\n- 三里屯（时尚购物）\n- 世贸天阶（购物中心）\n\n**自然风光：**\n- 香山公园（春季赏花）\n- 北海公园（划船）\n- 颐和园（长廊漫步）\n\n**美食推荐：**\n- 簋街（小龙虾、烧烤）\n- 南锣鼓巷（特色小吃）\n- 王府井（各种美食）\n\n建议选择天气好的时候去户外景点。',
+        role: 'assistant',
+        createdAt: '2025-03-05T14:27:00Z',
+        isLoading: false,
+        isStreaming: false,
+        isFinished: true,
+        isThumbUp: true,
+        isThumbDown: false,
+      }
     ]
   },
   {
@@ -575,6 +647,25 @@ export const MOCK_CHAT_HISTORY = [
     images: [
       'https://picsum.photos/150/150?random=7',
       'https://picsum.photos/150/150?random=8'
+    ],
+    history: [
+      {
+        chatId: '3',
+        content: '有哪些适合独处的安静咖啡厅',
+        role: 'user',
+        createdAt: '2025-01-15T09:15:00Z'
+      },
+      {
+        chatId: '3',
+        content: '推荐几家适合独处的安静咖啡厅：\n\n**环境安静的：**\n- 星巴克臻选店（座位宽敞，音乐轻柔）\n- 猫屎咖啡（氛围温馨，适合看书）\n- 蓝山咖啡（环境优雅，座位舒适）\n\n**24小时营业：**\n- 漫咖啡（深夜好去处）\n- 瑞幸咖啡（性价比高）\n\n**小众精品：**\n- % Arabica（日式简约风格）\n- Seesaw Coffee（工业风设计）\n- Manner Coffee（性价比超高）\n\n这些咖啡厅都有WiFi，适合工作、学习或放松。',
+        role: 'assistant',
+        createdAt: '2025-01-15T09:17:00Z',
+        isLoading: false,
+        isStreaming: false,
+        isFinished: true,
+        isThumbUp: false,
+        isThumbDown: false,
+      }
     ]
   },
   {
@@ -585,6 +676,25 @@ export const MOCK_CHAT_HISTORY = [
     images: [
       'https://picsum.photos/150/150?random=7',
       'https://picsum.photos/150/150?random=8'
+    ],
+    history: [
+      {
+        chatId: '4',
+        content: '有哪些适合独处的安静咖啡厅',
+        role: 'user',
+        createdAt: '2025-01-15T16:45:00Z'
+      },
+      {
+        chatId: '4',
+        content: '我为你推荐几家适合独处的安静咖啡厅：\n\n**环境安静型：**\n- 星巴克臻选店（座位宽敞，音乐轻柔）\n- 猫屎咖啡（氛围温馨，适合看书）\n- 蓝山咖啡（环境优雅，座位舒适）\n\n**24小时营业：**\n- 漫咖啡（深夜好去处）\n- 瑞幸咖啡（性价比高）\n\n**小众精品：**\n- % Arabica（日式简约风格）\n- Seesaw Coffee（工业风设计）\n- Manner Coffee（性价比超高）\n\n这些咖啡厅都有WiFi，适合工作、学习或放松。',
+        role: 'assistant',
+        createdAt: '2025-01-15T16:47:00Z',
+        isLoading: false,
+        isStreaming: false,
+        isFinished: true,
+        isThumbUp: true,
+        isThumbDown: false,
+      }
     ]
   },
   {
@@ -595,6 +705,25 @@ export const MOCK_CHAT_HISTORY = [
     images: [
       'https://picsum.photos/150/150?random=7',
       'https://picsum.photos/150/150?random=8'
+    ],
+    history: [
+      {
+        chatId: '5',
+        content: '有哪些适合独处的安静咖啡厅',
+        role: 'user',
+        createdAt: '2025-01-15T20:30:00Z'
+      },
+      {
+        chatId: '5',
+        content: '推荐几家适合独处的安静咖啡厅：\n\n**环境安静型：**\n- 星巴克臻选店（座位宽敞，音乐轻柔）\n- 猫屎咖啡（氛围温馨，适合看书）\n- 蓝山咖啡（环境优雅，座位舒适）\n\n**24小时营业：**\n- 漫咖啡（深夜好去处）\n- 瑞幸咖啡（性价比高）\n\n**小众精品：**\n- % Arabica（日式简约风格）\n- Seesaw Coffee（工业风设计）\n- Manner Coffee（性价比超高）\n\n这些咖啡厅都有WiFi，适合工作、学习或放松。',
+        role: 'assistant',
+        createdAt: '2025-01-15T20:32:00Z',
+        isLoading: false,
+        isStreaming: false,
+        isFinished: true,
+        isThumbUp: false,
+        isThumbDown: true,
+      }
     ]
   }
 ]

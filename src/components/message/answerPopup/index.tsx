@@ -1,9 +1,6 @@
 import { View, Text, RichText, Image } from '@tarojs/components'
 import { useEffect, useState } from 'react'
 import markdownit from 'markdown-it'
-// import { RichNodeT } from '@/utils/type'
-// import 'highlight.js/styles/default.css'
-// import 'normalize.css'
 import logoImage from '@/assets/iconfont/youxiaozhu.png'
 import Taro from '@tarojs/taro'
 import { useDispatch } from 'react-redux'
@@ -26,6 +23,7 @@ type AnswerPopupProps = {
   isFinished: boolean
   isThumbUp: boolean
   isThumbDown: boolean
+  isLastItem: boolean
   isLast: boolean
   chatId: string // 添加chatId用于更新状态
   onRegenerate?: (chatId: string) => void // 添加重新生成回调函数
@@ -33,7 +31,7 @@ type AnswerPopupProps = {
 
 const AnswerPopupStatus = {
   LOADING: '正在理解您的需求...',
-  STREAMING: '兜兜正在思考...',
+  STREAMING: '游小猪正在思考...',
   FINISHED: '已深度思考',
 }
 
@@ -56,27 +54,12 @@ const md = markdownit({
 
 export default function AnswerPopup(props: AnswerPopupProps) {
   const dispatch = useDispatch()
-  // console.log('props>>>>>>>', props)
-  // const [richNodes, setRichNodes] = useState<RichNodeT[]>([])
   const [htmlString, setHtmlString] = useState('')
   const [currentStep, setCurrentStep] = useState(0)
 
   useEffect(() => {
-    // console.log('props.answerText>>>>>>>', props.answerText)
     const markdownString = md.render(props.answerText)
     setHtmlString(`<div class="${styles?.markdownModule}">${markdownString}</div>`)
-    // const nodes: RichNodeT[] = [{
-    //   name: 'div',
-    //   attrs: {
-    //     class: styles['markdown__it-richtext'],
-    //     style: 'font-size: 28rpx; line-height: 1.5;'
-    //   },
-    //   children: [{
-    //     type: 'text',
-    //     text:  `<div class="${styles?.['markdown__it-richtext']}">${markdownString}</div>`
-    //   }]
-    // }]
-    // setRichNodes(nodes)
   }, [props.answerText])
 
   // 模拟进度步骤动画 - 与状态同步
@@ -152,7 +135,7 @@ export default function AnswerPopup(props: AnswerPopupProps) {
 
   // 重新生成
   const onRegenerate = () => {
-    console.log('onRegenerate>>>>>>>', props.chatId)
+    // console.log('onRegenerate>>>>>>>', props.chatId)
     if (props.onRegenerate) {
       props.onRegenerate(props.chatId)
     }
@@ -314,8 +297,6 @@ export default function AnswerPopup(props: AnswerPopupProps) {
         props.answerText ? (
           <View className='answer-popup-content'>
             <View className='answer-popup-content-item'>
-              {/* <Text dangerouslySetInnerHTML={{ __html: htmlString }}></Text> */}
-              {/* <RichText nodes={nodes} /> */}
               <RichText nodes={htmlString} />
             </View>
           </View>
@@ -374,9 +355,13 @@ export default function AnswerPopup(props: AnswerPopupProps) {
                 }
               </View>
               {/* 重新生成 */}
-              <View className='tool-item resend' onClick={onRegenerate}>
-                <Image className='tool-item-image resend-image' src='https://s3-gz01.didistatic.com/packages-mait/img/jUcWCrIeHk1745933187753.png'></Image>
-              </View>
+              {
+                props.isLastItem && (
+                  <View className='tool-item resend' onClick={onRegenerate}>
+                    <Image className='tool-item-image resend-image' src='https://s3-gz01.didistatic.com/packages-mait/img/jUcWCrIeHk1745933187753.png'></Image>
+                  </View>
+                )
+              }
               {/* 分享 */}
               <View className='tool-item share' onClick={onShare}>
                 <IconFont

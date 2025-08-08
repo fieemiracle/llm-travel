@@ -13,12 +13,11 @@ import IconFont from '@/components/common/iconfont'
 import { ICONFONT_ICONS } from '@/utils/iconfont'
 import styles from './markdown.module.less'
 import MapSection from '@/components/map/map-section'
+import RecommendSwiper from '../recommend-swiper'
+import { RecommendItemType } from '@/types/common'
+import { exampleMarkers, examplePolylines, exampleRecommendList } from '@/mock/message'
 import './index.less'
-import { MapMarkerType, MapPolylineType } from '@/types/map'
-import pointIcon from "@/assets/iconfont/point-purple.png"
-import { generateRandomHash } from '@/utils/tools'
 
-// console.log('styles>>>>>>>', styles, styles?.markdownModule, styles?.testModule)
 
 type AnswerPopupProps = {
   answerText: string
@@ -54,72 +53,6 @@ const md = markdownit({
   breaks: true, // 转换段落里的 '\n' 到 <br>
   quotes: '“”‘’'
 })
-
-// 示例数据
-const callout = {
-  content: '天安门广场',
-  bgColor: '#fff',
-  color: '#000',
-  fontSize: 12,
-  borderRadius: 10,
-  borderWidth: 1,
-  borderColor: '#000',
-  display: 'ALWAYS',
-  textAlign: 'center',
-  padding: 10,
-  anchorX: 0.5,
-  anchorY: 0.5,
-} as const
-const exampleMarkers: MapMarkerType[] = [
-  {
-    id: Number(generateRandomHash('0123456789', 6)),
-    latitude: 39.90923,
-    longitude: 116.397428,
-    iconPath: pointIcon,
-    width: 32,
-    height: 32,
-    callout: {
-      ...callout,
-      content: '天安门广场'
-    }
-  },
-  {
-    id: Number(generateRandomHash('0123456789', 6)),
-    latitude: 39.91923,
-    longitude: 116.407428,
-    iconPath: pointIcon,
-    width: 32,
-    height: 32,
-    callout: {
-      ...callout,
-      content: '故宫博物院'
-    }
-  },
-  {
-    id: Number(generateRandomHash('0123456789', 6)),
-    latitude: 39.92923,
-    longitude: 116.417428,
-    iconPath: pointIcon,
-    width: 32,
-    height: 32,
-    callout: {
-      ...callout,
-      content: '景山公园'
-    }
-  }
-]
-
-const examplePolylines: MapPolylineType[] = [
-  {
-    points: [
-      { latitude: 39.90923, longitude: 116.397428 },
-      { latitude: 39.91923, longitude: 116.407428 },
-      { latitude: 39.92923, longitude: 116.417428 }
-    ],
-    color: '#667eea',
-    width: 6,
-  }
-]
 
 export default function AnswerPopup(props: AnswerPopupProps) {
   const dispatch = useDispatch()
@@ -230,6 +163,124 @@ export default function AnswerPopup(props: AnswerPopupProps) {
     dispatch(setShareMode(true))
   }
 
+  // 处理应用选择
+  const handleAppSelection = (item: RecommendItemType) => {
+    Taro.showActionSheet({
+      itemList: ['美团', '大众点评'],
+      success: (res) => {
+        const { address, type } = item
+        switch (res.tapIndex) {
+          case 0:
+            // 美团
+            launchMeituan({
+              type: type === '景点' ? 'scenic' : type === '美食' ? 'food' : 'search',
+              keyword: address
+            })
+            break
+          case 1:
+            // 大众点评
+            launchDianping({
+              type: type === '景点' ? 'scenic' : type === '美食' ? 'food' : 'search',
+              keyword: address
+            })
+            break
+        }
+      }
+    })
+  }
+
+  // 调起美团应用
+  const launchMeituan = async (options: {
+    type: 'search' | 'shop' | 'hotel' | 'food' | 'scenic'
+    keyword?: string
+  }) => {
+    const { type, keyword } = options
+    
+    try {
+      // 尝试调起美团小程序
+      await Taro.navigateToMiniProgram({
+        appId: 'wx2c348cf579062e56', // 美团的微信小程序 appId
+        path: `pages/search/search?keyword=${encodeURIComponent(keyword || '')}`,
+        success: () => {
+          Taro.showToast({
+            title: '已打开美团',
+            icon: 'success'
+          })
+        },
+        fail: (error) => {
+          console.log('调起美团失败:', error)
+          Taro.showModal({
+            title: '打开美团',
+            content: '检测到您未安装美团，是否前往下载？',
+            confirmText: '去下载',
+            cancelText: '取消',
+            success: (res) => {
+              if (res.confirm) {
+                Taro.setClipboardData({
+                  data: 'https://apps.apple.com/cn/app/mei-tuan-wai-mai-dian-ping/id423084029',
+                  success: () => {
+                    Taro.showToast({
+                      title: '下载链接已复制',
+                      icon: 'success'
+                    })
+                  }
+                })
+              }
+            }
+          })
+        }
+      })
+    } catch (error) {
+      console.log('调起美团应用失败:', error)
+    }
+  }
+
+  // 调起大众点评应用
+  const launchDianping = async (options: {
+    type: 'search' | 'shop' | 'hotel' | 'food' | 'scenic'
+    keyword?: string
+  }) => {
+    const { type, keyword } = options
+    
+    try {
+      // 尝试调起大众点评小程序
+      await Taro.navigateToMiniProgram({
+        appId: 'wxde8ac0a21135c07d', // 大众点评的微信小程序 appId
+        path: `pages/search/search?keyword=${encodeURIComponent(keyword || '')}`,
+        success: () => {
+          Taro.showToast({
+            title: '已打开大众点评',
+            icon: 'success'
+          })
+        },
+        fail: (error) => {
+          console.log('调起大众点评失败:', error)
+          Taro.showModal({
+            title: '打开大众点评',
+            content: '检测到您未安装大众点评，是否前往下载？',
+            confirmText: '去下载',
+            cancelText: '取消',
+            success: (res) => {
+              if (res.confirm) {
+                Taro.setClipboardData({
+                  data: 'https://apps.apple.com/cn/app/da-zhong-dian-ping/id340934251',
+                  success: () => {
+                    Taro.showToast({
+                      title: '下载链接已复制',
+                      icon: 'success'
+                    })
+                  }
+                })
+              }
+            }
+          })
+        }
+      })
+    } catch (error) {
+      console.log('调起大众点评应用失败:', error)
+    }
+  }
+
   return (
     <View className='answer-popup'>
       <View className='answer-popup-header'>
@@ -279,6 +330,17 @@ export default function AnswerPopup(props: AnswerPopupProps) {
               markers={exampleMarkers}
               polylines={examplePolylines}
               onRegenerate={onRegenerate}
+            />
+            <RecommendSwiper
+              title='行程中提到的推荐:'
+              recommendList={exampleRecommendList}
+              loading={false}
+              showAppSelection={true}
+              onItemClick={(item) => {
+                console.log('点击推荐项目:', item)
+                // 显示应用选择弹窗
+                handleAppSelection(item)
+              }}
             />
           </View>
         )

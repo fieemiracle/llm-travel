@@ -75,6 +75,7 @@ export async function launchMeituan(options: {
   fallback?: boolean // 是否在调起失败时跳转到应用商店
 }) {
   const { type, keyword, shopId, hotelId, fallback = true } = options
+  console.log('launchMeituan>>>>>>>', type, keyword, shopId, hotelId, fallback)
   const platform = getPlatform()
   
   try {
@@ -121,6 +122,7 @@ export async function launchDianping(options: {
   fallback?: boolean // 是否在调起失败时跳转到应用商店
 }) {
   const { type, keyword, shopId, hotelId, fallback = true } = options
+  console.log('launchDianping>>>>>>>', type, keyword, shopId, hotelId, fallback)
   const platform = getPlatform()
   
   try {

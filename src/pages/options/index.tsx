@@ -19,10 +19,10 @@ interface EntertainmentOption {
   subtitle: string
 }
 
-interface UserPreferences {
-  food: string[]
-  entertainment: string
-}
+// interface UserPreferences {
+//   food: string[]
+//   entertainment: string
+// }
 
 // 美食偏好选项
 const FOOD_OPTIONS = [

@@ -177,6 +177,7 @@ export default function AnswerPopup(props: AnswerPopupProps) {
     keyword?: string
   }) => {
     const { type, keyword } = options
+    console.log('launchMeituan>>>>>>>', type, keyword)
     
     try {
       // 尝试调起美团小程序
@@ -190,6 +191,7 @@ export default function AnswerPopup(props: AnswerPopupProps) {
           })
         },
         fail: (error) => {
+          console.log('launchMeituan fail>>>>>>>', error)
           Taro.showModal({
             title: '打开美团',
             content: '检测到您未安装美团，是否前往下载？',
@@ -222,6 +224,7 @@ export default function AnswerPopup(props: AnswerPopupProps) {
     keyword?: string
   }) => {
     const { type, keyword } = options
+    console.log('launchDianping>>>>>>>', type, keyword)
     
     try {
       // 尝试调起大众点评小程序
@@ -235,6 +238,7 @@ export default function AnswerPopup(props: AnswerPopupProps) {
           })
         },
         fail: (error) => {
+          console.log('launchDianping fail>>>>>>>', error)
           Taro.showModal({
             title: '打开大众点评',
             content: '检测到您未安装大众点评，是否前往下载？',

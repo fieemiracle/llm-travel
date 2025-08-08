@@ -303,6 +303,7 @@ export default function ShareActionBar() {
         const selectedContent = selectedMessages
             .map(msg => `${msg.role === 'user' ? '我' : 'AI'}: ${msg.content}`)
             .join('\n\n')
+        console.log('selectedContent>>>>>>>', selectedContent)
 
         try {
             Taro.showShareMenu({

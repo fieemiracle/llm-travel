@@ -22,7 +22,6 @@ export default function Home(props: HomeProps) {
   const [showPopup, setShowPopup] = useState(false)
   const [showCalendar, setShowCalendar] = useState(false)
   const [selectedDate, setSelectedDate] = useState('')
-  console.log('Home showPopup:', showPopup)
 
   // 点击词条
   const onTipsClick = (item: { type: string, name: string }) => {

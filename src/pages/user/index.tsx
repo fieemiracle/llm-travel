@@ -21,6 +21,7 @@ export default function Index () {
   // 开始新对话
   const startNewChat = () => {
     dispatch(setCurrentRouteName(RouterName.CHAT))
+    dispatch(setChatList([]))
     Taro.navigateTo({
       url: '/pages/layout/index'
     }) 

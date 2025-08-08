@@ -14,7 +14,6 @@ type CalendarProps = {
 
 export default function Calendar(props: CalendarProps) {
   const { isOpened, onClose, onConfirm, onCancel, title = '选择出发日期', defaultDate } = props
-  console.log('Calendar isOpened:', isOpened)
   
   const [currentDate, setCurrentDate] = useState(defaultDate || new Date())
   const [selectedDate, setSelectedDate] = useState<Date | null>(defaultDate || null)

@@ -3,6 +3,7 @@ import { useSelector, useDispatch } from 'react-redux'
 import { setShareMode, selectAllChats, clearChatSelection } from '@/store/actions/chat'
 import Taro from '@tarojs/taro'
 import './index.less'
+import * as dayjs from 'dayjs'
 
 export default function ShareActionBar() {
     const dispatch = useDispatch()
@@ -103,11 +104,11 @@ export default function ShareActionBar() {
             canvas.setFillStyle('#333333')
             canvas.setFontSize(36)
             canvas.setTextAlign('center')
-            canvas.fillText('智能旅游规划助手', canvasWidth / 2, 60)
+            canvas.fillText('旅团子', canvasWidth / 2, 60)
 
             canvas.setFillStyle('#666666')
             canvas.setFontSize(24)
-            canvas.fillText('对话分享', canvasWidth / 2, 90)
+            canvas.fillText(dayjs().format('YYYY年MM月DD日 HH:mm'), canvasWidth / 2, 90)
 
             let yPos = 150
 
@@ -115,9 +116,9 @@ export default function ShareActionBar() {
             for (let index = 0; index < messages.length; index++) {
                 const message = messages[index]
                 const isUser = message.role === 'user'
-                const bgColor = isUser ? '#E3F2FD' : '#E8F5E8'
-                const textColor = isUser ? '#1976D2' : '#388E3C'
-                const role = isUser ? '我' : 'AI助手'
+                const bgColor = isUser ? '#90F9F2' : '#E8F5E8'
+                const textColor = isUser ? '#00CCC9' : '#388E3C'
+                const role = isUser ? '我' : '游小助'
 
                 console.log(`绘制第${index + 1}条消息，yPos: ${yPos}, canvasHeight: ${canvasHeight}`)
 
@@ -134,7 +135,7 @@ export default function ShareActionBar() {
 
                 // 绘制消息背景
                 canvas.setFillStyle(bgColor)
-                canvas.fillRect(40, yPos, canvasWidth - 80, messageHeight)
+                canvas.fillRect(40, yPos, canvasWidth, messageHeight)
 
                 // 绘制角色标签背景
                 canvas.setFillStyle(textColor)
@@ -177,8 +178,8 @@ export default function ShareActionBar() {
             canvas.setFillStyle('#999999')
             canvas.setFontSize(20)
             canvas.setTextAlign('center')
-            canvas.fillText(`生成时间：${new Date().toLocaleString()}`, canvasWidth / 2, yPos)
-            canvas.fillText('智能旅游规划助手 - 让您的旅行更轻松', canvasWidth / 2, yPos + 30)
+            canvas.fillText(`${new Date().toLocaleString()}`, canvasWidth / 2, yPos)
+            canvas.fillText('旅团子 - 让您的旅行更轻松', canvasWidth / 2, yPos + 30)
 
             // 绘制完成
             canvas.draw(true, () => {

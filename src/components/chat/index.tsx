@@ -231,7 +231,7 @@ export default function Chat(props: ChatProps) {
 
   useEffect(() => {
     if (queryText) {
-      // console.log('useEffect queryText>>>>>>>', queryText)
+      console.log('useEffect queryText>>>>>>>', queryText)
       // 发送消息前确保自动滚动开启
       setShouldAutoScroll(true)
       

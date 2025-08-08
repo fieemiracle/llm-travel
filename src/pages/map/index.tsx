@@ -52,7 +52,7 @@ export default function Map() {
     // 出游路线
     if (options.mytour) {
       const mytour = JSON.parse(decodeURIComponent(options.mytour))
-      console.log('mytour>>>>>>>', mytour)
+      // console.log('mytour>>>>>>>', mytour)
       const { title, tourdetail } = mytour as any
       const formatTour = tourdetail.map((tourItem: { day: string,footprint: { address: string, location: { longitude: number, latitude: number } }[] }, tourIdx: number) => {
         const { day, footprint } = tourItem
@@ -139,13 +139,13 @@ export default function Map() {
     if (maxRange > 1) scale = 8
     if (maxRange > 2) scale = 6
     
-    console.log('计算中心点:', { centerLat, centerLng, scale, maxRange })
+    // console.log('计算中心点:', { centerLat, centerLng, scale, maxRange })
     
     return { centerLat, centerLng, scale: 14 }
   }
 
   const onTabPaneChange = (tourItem: any) => {
-    console.log('onTabPaneChange>>>>>>>', tourItem)
+    // console.log('onTabPaneChange>>>>>>>', tourItem)
     const { day, markers, polyline } = tourItem
     setTabPane(day)
     setGMapMarkers(markers)

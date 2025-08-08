@@ -43,7 +43,7 @@ export default function FloatingPanel({
   const menuInfo = getMenuButtonBoundingClientRect()
   const panelHeight = systemInfo.windowHeight - menuInfo.height - menuInfo.top
   const EstPanelAnchor = {
-    COLLAPSE: 24,
+    COLLAPSE: 36,
     HALF: Math.round(0.5 * panelHeight),
     FULL: panelHeight
   }

@@ -5,7 +5,6 @@ import { useState } from "react"
 import {
   MapConfigType,
   IncludePaddingStyleT,
-  // CustomMapStyleT
 } from "@/types/map"
 import Back from "@/components/map/back"
 import Taro, { useLoad } from "@tarojs/taro"
@@ -269,7 +268,7 @@ export default function Map() {
       {/* 悬浮面板 */}
       <FloatingPanel
         onHeightChange={(newHeight, status) => {
-          console.log('高度发生改变>>>>>>>', newHeight, status, EstimateContain.FULL)
+          // console.log('高度发生改变>>>>>>>', newHeight, status, EstimateContain.FULL)
           setGMapIncludePadding({
             ...gMapIncludePadding,
             bottom: newHeight

@@ -12,7 +12,7 @@ import { COPY_FAIL_TEXT, COPY_SUCCESS_TEXT, THUMB_DOWN_TEXT, THUMB_UP_TEXT } fro
 import IconFont from '@/components/common/iconfont'
 import { ICONFONT_ICONS } from '@/utils/iconfont'
 import styles from './markdown.module.less'
-import MapSection from '@/components/common/map-section'
+import MapSection from '@/components/map/map-section'
 import './index.less'
 import { MapMarkerType, MapPolylineType } from '@/types/map'
 import pointIcon from "@/assets/iconfont/point-purple.png"

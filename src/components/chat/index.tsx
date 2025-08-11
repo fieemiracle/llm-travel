@@ -74,7 +74,8 @@ export default function Chat(props: ChatProps) {
   }, [])
 
   // sse
-  const sendMessage = useCallback((userChatItem: ChatItem, assistantChatItem: ChatItem) => {
+  const sendMessage = useCallback((userChatItem: ChatItem, assistantChatItem: ChatItem, callbackSource?: string) => {
+    console.log('sendMessage>>>>>>>', callbackSource)
     let updateContent = ''
     let updateChunks = [] as ChatChunk[]
     
@@ -209,7 +210,7 @@ export default function Chat(props: ChatProps) {
     dispatch(clearChatItemContent(chatId))
     
     // 重新发送请求
-    sendMessage(userChatItem, { ...chatItem, content: '', chunks: [] } as ChatItem)
+    sendMessage(userChatItem, { ...chatItem, content: '', chunks: [] } as ChatItem, '重新生成')
   }, [dispatch, chatList, sendMessage])
 
   const onSendQuery = useCallback((query: string) => {
@@ -222,7 +223,7 @@ export default function Chat(props: ChatProps) {
     dispatch(setGlobalStatus(GlobalStatus.LOADING))
     dispatch(addChatItem(assistantChatItem))
     dispatch(setQueryText(''))
-    sendMessage(userChatItem, assistantChatItem)
+    sendMessage(userChatItem, assistantChatItem, '点击发送')
   }, [dispatch, formatChatItem, sendMessage])
 
   useEffect(() => {
@@ -235,7 +236,7 @@ export default function Chat(props: ChatProps) {
       const assistantChatItem = formatChatItem('', ChatRole.ASSISTANT, { isLoading: true })
       dispatch(setGlobalStatus(GlobalStatus.LOADING))
       dispatch(addChatItem(assistantChatItem))
-      sendMessage(userChatItem, assistantChatItem)
+      sendMessage(userChatItem, assistantChatItem, 'useEffect')
       dispatch(setQueryText(''))
     }
   }, [queryText, dispatch, formatChatItem, sendMessage])

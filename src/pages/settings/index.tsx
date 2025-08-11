@@ -77,7 +77,7 @@ export default function Settings() {
   const checkVersion = () => {
     Taro.showModal({
       title: '版本信息',
-      content: `当前版本：v${APP_VERSION}\n这是最新版本\n\n🚀 智能旅游规划助手\n让您的旅行更轻松！`,
+      content: `当前版本：v${APP_VERSION}\n这是最新版本\n\n🚀 旅团子\n让您的旅行更轻松！`,
       showCancel: true,
       cancelText: '取消',
       confirmText: '检查更新',
@@ -126,7 +126,7 @@ export default function Settings() {
     Taro.showModal({
       title: '关于我们',
       content: `
-        🚀 智能旅游规划助手
+        🚀 旅团子
         我们致力于为用户提供最智能、最便捷的旅行规划服务。只需输入目的地和天数，就能为您量身定制完美的旅行攻略。
         适合个人游、家庭游、情侣游等各种出行需求。
       `,
@@ -156,7 +156,7 @@ export default function Settings() {
     Taro.showModal({
       title: '用户协议',
       content: `
-        感谢您使用智能旅游规划助手！
+        感谢您使用旅团子！
         使用本应用即表示您同意：
           • 合理使用本应用功能
           • 不进行恶意操作

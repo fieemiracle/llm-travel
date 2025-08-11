@@ -3,13 +3,14 @@ import Taro from '@tarojs/taro'
 import { useState } from 'react'
 import UserNavBar from '@/components/mine/userNavBar'
 import { MOCK_CHAT_HISTORY, MOCK_TRAVEL_PLANS, MOCK_USER_INFO } from '@/mock'
-import './index.less'
 import avatarIcon from '@/assets/iconfont/youxiaozhu.png'
-import settingIcon from '@/assets/iconfont/setting.png'
 import { setCurrentRouteName } from '@/store/actions/common'
 import { useDispatch } from 'react-redux'
 import { RouterName } from '@/utils/enum'
 import { setChatList } from '@/store/actions/chat'
+import IconFont from '@/components/common/iconfont'
+import { ICONFONT_ICONS } from '@/utils/iconfont'
+import './index.less'
 
 type TabType = 'chat' | 'travel'
 
@@ -143,7 +144,8 @@ export default function Index () {
             </Text>
           </View>
           <View className='user-settings' onClick={goToSettings}>
-            <Image className='settings-icon' src={settingIcon} />
+            {/* <Image className='settings-icon' src={settingIcon} /> */}
+            <IconFont type={ICONFONT_ICONS.SETTING} size={30} color='#111111' />
           </View>
         </View>
       </View>

@@ -2,7 +2,7 @@ import { View, Map as GMap, Text } from '@tarojs/components'
 import type { MapProps } from '@tarojs/components'
 import { useState, useEffect } from 'react'
 import { genMarker, genPolyline } from "@/utils/map"
-import { IncludePaddingStyleT, MapConfigType, MapMarkerType, MapPolylineType } from "@/types/map"
+import { MapConfigType, MapMarkerType, MapPolylineType } from "@/types/map"
 import './index.less'
 import Taro from '@tarojs/taro'
 
@@ -26,18 +26,16 @@ interface MapSectionProps {
   onMarkerTap?: (marker: any) => void
   onCalloutTap?: (callout: any) => void
   onRegenerate?: () => void
+  // 拖拽相关回调
+  onDragStart?: () => void
+  onDragEnd?: (region: any) => void
   // 是否显示底部按钮
   showFooter?: boolean
   // 自定义样式类名
   className?: string
 }
 
-const DEFAULT_INCLUDE_PADDING: IncludePaddingStyleT = {
-  left: 100,
-  right: 100,
-  top: 100,
-  bottom: 100
-}
+
 
 const DEFAULT_MAP_CONFIG: MapConfigType = {
   longitude: 116.397428,
@@ -47,7 +45,7 @@ const DEFAULT_MAP_CONFIG: MapConfigType = {
   maxScale: 20,
   showLocation: true,
   enableZoom: true,
-  enableScroll: true,
+  enableScroll: true, // 确保拖拽功能启用
   enableRotate: true,
   showCompass: false,
   showScale: true
@@ -76,6 +74,8 @@ export default function MapSection(props: MapSectionProps) {
     onRegionChange,
     onMarkerTap,
     onCalloutTap,
+    onDragStart,
+    onDragEnd,
     showFooter = true,
     className = '',
     onRegenerate,
@@ -112,33 +112,14 @@ export default function MapSection(props: MapSectionProps) {
     })
   }, [mapConfig])
 
-  // 计算地图中心点和缩放级别
-  const calculateMapCenter = () => {
-    if (markers.length === 0) return currentMapConfig
-
-    const latitudes = markers.map(m => m.latitude)
-    const longitudes = markers.map(m => m.longitude)
+  // 生成includePoints配置，用于自动调整地图视野
+  const generateIncludePoints = () => {
+    if (markers.length === 0) return []
     
-    const centerLat = (Math.max(...latitudes) + Math.min(...latitudes)) / 2
-    const centerLng = (Math.max(...longitudes) + Math.min(...longitudes)) / 2
-    
-    // 计算距离范围来确定合适的缩放级别
-    const latRange = Math.max(...latitudes) - Math.min(...latitudes)
-    const lngRange = Math.max(...longitudes) - Math.min(...longitudes)
-    const maxRange = Math.max(latRange, lngRange)
-    
-    let scale = 14
-    if (maxRange > 0.1) scale = 12
-    if (maxRange > 0.5) scale = 10
-    if (maxRange > 1) scale = 8
-    if (maxRange > 2) scale = 6
-    
-    return {
-      ...currentMapConfig,
-      longitude: centerLng,
-      latitude: centerLat,
-      scale
-    }
+    return markers.map(marker => ({
+      latitude: marker.latitude,
+      longitude: marker.longitude
+    }))
   }
 
   // 地图错误处理
@@ -149,6 +130,16 @@ export default function MapSection(props: MapSectionProps) {
   // 地图视野变化处理
   const handleRegionChange = (region: any) => {
     onRegionChange?.(region)
+  }
+
+  // 拖拽开始处理
+  const handleDragStart = () => {
+    onDragStart?.()
+  }
+
+  // 拖拽结束处理
+  const handleDragEnd = (region: any) => {
+    onDragEnd?.(region)
   }
 
   // 标记点点击处理
@@ -173,7 +164,14 @@ export default function MapSection(props: MapSectionProps) {
     }
   }
 
-  const finalMapConfig = markers.length > 0 ? calculateMapCenter() : currentMapConfig
+  // 当有markers时使用includePoints自动调整视野，否则使用默认配置
+  const hasMarkers = markers.length > 0
+  const finalMapConfig = hasMarkers 
+    ? { 
+        ...currentMapConfig, 
+        includePoints: generateIncludePoints()
+      }
+    : currentMapConfig
 
   return (
     <View className={`map-section ${className}`}>
@@ -205,11 +203,12 @@ export default function MapSection(props: MapSectionProps) {
           enableTraffic={finalMapConfig.enableTraffic}
           markers={mapMarkers}
           polyline={mapPolylines}
-          includePadding={DEFAULT_INCLUDE_PADDING}
+          includePoints={finalMapConfig.includePoints}
           onError={handleMapError}
           onRegionChange={handleRegionChange}
           onMarkerTap={handleMarkerTap}
           onCalloutTap={handleCalloutTap}
+          onTap={handleDragStart}
         />
       </View>
       

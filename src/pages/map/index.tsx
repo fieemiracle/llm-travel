@@ -4,7 +4,6 @@ import { EstimateContain, EstimateContainValues } from "@/utils/enum"
 import { useState } from "react"
 import {
   MapConfigType,
-  IncludePaddingStyleT,
 } from "@/types/map"
 import Back from "@/components/map/back"
 import Taro, { useLoad } from "@tarojs/taro"
@@ -24,18 +23,13 @@ const DEFAULT_MAP_CONFIG: MapConfigType = {
   enableZoom: true // 确保启用缩放功能
 }
 
-const DEFAULT_INCLUDE_PADDING: IncludePaddingStyleT = {
-    left: 100,
-    right: 100,
-    top: 100,
-    bottom: 100
-}
+
 
 export default function Map() {
   const [mapConfig, setMapConfig] = useState<MapConfigType>(DEFAULT_MAP_CONFIG)
   const [gMapMarkers, setGMapMarkers] = useState<MapProps.marker[]>([])
   const [gMapPolylines, setGMapPolylines] = useState<MapProps.polyline[]>([])
-  const [gMapIncludePadding, setGMapIncludePadding] = useState<IncludePaddingStyleT>(DEFAULT_INCLUDE_PADDING)
+
 
   const [isShowCover, setIsShowCover] = useState(false)
   const [estCardStatus, setEstCardStatus] = useState<EstimateContainValues>(EstimateContain.HALF)
@@ -73,20 +67,23 @@ export default function Map() {
         if (tourIdx === 0) {
           setTabPane(day)
           setGMapMarkers(markers)
+          const updateConfig = calculateMapCenter(markers)
+          setMapConfig({
+            ...mapConfig,
+            longitude: updateConfig?.centerLng || mapConfig.longitude,
+            latitude: updateConfig?.centerLat || mapConfig.latitude,
+            scale: updateConfig?.scale || mapConfig.scale
+          })
           if (polyline) {
             setGMapPolylines([polyline])
           }
-          // 使用手动计算的中心点和缩放级别
-          const centerInfo = calculateMapCenter(markers)
-          if (centerInfo) {
-            setMapConfig({
-              ...mapConfig,
-              longitude: centerInfo.centerLng,
-              latitude: centerInfo.centerLat,
-              scale: centerInfo.scale,
-              includePoints: undefined // 不使用自动缩放
-            })
-          }
+          // 使用includePoints自动调整视野，确保所有marker都在视野内
+          const includePoints = generateIncludePoints(markers)
+          setMapConfig({
+            ...mapConfig,
+            includePoints
+            // 当使用includePoints时，不需要手动设置longitude、latitude和scale
+          })
         }
         return {
           ...tourItem,
@@ -102,6 +99,13 @@ export default function Map() {
     if (options.markers) {
       const markers = JSON.parse(decodeURIComponent(options.markers))
       setGMapMarkers(markers)
+      const updateConfig = calculateMapCenter(markers)
+      setMapConfig({
+        ...mapConfig,
+        longitude: updateConfig?.centerLng || mapConfig.longitude,
+        latitude: updateConfig?.centerLat || mapConfig.latitude,
+        scale: updateConfig?.scale || mapConfig.scale
+      })
     }
     if (options.polylines) {
       const polylines = JSON.parse(decodeURIComponent(options.polylines))
@@ -131,8 +135,17 @@ export default function Map() {
     if (maxRange > 1) scale = 8
     if (maxRange > 2) scale = 6
     
+    return { centerLat, centerLng, scale }
+  }
+
+  // 生成includePoints配置，用于自动调整地图视野
+  const generateIncludePoints = (markers: any[]) => {
+    if (!markers || markers.length === 0) return []
     
-    return { centerLat, centerLng, scale: 14 }
+    return markers.map(marker => ({
+      latitude: marker.latitude,
+      longitude: marker.longitude
+    }))
   }
 
   const onTabPaneChange = (tourItem: any) => {
@@ -143,17 +156,12 @@ export default function Map() {
       setGMapPolylines([polyline])
     }
     
-    // 计算中心点和缩放级别
-    const centerInfo = calculateMapCenter(markers)
-    if (centerInfo) {
-      setMapConfig({
-        ...mapConfig,
-        longitude: centerInfo.centerLng,
-        latitude: centerInfo.centerLat,
-        scale: centerInfo.scale,
-        includePoints: undefined // 不使用自动缩放
-      })
-    }
+    // 使用includePoints自动调整视野
+    const includePoints = generateIncludePoints(markers)
+    setMapConfig({
+      ...mapConfig,
+      includePoints
+    })
   }
 
   return (
@@ -178,7 +186,6 @@ export default function Map() {
           enableScroll={true} // 启用滚动
           enableRotate={true} // 启用旋转
           includePoints={mapConfig.includePoints}
-          includePadding={gMapIncludePadding}
           // customMapStyle={gMapCustomMapStyle}
           markers={gMapMarkers}
           polyline={gMapPolylines}
@@ -258,10 +265,6 @@ export default function Map() {
       {/* 悬浮面板 */}
       <FloatingPanel
         onHeightChange={(newHeight, status) => {
-          setGMapIncludePadding({
-            ...gMapIncludePadding,
-            bottom: newHeight
-          })
           setEstCardStatus(status)
           setPanelHeight(newHeight)
           setIsShowCover(status === EstimateContain.FULL)

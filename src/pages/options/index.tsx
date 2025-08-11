@@ -99,7 +99,7 @@ export default function Options() {
   useLoad((options) => {
     const { time, date, purpose } = options
     setTitle(purpose + AFTER_FIX)
-    const prefixQuery = `帮我规划${date}出发、${time}的${purpose}的${purpose}旅游行程。`
+    const prefixQuery = `帮我规划${date}出发、${time}的${purpose}旅游行程。`
     setPrefixText(prefixQuery)
   })
 

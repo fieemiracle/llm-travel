@@ -28,7 +28,7 @@ export const ICONFONT_ICONS_ENTITY = {
   ARROW_DOWN: '&#xe665;',
   CHANGE: '&#xe650;',
   DELETE: '&#xe60f;',
-  SETTING: '&#xfaed;',
+  SETTING: '&#xe623;',
 } as const;
 
 export const ICONFONT_ICONS = convertIconfontEntitiesToUnicode(ICONFONT_ICONS_ENTITY)

@@ -13,17 +13,52 @@
 - 🌙 支持深色模式
 - ⚡ 丰富的交互事件
 - 🎯 自动计算地图中心点和缩放级别
+- 🖱️ 支持地图拖拽和缩放
+- 📍 拖拽状态监听和回调
 
 ## 基础用法
 
 ```tsx
-import MapSection from '@/components/common/map-section'
+import MapSection from '@/components/map/map-section'
 
 // 基础用法
 <MapSection
   title="北京旅游路线"
   subtitle="探索古都文化，感受历史魅力"
 />
+```
+
+## 拖拽功能使用
+
+```tsx
+import { useState } from 'react'
+import MapSection from '@/components/map/map-section'
+
+const MapWithDrag = () => {
+  const [isDragging, setIsDragging] = useState(false)
+  const [currentRegion, setCurrentRegion] = useState(null)
+
+  const handleDragStart = () => {
+    setIsDragging(true)
+    console.log('地图拖拽开始')
+  }
+
+  const handleDragEnd = (region) => {
+    setIsDragging(false)
+    setCurrentRegion(region)
+    console.log('地图拖拽结束', region)
+  }
+
+  return (
+    <MapSection
+      title="可拖拽地图"
+      subtitle="支持拖拽和缩放操作"
+      onDragStart={handleDragStart}
+      onDragEnd={handleDragEnd}
+      onRegionChange={(region) => console.log('视野变化', region)}
+    />
+  )
+}
 ```
 
 ## 带标记点的地图
@@ -147,6 +182,8 @@ const customButtons = [
 | onRegionChange | (region: any) => void | - | 地图视野变化回调 |
 | onMarkerTap | (marker: any) => void | - | 标记点点击回调 |
 | onCalloutTap | (callout: any) => void | - | 气泡点击回调 |
+| onDragStart | () => void | - | 拖拽开始回调 |
+| onDragEnd | (region: any) => void | - | 拖拽结束回调 |
 
 ### MapConfigType
 
@@ -231,6 +268,8 @@ interface ButtonConfig {
 3. 支持深色模式，会根据系统设置自动切换
 4. 地图加载失败时会触发 `onMapError` 回调
 5. 所有交互事件都是可选的，可以根据需要添加
+6. 地图默认启用拖拽功能（enableScroll: true），可以通过 mapConfig 配置
+7. 拖拽时会触发 onRegionChange 事件，可以通过 onDragStart 和 onDragEnd 监听拖拽状态
 
 ## 示例
 

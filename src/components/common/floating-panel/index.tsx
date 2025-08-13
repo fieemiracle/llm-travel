@@ -18,6 +18,8 @@ interface FloatingPanelProps {
   safeAreaInsetBottom?: boolean
   /** 是否开启滚动条 */
   showScrollbar?: boolean
+  /** 底部输入框的高度，用于预留空间 */
+  bottomPadding?: number
   /** 面板高度改变回调 */
   onHeightChange?: (height: number, status: EstimateContainValues) => void
   /** 自定义样式类 */
@@ -26,6 +28,8 @@ interface FloatingPanelProps {
   customStyle?: React.CSSProperties
   /** 子元素 */
   children?: React.ReactNode
+  /** 外部控制的目标高度，用于程序化设置面板高度 */
+  targetHeight?: number
 }
 
 export default function FloatingPanel({
@@ -33,10 +37,12 @@ export default function FloatingPanel({
   contentDraggable = true,
   safeAreaInsetBottom = false,
   showScrollbar = true,
+  bottomPadding = 0,
   onHeightChange,
   customClass = '',
   customStyle = {},
-  children
+  children,
+  targetHeight
 }: FloatingPanelProps) {
   // 系统信息
   const systemInfo = getSystemInfo()
@@ -54,6 +60,13 @@ export default function FloatingPanel({
   const [startHeight, setStartHeight] = useState(EstPanelAnchor.COLLAPSE)
   const [estPanelStatus, setEstPanelStatus] = useState<EstimateContainValues>(EstimateContain.COLLAPSE)
   const panelRef = useRef<HTMLDivElement>(null)
+
+  // 监听外部控制的目标高度
+  useEffect(() => {
+    if (targetHeight !== undefined && targetHeight !== height) {
+      setHeight(targetHeight)
+    }
+  }, [targetHeight])
 
   // 公共的状态判断函数
   const getStatus = (h: number) => {
@@ -176,6 +189,7 @@ export default function FloatingPanel({
       {/* 内容区域 */}
       <View
         className={`floating-panel__content ${showScrollbar ? 'floating-panel__content--scrollable' : ''}`}
+        style={{ paddingBottom: `${bottomPadding}px` }}
         onTouchStart={onContentTouchStart}
         onTouchMove={onContentTouchMove}
         onTouchEnd={onContentTouchEnd}

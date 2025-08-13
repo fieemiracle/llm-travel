@@ -27,9 +27,13 @@ export const exampleMarkers: MapMarkerType[] = [
     iconPath: pointIcon,
     width: 32,
     height: 32,
+    anchor: {
+      x: 0.5,
+      y: 0.5
+    },
     callout: {
       ...callout,
-      content: '天安门广场'
+      content: '天安门广场',
     }
   },
   {
@@ -39,6 +43,10 @@ export const exampleMarkers: MapMarkerType[] = [
     iconPath: pointIcon,
     width: 32,
     height: 32,
+    anchor: {
+      x: 0.5,
+      y: 0.5
+    },
     callout: {
       ...callout,
       content: '故宫博物院'
@@ -51,6 +59,10 @@ export const exampleMarkers: MapMarkerType[] = [
     iconPath: pointIcon,
     width: 32,
     height: 32,
+    anchor: {
+      x: 0.5,
+      y: 0.5
+    },
     callout: {
       ...callout,
       content: '景山公园'

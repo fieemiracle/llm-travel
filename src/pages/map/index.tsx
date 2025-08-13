@@ -1,4 +1,4 @@
-import { View, Map as GMap, Text } from "@tarojs/components"
+import { View, Map as GMap } from "@tarojs/components"
 import type { MapProps } from '@tarojs/components'
 import { EstimateContain, EstimateContainValues } from "@/utils/enum"
 import { useState } from "react"
@@ -12,6 +12,10 @@ import './index.less'
 import { genMarker, genPolyline } from "@/utils/map"
 import IconFont from "@/components/common/iconfont"
 import { ICONFONT_ICONS } from "@/utils/iconfont"
+import { useDispatch } from "react-redux"
+import { setQueryText } from "@/store/actions/chat"
+import Chat from "@/components/chat"
+import { getSystemInfo, getMenuButtonBoundingClientRect } from "@/utils/system"
 
 const DEFAULT_MAP_CONFIG: MapConfigType = {
   longitude: 116.397428,
@@ -22,6 +26,9 @@ const DEFAULT_MAP_CONFIG: MapConfigType = {
   showLocation: true,
   enableZoom: true // 确保启用缩放功能
 }
+
+const CHANGE_LOCATION_TEXT = '换地点'
+const DELETE_LOCATION_TEXT = '删地点'
 
 
 
@@ -36,6 +43,10 @@ export default function Map() {
   const [panelHeight, setPanelHeight] = useState<number>(0)
   const [tabPane, setTabPane] = useState<string>('')
   const [mytour, setMytour] = useState<{title: string, tourdetail: any[]} | null>(null)
+  const [showChat, setShowChat] = useState(false)
+  const [targetPanelHeight, setTargetPanelHeight] = useState<number | undefined>(undefined)
+
+  const dispatch = useDispatch()
 
   // 接收参数
   useLoad((options) => {
@@ -164,6 +175,18 @@ export default function Map() {
     })
   }
 
+  const changeLocation = (type: 'change' | 'delete', text: string) => {
+    console.log('changeLocation>>>>>>>', type)
+    setShowChat(true)
+    dispatch(setQueryText(text))
+    // 计算半屏高度
+    const systemInfo = getSystemInfo()
+    const menuInfo = getMenuButtonBoundingClientRect()
+    const panelHeight = systemInfo.windowHeight - menuInfo.height - menuInfo.top
+    const halfHeight = Math.round(0.5 * panelHeight)
+    setTargetPanelHeight(halfHeight)
+  }
+
   return (
     <View
       className='map-page-wrapper'
@@ -241,17 +264,17 @@ export default function Map() {
                   ))
                 )
               }
-              <View className="panel-header-tab-pane-item">
+              <View className="panel-header-tab-pane-item" onClick={() => changeLocation('change', CHANGE_LOCATION_TEXT)}>
                 <View className="panel-header-tab-pane-item-icon">
                   <IconFont type={ICONFONT_ICONS.CHANGE} size={18} color="#41C9A9"/>
                 </View>
-                <View className="panel-header-tab-pane-item-text">换地点</View>
+                <View className="panel-header-tab-pane-item-text">{CHANGE_LOCATION_TEXT}</View>
               </View>
-              <View className="panel-header-tab-pane-item">
+              <View className="panel-header-tab-pane-item" onClick={() => changeLocation('delete', DELETE_LOCATION_TEXT)}>
                 <View className="panel-header-tab-pane-item-icon">
                   <IconFont type={ICONFONT_ICONS.DELETE} size={18} color="#D81F06"/>
                 </View>
-                <View className="panel-header-tab-pane-item-text">删地点</View>
+                <View className="panel-header-tab-pane-item-text">{DELETE_LOCATION_TEXT}</View>
               </View>
             </View>
             {/* 地图操作工具 */}
@@ -268,22 +291,21 @@ export default function Map() {
           setEstCardStatus(status)
           setPanelHeight(newHeight)
           setIsShowCover(status === EstimateContain.FULL)
+          // 如果当前高度已经达到目标高度，清除目标高度
+          if (targetPanelHeight !== undefined && Math.abs(newHeight - targetPanelHeight) < 5) {
+            setTargetPanelHeight(undefined)
+          }
         }}
         contentDraggable={true}
         showScrollbar={true}
         duration={300}
+        targetHeight={targetPanelHeight}
       >
-        <View style={{ padding: '16px' }}>
-          <Text style={{ 
-            fontSize: '16px', 
-            fontWeight: 'bold', 
-            marginBottom: '16px',
-            display: 'block'
-          }}>
-            自定义锚点面板 {JSON.stringify(estCardStatus)}
-          </Text>
-          
-        </View>
+        {
+          showChat && (
+            <Chat />
+          )
+        }
       </FloatingPanel>
     </View>
   )

@@ -50,6 +50,7 @@ export default function Chat(props: ChatProps) {
   // 自动滚动相关状态
   const [scrollTop, setScrollTop] = useState(0)
   const [shouldAutoScroll, setShouldAutoScroll] = useState(true)
+  const [inputHeight, setInputHeight] = useState(0) // 新增：跟踪输入框高度
   const scrollViewRef = useRef<any>(null)
 
   // 格式化聊天项
@@ -280,6 +281,11 @@ export default function Chat(props: ChatProps) {
     scrollToBottom()
   }, [scrollToBottom])
 
+  // 处理输入框高度变化
+  const handleInputHeightChange = useCallback((height: number) => {
+    setInputHeight(height)
+  }, [])
+
   // 组件卸载时清理请求任务
   useEffect(() => {
     return () => {
@@ -301,6 +307,7 @@ export default function Chat(props: ChatProps) {
         showScrollbar={false}
         scrollTop={scrollTop}
         onScroll={handleScroll}
+        style={{ paddingBottom: `${inputHeight + 40}px` }} // 动态设置底部padding
       >
         {
           chatList.map((item: ChatItem, idx: number) => {
@@ -351,7 +358,10 @@ export default function Chat(props: ChatProps) {
       {/* 分享模式下隐藏输入框，显示分享操作栏 */}
       {!shareMode && (
         <View className='chat-input'>
-          <FormInput onSend={(query) => onSendQuery(query)} onHeightChange={(height) => props.getInputHeight?.(height)} />
+          <FormInput 
+            onSend={(query) => onSendQuery(query)} 
+            onHeightChange={handleInputHeightChange}
+          />
         </View>
       )}
       

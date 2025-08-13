@@ -75,7 +75,7 @@ export default function MapSection(props: MapSectionProps) {
     onMarkerTap,
     onCalloutTap,
     onDragStart,
-    onDragEnd,
+    // onDragEnd,
     showFooter = true,
     className = '',
     onRegenerate,
@@ -138,9 +138,9 @@ export default function MapSection(props: MapSectionProps) {
   }
 
   // 拖拽结束处理
-  const handleDragEnd = (region: any) => {
-    onDragEnd?.(region)
-  }
+  // const handleDragEnd = (region: any) => {
+  //   onDragEnd?.(region)
+  // }
 
   // 标记点点击处理
   const handleMarkerTap = (marker: any) => {

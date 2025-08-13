@@ -29,11 +29,10 @@ import './index.less'
 import { setGlobalStatus } from '@/store/actions/common'
 
 
-type ChatProps = {
-  getInputHeight?: (height: number) => void
-}
+// type ChatProps = {
+// }
 
-export default function Chat(props: ChatProps) {
+export default function Chat() {
   const chatList = useSelector((state: RootState) => state.chat.chatList) || [] as ChatItem[]
   const queryText = useSelector((state: RootState) => state.chat.queryText)
   const shareMode = useSelector((state: RootState) => state.chat.shareMode)
@@ -50,7 +49,7 @@ export default function Chat(props: ChatProps) {
   // 自动滚动相关状态
   const [scrollTop, setScrollTop] = useState(0)
   const [shouldAutoScroll, setShouldAutoScroll] = useState(true)
-  const [inputHeight, setInputHeight] = useState(0) // 新增：跟踪输入框高度
+  // const [inputHeight, setInputHeight] = useState(0) // 新增：跟踪输入框高度
   const scrollViewRef = useRef<any>(null)
 
   // 格式化聊天项
@@ -282,9 +281,9 @@ export default function Chat(props: ChatProps) {
   }, [scrollToBottom])
 
   // 处理输入框高度变化
-  const handleInputHeightChange = useCallback((height: number) => {
-    setInputHeight(height)
-  }, [])
+  // const handleInputHeightChange = useCallback((height: number) => {
+  //   setInputHeight(height)
+  // }, [])
 
   // 组件卸载时清理请求任务
   useEffect(() => {
@@ -307,7 +306,7 @@ export default function Chat(props: ChatProps) {
         showScrollbar={false}
         scrollTop={scrollTop}
         onScroll={handleScroll}
-        style={{ paddingBottom: `${inputHeight + 40}px` }} // 动态设置底部padding
+        // style={{ paddingBottom: `${inputHeight + 40}px` }} // 动态设置底部padding
       >
         {
           chatList.map((item: ChatItem, idx: number) => {
@@ -360,7 +359,7 @@ export default function Chat(props: ChatProps) {
         <View className='chat-input'>
           <FormInput 
             onSend={(query) => onSendQuery(query)} 
-            onHeightChange={handleInputHeightChange}
+            // onHeightChange={handleInputHeightChange}
           />
         </View>
       )}

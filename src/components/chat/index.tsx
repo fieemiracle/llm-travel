@@ -300,7 +300,7 @@ export default function Chat() {
         showScrollbar={false}
         scrollTop={scrollTop}
         onScroll={handleScroll}
-      // style={{ paddingBottom: `${inputHeight + 40}px` }} // 动态设置底部padding
+      style={{ paddingBottom: '128rpx' }} // 动态设置底部padding
       >
         {
           chatList.map((item: ChatItem, idx: number) => {
